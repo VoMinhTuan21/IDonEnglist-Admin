@@ -1,0 +1,41 @@
+@use "../../../../../variables.scss";
+
+.login {
+  height: 100%;
+  width: 300px;
+
+  &__container {
+    height: 100%;
+    width: 100%;
+    position: relative;
+  }
+
+  &__title {
+    width: 100%;
+    text-align: left;
+    margin-bottom: 36px;
+
+    &--sub {
+      font-size: 36px;
+      line-height: 0.8em;
+      font-weight: 300;
+      color: variables.$primary;
+    }
+
+    &--main {
+      line-height: 1em;
+      font-size: 38px;
+      font-weight: 900;
+      color: variables.$accent;
+    }
+  }
+
+  &__form {
+    width: 100%;
+
+    &__button {
+      margin-top: 24px;
+      text-transform: capitalize;
+    }
+  }
+}

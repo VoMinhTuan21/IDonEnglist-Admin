@@ -1,0 +1,67 @@
+<form
+  class="create-new-password"
+  [formGroup]="form"
+  nz-form
+  nzLayout="vertical"
+  (ngSubmit)="onSubmit()"
+>
+  <nz-form-item>
+    <nz-form-label nzFor="password" nzRequired>Password</nz-form-label>
+    <nz-form-control nzErrorTip="Please enter password.">
+      <input
+        nz-input
+        nzSize="large"
+        type="password"
+        id="password"
+        formControlName="password"
+        (ngModelChange)="validateConfirmPassword()"
+      />
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzFor="confirm-password" nzRequired
+      >Confirm password</nz-form-label
+    >
+    <nz-form-control [nzErrorTip]="passwordErrorTpl">
+      <input
+        nz-input
+        nzSize="large"
+        type="password"
+        id="confirm-password"
+        formControlName="confirmPassword"
+      />
+      <ng-template #passwordErrorTpl let-control>
+        @if (control.errors?.['confirm']) {
+          Password is inconsistent!
+        }
+        @if (control.errors?.['required']) {
+          Please confirm your password!
+        }
+      </ng-template>
+    </nz-form-control>
+  </nz-form-item>
+  <div nz-flex [nzJustify]="'space-between'">
+    <button
+      class="create-new-password__submit"
+      nz-button
+      nzType="text"
+      nzSize="large"
+      type="button"
+      (click)="back.emit()"
+    >
+      Back
+    </button>
+    <nz-form-item>
+      <nz-form-control>
+        <button
+          class="create-new-password__submit"
+          nz-button
+          nzType="primary"
+          nzSize="large"
+        >
+          Submit
+        </button>
+      </nz-form-control>
+    </nz-form-item>
+  </div>
+</form>

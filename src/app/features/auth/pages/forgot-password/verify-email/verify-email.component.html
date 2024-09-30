@@ -1,0 +1,57 @@
+<form class="verify-email" nz-form nzLayout="vertical" (ngSubmit)="onSubmit()" [formGroup]="form">
+  <nz-form-item>
+    <nz-form-label nzFor="email" nzRequired>Email</nz-form-label>
+    <nz-form-control [nzErrorTip]="emailErrorTpl">
+      <nz-input-group
+        nzSearch
+        class="verify-email__group-email"
+        nzSize="large"
+        [nzAddOnAfter]="sendCodeButton"
+      >
+        <input formControlName="email" nz-input name="email" type="email" id="email" />
+      </nz-input-group>
+      <ng-template #emailErrorTpl let-control>
+        @if (control.errors?.['required']) {
+          Please enter email.
+        }
+        @if (control.errors?.['email']) {
+          Email not valid
+        }
+      </ng-template>
+      
+    </nz-form-control>
+    <ng-template #sendCodeButton>
+      <button
+        class="verify-email__group-email--send-code"
+        nzTooltipTitle="Send verify code to your email"
+        nzTooltipPlacement="right"
+        nz-tooltip
+        nz-button
+        type="button"
+        nzType="primary"
+        nzSearch
+      >
+        <span nz-icon nzType="send" nzTheme="outline"></span>
+      </button>
+    </ng-template>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzFor="code" nzRequired>Code</nz-form-label>
+    <nz-form-control [nzErrorTip]="codeErrorTpl">
+      <input formControlName="code" nz-input nzSize="large" name="code" type="text" id="code" />
+      <ng-template #codeErrorTpl let-control>
+        @if (control.errors?.required) {
+          Please enter code.
+        }
+        @if (control.errors?.['maxlength'] || control.errors?.['minlength']) {
+          Code should contain 6 characters
+        }
+      </ng-template>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-control>
+      <button class="verify-email__submit-button" nzSize="large" nz-button nzType="primary" nzBlock>Verify</button>
+    </nz-form-control>
+  </nz-form-item>
+</form>

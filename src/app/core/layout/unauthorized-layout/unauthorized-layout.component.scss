@@ -1,0 +1,25 @@
+@use "../../../../variables.scss";
+
+.unauthorized-layout {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 25px;
+  background-color: variables.$background;
+
+  &__container {
+    max-width: 50%;
+    padding: 32px 24px;
+    background-color: white;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    border-radius: variables.$border-radius;
+  }
+
+  &__logo {
+    width: 60px;
+    height: 60px;
+  }
+}

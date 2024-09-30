@@ -1,4 +1,12 @@
-<!-- NG-ZORRO -->
-<a href="https://github.com/NG-ZORRO/ng-zorro-antd" target="_blank" style="display: flex;align-items: center;justify-content: center;height: 100%;width: 100%;">
-  <img height="300" src="https://img.alicdn.com/tfs/TB1X.qJJgHqK1RjSZFgXXa7JXXa-89-131.svg">
-</a>
+@switch (pageLayoutService.layout$ | async) {
+  @case (PageLayout.UnAuthorized) {
+    <app-unauthorized-layout>
+      <router-outlet/>
+    </app-unauthorized-layout>
+  }
+  @case (PageLayout.Authorized) {
+    <app-authorized-layout>
+      <router-outlet/>
+    </app-authorized-layout>
+  }
+}
