@@ -1,6 +1,6 @@
 const AuthAPI = {
   login: 'auth/login',
-  refreshToken: 'auth/refreshToken'
+  refreshToken: 'auth/refresh'
 }
 
 export default AuthAPI;

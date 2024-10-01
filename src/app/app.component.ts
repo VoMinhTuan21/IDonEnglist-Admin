@@ -5,7 +5,7 @@ import { UnauthorizedLayoutComponent } from './core/layout/unauthorized-layout/u
 import { PageLayout } from './shared/models/enum';
 import { AsyncPipe } from '@angular/common';
 import { AuthorizedLayoutComponent } from './core/layout/authorized-layout/authorized-layout.component';
-import { HttpClientModule } from '@angular/common/http';
+import {} from '@angular/common/http';
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -14,7 +14,6 @@ import { HttpClientModule } from '@angular/common/http';
     UnauthorizedLayoutComponent,
     AsyncPipe,
     AuthorizedLayoutComponent,
-    HttpClientModule,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
