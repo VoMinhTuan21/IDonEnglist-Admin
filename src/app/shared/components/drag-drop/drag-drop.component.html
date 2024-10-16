@@ -1,0 +1,15 @@
+<div class="drag-drop-list">
+  <ul class="drag-drop-list__container">
+    <li *ngFor="let item of items; let i = index"
+        class="draggable"
+        [class.dragging]="i === draggedItemIndex"
+        [class.over]="i === overItemIndex"
+        draggable="true"
+        (dragstart)="onDragStart(i)"
+        (dragover)="onDragOver(i); $event.preventDefault()"
+        (dragleave)="onDragLeave()"
+        (drop)="onDrop(i)">
+      <nz-tag nzMode="closeable" (nzOnClose)="onDelete(i)">{{item.label}}</nz-tag>
+    </li>
+  </ul>
+</div>

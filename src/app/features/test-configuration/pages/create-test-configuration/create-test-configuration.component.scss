@@ -1,0 +1,26 @@
+.create-test-configuration {
+  height: 100%;
+
+  &__container {
+    height: 100%;
+  }
+
+  &__error {
+    margin-bottom: 8px;
+  }
+
+  &__test-parts {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+
+    &--forms {
+      flex: 1;
+      overflow-y: auto;
+
+      > * + * {
+        margin-top: 16px;
+      }
+    }
+  }
+}

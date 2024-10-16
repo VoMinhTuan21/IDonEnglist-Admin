@@ -10,6 +10,8 @@ export const refreshToken = createAction("[Auth] Refresh Token", props<Token>())
 export const refreshTokenSuccess = createAction("[Auth] Refresh Token Success", props<Token>());
 export const refreshTokenFailure = createAction("[Auth] Refresh Token Failure", props<{error: string}>());
 
+const logout = createAction("[Auth] Logout");
+
 const AuthActions = {
   login,
   loginSuccess,
@@ -17,7 +19,9 @@ const AuthActions = {
 
   refreshToken,
   refreshTokenSuccess,
-  refreshTokenFailure
+  refreshTokenFailure,
+
+  logout
 };
 
 export default AuthActions;

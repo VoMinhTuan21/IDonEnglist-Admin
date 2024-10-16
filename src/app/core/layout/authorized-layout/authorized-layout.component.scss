@@ -1,0 +1,57 @@
+@use "../../../../variables.scss";
+
+.authorized-layout {
+  height: 100%;
+
+  .logo-container {
+    display: flex;
+    column-gap: 8px;
+    align-items: center;
+    justify-content: center;
+    margin: 12px 0;
+
+    &__logo {
+      height: 25px;
+      transition: all 0.3s ease;
+
+      &__expand {
+        height: 30px;
+      }
+    }
+
+    &__text {
+      color: #4a90e2;
+      font-weight: 600;
+      font-size: 20px;
+
+      &--hide {
+        display: none;
+      }
+    }
+  }
+
+  nz-header {
+    background: #fff;
+    padding: 0 24px;
+  }
+
+  nz-layout {
+    background-color: variables.$background;
+  }
+
+  nz-content {
+    padding: 16px;
+    overflow-y: auto;
+  }
+
+  nz-breadcrumb {
+    margin: 16px 0;
+  }
+
+  .inner-content {
+    padding: 24px;
+    background: #fff;
+    min-height: 360px;
+    border-radius: 6px;
+  }
+}

@@ -1,0 +1,175 @@
+<form class="create-test-configuration__container" nz-form nzLayout="vertical" [formGroup]="form" (ngSubmit)="onSubmit()">
+  @if (form.hasError("totalQuestions") && (form.touched || form.dirty)) {
+    <div class="create-test-configuration__error">
+      <nz-alert nzType="error" nzMessage="The total number of questions of all parts must equal to the number of questions of the test type"></nz-alert>
+    </div>
+  }
+  @if (form.hasError("totalDuration") && (form.touched || form.dirty)) {
+    <div class="create-test-configuration__error">
+      <nz-alert nzType="error" nzMessage="The total number of duration of all parts must equal to the number of duration of the test type"></nz-alert>
+    </div>
+  }
+  <div class="create-test-configuration" nz-row [nzGutter]="32">
+    <div nz-col nzSpan="12">
+      <h5 nz-typography>Test type form</h5>
+      <app-box>
+        <nz-form-item>
+          <nz-form-label nzRequired>Name</nz-form-label>
+          <nz-form-control nzErrorTip="Please enter name">
+            <input nz-input placeholder="abcd" formControlName="name" />
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label nzRequired>Number of Questions</nz-form-label>
+          <nz-form-control [nzErrorTip]="questionsErrorTpl">
+            <input
+              nz-input
+              placeholder="0"
+              type="number"
+              formControlName="questions"
+            />
+            <ng-template #questionsErrorTpl let-control>
+              @if (control.errors?.required) {
+                Please enter number of questions
+              }
+              @if (control.errors?.min) {
+                It must include at least 1 question
+              }
+            </ng-template>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label nzRequired>Duration (minutes)</nz-form-label>
+          <nz-form-control [nzErrorTip]="durationsErrorTpl">
+            <input
+              nz-input
+              placeholder="0"
+              type="number"
+              formControlName="duration"
+            />
+            <ng-template #durationsErrorTpl let-control>
+              @if (control.errors?.required) {
+                Please enter durations
+              }
+              @if (control.errors?.min) {
+                it must greater than or equal 1 minute
+              }
+            </ng-template>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label nzRequired>Category skill</nz-form-label>
+          <nz-form-control nzErrorTip="Please select category">
+            <nz-select
+              nzPlaceHolder="select category"
+              formControlName="categorySkillId"
+              [nzOptions]="categoryListOptions"
+              [nzCustomTemplate]="selectCustomTpl"
+            ></nz-select>
+            <ng-template #selectCustomTpl let-selected>
+              {{selected.groupLabel}} - {{selected.nzLabel}}
+            </ng-template>
+            
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item [hidden]="!listPartNames.length">
+          <nz-form-label>Parts</nz-form-label>
+          <nz-form-control>
+            <app-drag-drop [items]="listPartNames" (itemsChange)="updateParts($event)" (itemDelete)="removeItem($event)"></app-drag-drop>
+          </nz-form-control>
+        </nz-form-item>
+        <div nz-flex [nzJustify]="'end'">
+          <button [nzLoading]="isSubmitting$ | async" nz-button nzType="primary">Submit</button>
+        </div>
+      </app-box>
+    </div>
+    <div nz-col nzSpan="12" formArrayName="parts" class="create-test-configuration__test-parts">
+      <div nz-flex [nzJustify]="'space-between'">
+        <h5 nz-typography>Test part form</h5>
+        <button [nzLoading]="isSubmitting$ | async" nz-button type="button" nzSize="small" nzType="dashed" (click)="addTestPartForm()">
+          <span nz-icon nzType="plus" nzTheme="outline"></span>Add
+        </button>
+      </div>
+      <div class="create-test-configuration__test-parts--forms">
+        @for (part of parts.controls; track part.value.id) {
+        <div [formGroupName]="$index">
+          <app-box>
+            <nz-form-item>
+              <nz-form-label nzRequired>Name</nz-form-label>
+              <nz-form-control [nzErrorTip]="partNameErrorTpl">
+                <input nz-input placeholder="abcd" formControlName="name" />
+                <ng-template #partNameErrorTpl let-control>
+                  @if (control.errors?.required) {
+                    Please enter a name
+                  }
+                  @if (control.errors?.uniqueName) {
+                    Name must be unique
+                  }
+                </ng-template>
+              </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+              <nz-form-label nzRequired>Number of Questions</nz-form-label>
+              <nz-form-control [nzErrorTip]="partQuestionsErrorTpl">
+                <input
+                  nz-input
+                  placeholder="0"
+                  type="number"
+                  formControlName="questions"
+                />
+                <ng-template #partQuestionsErrorTpl let-control>
+                  @if (control.errors?.required) {
+                    Please enter number of questions
+                  }
+                  @if (control.errors?.min) {
+                    It must include at least 1 question
+                  }
+                </ng-template>
+              </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+              <nz-form-label nzRequired>Duration (minutes)</nz-form-label>
+              <nz-form-control [nzErrorTip]="partDurationsErrorTpl">
+                <input
+                  nz-input
+                  placeholder="0"
+                  type="number"
+                  formControlName="duration"
+                />
+                <ng-template #partDurationsErrorTpl let-control>
+                  @if (control.errors?.required) {
+                    Please enter durations
+                  }
+                  @if (control.errors?.min) {
+                    it must greater than or equal 1 minute
+                  }
+                </ng-template>
+              </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+              <nz-form-label nzRequired>Order</nz-form-label>
+              <nz-form-control nzErrorTip="Please enter the order">
+                <input
+                  nz-input
+                  placeholder="0"
+                  type="number"
+                  formControlName="order"
+                />
+              </nz-form-control>
+            </nz-form-item>
+            <div nz-flex [nzJustify]="'end'">
+              <button [nzLoading]="isSubmitting$ | async" type="button" nz-button nzDanger (click)="removeItem($index)">
+                Delete
+              </button>
+            </div>
+          </app-box>
+        </div>
+        }
+      </div>
+    </div>
+  </div>
+</form>

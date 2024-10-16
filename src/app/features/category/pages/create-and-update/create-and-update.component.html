@@ -1,0 +1,59 @@
+<div class="create-and-update-category__plus-button">
+  <button
+    nz-button
+    nzSize="large"
+    nzType="primary"
+    nzShape="circle"
+    (click)="open()"
+  >
+    <span nz-icon nzType="plus" nzTheme="outline"></span>
+  </button>
+</div>
+<nz-drawer
+  [nzBodyStyle]="{overflow: 'auto'}"
+  [nzMaskClosable]="false"
+  [nzWidth]="500"
+  [nzVisible]="drawerVisible"
+  [nzTitle]="drawerTitle"
+  [nzFooter]="footerTpl"
+  (nzOnClose)="close()"
+>
+  <form nz-form [formGroup]="form" *nzDrawerContent nzLayout="vertical">
+    <nz-form-item>
+      <nz-form-label nzRequired>
+        Name
+      </nz-form-label>
+      <nz-form-control nzErrorTip="Please enter name">
+        <input nz-input nzSize="large" placeholder="abcd" formControlName="name"/>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label>Skills</nz-form-label>
+      <nz-form-control>
+        <nz-select nzMode="multiple" nzSize="large" nzPlaceHolder="select skills" formControlName="skills">
+          @for (skill of skillValues; track skill) {
+            <nz-option [nzValue]="skill" [nzLabel]="skills[skill]"></nz-option>
+          }
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label>Parent</nz-form-label>
+      <nz-form-control>
+        <nz-select nzSize="large" nzPlaceHolder="select parent" formControlName="parent">
+          @for(category of categories; track category.id) {
+            <nz-option [nzValue]="category.id" [nzLabel]="category.name"></nz-option>
+          }
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
+    
+  </form>
+  <ng-template #footerTpl>
+    <div style="float: right">
+      <button nz-button style="margin-right: 8px;" (click)="close()">Cancel</button>
+      <button nz-button nzType="primary" (click)="submitForm()">Submit</button>
+    </div>
+  </ng-template>
+  
+</nz-drawer>

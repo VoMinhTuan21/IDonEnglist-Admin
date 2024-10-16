@@ -1,0 +1,6 @@
+@use "../../../../variables.scss";
+
+.box {
+  background-color: white;
+  border-radius: variables.$border-radius;
+}

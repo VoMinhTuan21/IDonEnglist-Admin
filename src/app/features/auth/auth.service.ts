@@ -4,10 +4,11 @@ import { Observable } from "rxjs";
 import AuthAPI from "./api/auth.api";
 import { LoginRequest, LoginResponse } from "./models/login.model";
 import { Token } from "../../shared/models/common";
+import { CookieService } from "../../core/services/cookie.service";
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  constructor(private httpService: HttpService) {}
+  constructor(private httpService: HttpService, private cookieService: CookieService) {}
 
   login(data: LoginRequest): Observable<LoginResponse> {
     return this.httpService.post(AuthAPI.login, data)

@@ -1,20 +1,29 @@
-<nz-layout>
-  <nz-sider nzCollapsible nzWidth="200px">
-    <div class="logo"></div>
-    <ul nz-menu nzTheme="dark" nzMode="inline">
+<nz-layout class="authorized-layout">
+  <nz-sider nzCollapsible nzWidth="200px" nzTheme="light" (nzCollapsedChange)="handleCollapseChange($event)">
+    <div class="logo-container">
+      <img src="/assets/images/logo.png" [class]="{'logo-container__logo': true, 'logo-container__logo__expand': isCollapse}" />
+      <p [class]="{'logo-container__text': true, 'logo-container__text--hide': isCollapse}">IDonEnglist</p>
+    </div>
+    <ul nz-menu nzTheme="light" nzMode="inline">
       <li nz-menu-item>
         <span nz-icon nzType="pie-chart"></span>
-        <span>Option 1</span>
+        <span><a routerLink="/">Dashboard</a></span>
       </li>
       <li nz-menu-item>
-        <span nz-icon nzType="ant-design" nzTheme="outline"></span>
-        <span>Option 2</span>
+        <span nz-icon nzType="product" nzTheme="outline"></span>
+        <span><a routerLink="/category">Category</a></span>
+      </li>
+      <li nz-menu-item>
+        <span nz-icon nzType="setting" nzTheme="outline"></span>
+        <span><a routerLink="/test-configuration">Test Configuration</a></span>
+      </li>
+      <li nz-menu-item>
+        <span nz-icon nzType="book" nzTheme="outline"></span>
+        <span><a routerLink="/category">Collections</a></span>
       </li>
       <li nz-submenu nzTitle="User" nzIcon="user">
         <ul>
-          <li nz-menu-item>Tom</li>
-          <li nz-menu-item>Bill</li>
-          <li nz-menu-item>Alex</li>
+          <li nz-menu-item>Role</li>
         </ul>
       </li>
       <li nz-submenu nzTitle="Team" nzIcon="team">
@@ -29,17 +38,9 @@
       </li>
     </ul>
   </nz-sider>
-  <nz-layout>
-    <nz-header></nz-header>
+  <nz-layout class="authorized-layout__main-content">
     <nz-content>
-      <nz-breadcrumb>
-        <nz-breadcrumb-item>User</nz-breadcrumb-item>
-        <nz-breadcrumb-item>Bill</nz-breadcrumb-item>
-      </nz-breadcrumb>
-      <div class="inner-content">Bill is a cat.</div>
       <ng-content></ng-content>
     </nz-content>
-    <nz-footer>Ant Design ©2020 Implement By Angular</nz-footer>
   </nz-layout>
 </nz-layout>
-

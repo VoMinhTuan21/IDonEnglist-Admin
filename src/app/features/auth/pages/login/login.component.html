@@ -20,13 +20,7 @@
       <nz-form-item>
         <nz-form-label nzRequired nzFor="email">Email</nz-form-label>
         <nz-form-control [nzErrorTip]="emailErrorTpl">
-          <input
-            nz-input
-            name="email"
-            type="email"
-            nzSize="large"
-            formControlName="email"
-          />
+          <input nz-input name="email" type="email" formControlName="email" />
           <ng-template #emailErrorTpl let-control>
             @if (control.errors?.required) { Please enter email. } @if
             (control.errors?.email) { Email is not valid }
@@ -36,7 +30,7 @@
       <nz-form-item>
         <nz-form-label nzRequired nzFor="password">Password</nz-form-label>
         <nz-form-control nzErrorTip="Please enter password.">
-          <nz-input-group [nzSuffix]="suffixTemplate" nzSize="large">
+          <nz-input-group [nzSuffix]="suffixTemplate">
             <input
               nz-input
               name="password"
@@ -63,7 +57,6 @@
             class="login__form__button"
             nz-button
             nzBlock
-            nzSize="large"
             nzType="primary"
             [nzLoading]="loading$ | async"
           >

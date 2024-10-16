@@ -1,0 +1,110 @@
+<app-box>
+  <nz-table
+    #nestedTable
+    [nzData]="(categories$ | async) ?? []"
+    [nzPageSize]="10"
+  >
+    <thead>
+      <tr>
+        <th [nzWidth]="'25px'"></th>
+        <th>Name</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (data of nestedTable.data; track data.id) {
+      <tr>
+        <td [(nzExpand)]="data.expand"></td>
+        <td>
+          <a
+          [routerLink]="['/category', (data.code | urlCode: data.id)]"
+            (click)="handleOpenDrawer()"
+            >{{ data.name }}</a
+          >
+        </td>
+        <td>
+          <div nz-flex [nzGap]="'large'">
+            <a
+              [routerLink]="['/category', (data.code | urlCode: data.id)]"
+              (click)="handleOpenDrawer()"
+            >
+              <span nz-icon nzType="edit" nzTheme="twotone"></span>
+            </a>
+            <a
+              nz-popconfirm
+              nzPopconfirmTitle="Are you sure?"
+              (nzOnConfirm)="confirmDelete(data.id)"
+            >
+              <span
+                nz-icon
+                nzType="delete"
+                nzTheme="twotone"
+                [nzTwotoneColor]="'#FF4C4C'"
+              ></span>
+            </a>
+          </div>
+        </td>
+      </tr>
+      <tr [nzExpand]="!!data.expand">
+        <nz-table
+          #innerTable
+          [nzData]="data.children ?? []"
+          nzSize="middle"
+          [nzShowPagination]="false"
+        >
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Skill</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (data of innerTable.data; track data.id) {
+            <tr>
+              <td>
+                <a
+                  [routerLink]="['/category', (data.code | urlCode: data.id)]"
+                  (click)="handleOpenDrawer()"
+                  >{{ data.name }}</a
+                >
+              </td>
+              <td>
+                @for (skill of data.skills; track skill) {
+                <nz-tag [nzColor]="(skill.skill| skill).color">{{
+                  (skill.skill| skill).name
+                }}</nz-tag>
+                }
+              </td>
+              <td>
+                <div nz-flex [nzGap]="'large'">
+                  <a
+                    [routerLink]="['/category', (data.code | urlCode: data.id)]"
+                    (click)="handleOpenDrawer()"
+                  >
+                    <span nz-icon nzType="edit" nzTheme="twotone"></span>
+                  </a>
+                  <a
+                    nz-popconfirm
+                    nzPopconfirmTitle="Are you sure?"
+                    (nzOnConfirm)="confirmDelete(data.id)"
+                  >
+                    <span
+                      nz-icon
+                      nzType="delete"
+                      nzTheme="twotone"
+                      [nzTwotoneColor]="'#FF4C4C'"
+                    ></span>
+                  </a>
+                </div>
+              </td>
+            </tr>
+            }
+          </tbody>
+        </nz-table>
+      </tr>
+      }
+    </tbody>
+  </nz-table>
+</app-box>
+<app-create-and-update [(drawerVisible)]="drawerVisible" />

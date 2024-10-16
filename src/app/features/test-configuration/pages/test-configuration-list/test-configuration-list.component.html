@@ -1,0 +1,68 @@
+<app-box>
+  <div nz-flex [nzJustify]="'space-between'">
+    <h4 nz-typography>Test Types Table</h4>
+    <a [routerLink]="'/test-configuration/create'"
+      ><button nz-button nzType="primary">
+        <span nz-icon nzType="plus" nzTheme="outline"></span>Add new
+      </button></a
+    >
+  </div>
+  <nz-table
+    #testConfigurationTable
+    [nzPageSize]="table.pageSize"
+    [nzData]="table.items"
+    [nzLoading]="loading$ | async"
+  >
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Category</th>
+        <th>Questions</th>
+        <th>Parts</th>
+        <th>Duration (minutes)</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (data of testConfigurationTable.data; track data.id) {
+      <tr>
+        <td>{{ data.name }}</td>
+        <td>
+          <a
+            [routerLink]="[
+              '/category',
+              data.categorySkill.category.code
+                | urlCode : data.categorySkill.category.id
+            ]"
+            >{{ data.categorySkill.category.name }}</a
+          >
+          |
+          <nz-tag
+            [nzColor]="(data.categorySkill.skill | skill).color"
+            [nzBordered]="false"
+            >{{ (data.categorySkill.skill | skill).name }}</nz-tag
+          >
+        </td>
+        <td>{{ data.questions }}</td>
+        <td>{{ data.parts }}</td>
+        <td>{{ data.durations }}</td>
+        <td>
+          <div nz-flex [nzGap]="'large'">
+            <a>
+              <span nz-icon nzType="edit" nzTheme="twotone"></span>
+            </a>
+            <a nz-popconfirm nzPopconfirmTitle="Are you sure?">
+              <span
+                nz-icon
+                nzType="delete"
+                nzTheme="twotone"
+                [nzTwotoneColor]="'#FF4C4C'"
+              ></span>
+            </a>
+          </div>
+        </td>
+      </tr>
+      }
+    </tbody>
+  </nz-table>
+</app-box>

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { catchError, map, mergeMap, of } from 'rxjs';
+import { catchError, map, mergeMap, of, tap } from 'rxjs';
 import { CookieService } from '../../../core/services/cookie.service';
 import { AuthService } from '../auth.service';
 import AuthActions from './auth.action';
@@ -46,12 +46,24 @@ export class AuthEffects {
               { token: response.token, refreshToken: response.refreshToken },
               !!remember ? 7 : 1
             );
-            return AuthActions.refreshTokenSuccess(response)}),
+            return AuthActions.refreshTokenSuccess(response);
+          }),
           catchError((error) =>
             of(AuthActions.refreshTokenFailure({ error: error.message }))
           )
         )
       )
     )
+  );
+
+  logout$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(AuthActions.logout),
+        tap(() => {
+          this.cookieService.deleteToken();
+        })
+      ),
+    { dispatch: false }
   );
 }
