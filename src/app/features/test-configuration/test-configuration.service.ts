@@ -21,4 +21,7 @@ export class TestConfigurationService {
   update(data: UpdateTestTypeRequest): Observable<ITestTypeTableItem> {
     return this.httpService.put<ITestTypeTableItem>(TestConfigurationAPI.update, data);
   }
+  delete(id: number): Observable<number> {
+    return this.httpService.delete<number>(`${TestConfigurationAPI.delete}/${id}`);
+  }
 }

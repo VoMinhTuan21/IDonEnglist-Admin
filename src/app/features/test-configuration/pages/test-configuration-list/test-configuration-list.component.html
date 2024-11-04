@@ -53,7 +53,11 @@
             <a [routerLink]="[data.id]">
               <span nz-icon nzType="edit" nzTheme="twotone"></span>
             </a>
-            <a nz-popconfirm nzPopconfirmTitle="Are you sure?">
+            <a
+              nz-popconfirm
+              nzPopconfirmTitle="Are you sure?"
+              (nzOnConfirm)="handleDelete(data.id)"
+            >
               <span
                 nz-icon
                 nzType="delete"

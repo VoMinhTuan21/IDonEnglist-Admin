@@ -9,10 +9,10 @@ import { TestConfigurationSelect } from '@features/test-configuration/store/test
 import { Store } from '@ngrx/store';
 import { BoxComponent } from '@shared/components/box/box.component';
 import { PaginatedList } from '@shared/models/common';
-import { Skill } from '@shared/models/enum';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzFlexModule } from 'ng-zorro-antd/flex';
 import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
 import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzTagModule } from 'ng-zorro-antd/tag';
 import { NzTypographyModule } from 'ng-zorro-antd/typography';
@@ -33,6 +33,7 @@ import { Observable, Subject, takeUntil } from 'rxjs';
     NzTypographyModule,
     NzButtonModule,
     AsyncPipe,
+    NzPopconfirmModule
   ],
   templateUrl: './test-configuration-list.component.html',
   styleUrl: './test-configuration-list.component.scss',
@@ -63,5 +64,9 @@ export class TestConfigurationListComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
+  }
+
+  handleDelete(id: number) {
+    this.store.dispatch(TestConfigurationActions.remove({id}));
   }
 }

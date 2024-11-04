@@ -3,6 +3,7 @@ const TestConfigurationAPI = {
   getPagination: "test-type",
   getDetail: "test-type",
   update: "test-type",
+  delete: "test-type"
 }
 
 export default TestConfigurationAPI;

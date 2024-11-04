@@ -45,6 +45,18 @@ const resetSubmitStatus = createAction(
   '[Test Configuration] Reset Submit Status'
 )
 
+const remove = createAction(
+  '[Test Configuration] Remove',
+  props<{id: number}>()
+);
+const removeSuccess = createAction(
+  '[Test Configuration] Remove Success',
+  props<{id: number}>()
+)
+const removeFailure = createAction(
+  '[Test Configuration] Remove Failure'
+)
+
 export const TestConfigurationActions = {
   create,
   createSuccess,
@@ -58,5 +70,9 @@ export const TestConfigurationActions = {
   updateSuccess,
   updateFailure,
 
-  resetSubmitStatus
+  resetSubmitStatus,
+
+  remove,
+  removeSuccess,
+  removeFailure
 };

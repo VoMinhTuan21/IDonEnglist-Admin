@@ -58,7 +58,21 @@ const testConfigurationReducer = createReducer(
 
   mutableOn(TestConfigurationActions.resetSubmitStatus, (state) => {
     state.submitStatus = "idle";
-  })
+  }),
+
+  mutableOn(TestConfigurationActions.remove, (state) => {
+    state.isSubmitting = true;
+    state.submitStatus = "idle"
+  }),
+  mutableOn(TestConfigurationActions.removeSuccess, (state, { id }) => {
+    state.isSubmitting = false;
+    state.submitStatus = "success";
+    state.table.items = state.table.items.filter(t => t.id !== id);
+  }),
+  mutableOn(TestConfigurationActions.removeFailure, (state) => {
+    state.isSubmitting = false;
+    state.submitStatus = "error"
+  }),
 )
 
 export default testConfigurationReducer;

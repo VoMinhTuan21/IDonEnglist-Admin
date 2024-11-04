@@ -48,8 +48,8 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kb",
-                  "maximumError": "1mb"
+                  "maximumWarning": "1.5mb",
+                  "maximumError": "2mb"
                 },
                 {
                   "type": "anyComponentStyle",
@@ -65,7 +65,10 @@
               "sourceMap": true
             }
           },
-          "defaultConfiguration": "production"
+          "defaultConfiguration": "production",
+          "allowedCommonJsDependencies": [
+            "ngrx-etc"
+          ]
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",

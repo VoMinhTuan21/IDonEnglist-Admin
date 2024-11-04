@@ -59,4 +59,16 @@ export class TestConfigurationEffects {
       )
     )
   );
+
+  delete$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(TestConfigurationActions.remove),
+      mergeMap(({ id }) =>
+        this.testConfigurationService.delete(id).pipe(
+          map((value) => TestConfigurationActions.removeSuccess({ id: value })),
+          catchError(() => of(TestConfigurationActions.removeFailure()))
+        )
+      )
+    )
+  );
 }
