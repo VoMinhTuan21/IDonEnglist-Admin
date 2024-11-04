@@ -24,4 +24,13 @@ export const testConfigurationRoutes: Routes = [
     data: { isAuthLayout: true },
     canActivate: [AuthGuard],
   },
+  {
+    path: 'test-configuration/:id',
+    component: CreateTestConfigurationComponent,
+    resolve: {
+      layout: setLayout(PageLayout.Authorized),
+    },
+    data: { isAuthLayout: true },
+    canActivate: [AuthGuard],
+  }
 ];

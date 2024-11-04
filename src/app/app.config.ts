@@ -49,7 +49,7 @@ export const appConfig: ApplicationConfig = {
         category: categoryReducer,
         testConfiguration: testConfigurationReducer,
       },
-      // { metaReducers: [resetOnLogout] }
+      { metaReducers: [resetOnLogout] }
     ),
     provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),
     provideEffects([AuthEffects, CategoryEffects, TestConfigurationEffects]),

@@ -4,15 +4,31 @@ import {
   FormArray,
   FormControl,
   FormGroup,
-  NonNullableFormBuilder,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import uniqueNameValidator from '@core/validators/unique-name-validator';
 import { Category } from '@features/category/models/category.model';
 import CategoryActions from '@features/category/store/category.action';
 import { CategorySelect } from '@features/category/store/category.selector';
+import {
+  CreateTestTypeRequest,
+  ITestPartDetail,
+  UpdateTestTypeRequest
+} from '@features/test-configuration/models/test-configuration';
+import { TestConfigurationActions } from '@features/test-configuration/store/test-configuration.action';
+import { TestConfigurationSelect } from '@features/test-configuration/store/test-configuration.selector';
+import { TestConfigurationService } from '@features/test-configuration/test-configuration.service';
 import { Store } from '@ngrx/store';
 import { BoxComponent } from '@shared/components/box/box.component';
+import {
+  DragDropComponent,
+  ItemDragDrop,
+} from '@shared/components/drag-drop/drag-drop.component';
+import { Skill } from '@shared/models/enum';
+import { NzAlertModule } from 'ng-zorro-antd/alert';
+import { NzBreadCrumbModule } from 'ng-zorro-antd/breadcrumb';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzFlexModule } from 'ng-zorro-antd/flex';
 import { NzFormModule } from 'ng-zorro-antd/form';
@@ -24,26 +40,11 @@ import { NzTypographyModule } from 'ng-zorro-antd/typography';
 import {
   debounceTime,
   distinctUntilChanged,
-  map,
   Observable,
   Subject,
   takeUntil,
 } from 'rxjs';
-import { NzBreadCrumbModule } from 'ng-zorro-antd/breadcrumb';
-import {
-  DragDropComponent,
-  ItemDragDrop,
-} from '@shared/components/drag-drop/drag-drop.component';
 import { v4 as uuidv4 } from 'uuid';
-import uniqueNameValidator from '@core/validators/unique-name-validator';
-import { Skill } from '@shared/models/enum';
-import totalQuestionsValidator from '@core/validators/total-questions-validator';
-import { NzAlertModule } from 'ng-zorro-antd/alert';
-import totalDurationValidator from '@core/validators/total-duration-validator';
-import { TestConfigurationSelect } from '@features/test-configuration/store/test-configuration.selector';
-import { Router } from '@angular/router';
-import { CreateTestPartRequest, CreateTestTypeRequest } from '@features/test-configuration/models/test-configuration';
-import { TestConfigurationActions } from '@features/test-configuration/store/test-configuration.action';
 
 @Component({
   selector: 'app-create-test-configuration',
@@ -62,7 +63,7 @@ import { TestConfigurationActions } from '@features/test-configuration/store/tes
     NzIconModule,
     NzBreadCrumbModule,
     DragDropComponent,
-    NzAlertModule
+    NzAlertModule,
   ],
   templateUrl: './create-test-configuration.component.html',
   styleUrl: './create-test-configuration.component.scss',
@@ -74,22 +75,40 @@ export class CreateTestConfigurationComponent implements OnInit, OnDestroy {
   listPartNames: ItemDragDrop[] = [];
   form = new FormGroup({
     name: new FormControl('', [Validators.required]),
-    categorySkillId: new FormControl(0, [Validators.required, Validators.min(1)]),
-    questions: new FormControl(0, [Validators.required, Validators.min(1)]),
+    categorySkillId: new FormControl(0, [
+      Validators.required,
+      Validators.min(1),
+    ]),
+    questions: new FormControl({ value: 0, disabled: true }, [
+      Validators.required,
+      Validators.min(1),
+    ]),
     parts: new FormArray([
       new FormGroup({
         id: new FormControl(uuidv4()),
         name: new FormControl('', Validators.required),
         duration: new FormControl(0, [Validators.required, Validators.min(1)]),
         questions: new FormControl(0, [Validators.required, Validators.min(1)]),
-        order: new FormControl(1, Validators.required),
+        order: new FormControl(
+          { value: 1, disabled: true },
+          Validators.required
+        ),
       }),
     ]),
-    duration: new FormControl(0, [Validators.required, Validators.min(1)]),
-  }, {validators: [totalQuestionsValidator(), totalDurationValidator()], updateOn: "blur"});
+    duration: new FormControl({ value: 0, disabled: true }, [
+      Validators.required,
+      Validators.min(1),
+    ]),
+  });
   isSubmitting$!: Observable<boolean>;
+  testTypeId: number = 0;
 
-  constructor(private store: Store, private router: Router) {}
+  constructor(
+    private store: Store,
+    private router: Router,
+    private route: ActivatedRoute,
+    private testConfigurationService: TestConfigurationService
+  ) {}
 
   ngOnInit(): void {
     this.store
@@ -112,7 +131,7 @@ export class CreateTestConfigurationComponent implements OnInit, OnDestroy {
           })
           .flat();
       });
-    
+
     this.store
       .select(CategorySelect.categories)
       .pipe(takeUntil(this.unsubscribe$))
@@ -132,8 +151,19 @@ export class CreateTestConfigurationComponent implements OnInit, OnDestroy {
         this.listPartNames =
           values.parts?.map((part) => ({
             label: part.name ? part.name : 'No title',
-            id: part.id ?? '',
+            id: part.id?.toString() ?? uuidv4(),
           })) ?? [];
+
+        this.form.patchValue({
+          questions: values.parts?.reduce(
+            (total, current) => total + (current.questions ?? 0),
+            0
+          ),
+          duration: values.parts?.reduce(
+            (total, current) => total + (current.duration ?? 0),
+            0
+          ),
+        });
       });
 
     this.parts.controls.forEach((part) =>
@@ -148,10 +178,35 @@ export class CreateTestConfigurationComponent implements OnInit, OnDestroy {
       .select(TestConfigurationSelect.submitStatus)
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((status) => {
-        if (status === "success") {
-          this.router.navigate(["test-configuration"])
+        if (status === 'success') {
+          this.store.dispatch(TestConfigurationActions.resetSubmitStatus())
+          this.router.navigate(['test-configuration']);
         }
-      })
+      });
+
+    this.route.paramMap
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((params) => {
+        this.testTypeId = Number(params.get('id'));
+        if (this.testTypeId) {
+          this.testConfigurationService
+            .getDetail(this.testTypeId)
+            .subscribe((value) => {
+              this.form.get("categorySkillId")?.disable();
+              this.form.patchValue({
+                name: value.name,
+                questions: value.questions,
+                categorySkillId: value.categorySkill.id,
+                duration: value.duration,
+              });
+
+              this.parts.clear();
+              value.parts.forEach((p) => {
+                this.addTestPartForm(p);
+              });
+            });
+        }
+      });
   }
 
   ngOnDestroy(): void {
@@ -163,13 +218,22 @@ export class CreateTestConfigurationComponent implements OnInit, OnDestroy {
     return this.form.get('parts') as FormArray;
   }
 
-  addTestPartForm() {
+  addTestPartForm(data?: ITestPartDetail) {
     const part = new FormGroup({
-      id: new FormControl(uuidv4()),
-      name: new FormControl('', Validators.required),
-      duration: new FormControl(0, [Validators.required, Validators.min(1)]),
-      questions: new FormControl(0, [Validators.required, Validators.min(1)]),
-      order: new FormControl(this.parts.length + 1, [Validators.required]),
+      id: new FormControl(data?.id.toString() ?? uuidv4()),
+      name: new FormControl(data?.name ?? '', Validators.required),
+      duration: new FormControl(data?.duration ?? 0, [
+        Validators.required,
+        Validators.min(1),
+      ]),
+      questions: new FormControl(data?.questions ?? 0, [
+        Validators.required,
+        Validators.min(1),
+      ]),
+      order: new FormControl(
+        { value: data?.order ?? this.parts.length + 1, disabled: true },
+        [Validators.required]
+      ),
     });
 
     this.parts.push(part);
@@ -183,27 +247,36 @@ export class CreateTestConfigurationComponent implements OnInit, OnDestroy {
 
   onSubmit(): void {
     if (this.form.valid) {
-      const partsData: CreateTestPartRequest[] = this.form.value.parts?.map(p => ({
-        duration: p.duration ?? 0,
-        name: p.name ?? "",
-        order: p.order ?? 0,
-        questions: p.questions ?? 0
-      })) ?? [];
-       
-      console.log("this.form.value: ", this.form.value);
-      const data: CreateTestTypeRequest = {
-        categorySkillId: this.form.value.categorySkillId ?? 0,
-        duration: this.form.value.duration ?? 0,
-        name: this.form.value.name ?? "",
+      const isUpdate = this.testTypeId !== 0;
+
+      const partsData =
+        this.form.controls['parts']?.controls.map((p) => ({
+          ...(isUpdate ? { id: p.value.id ?? '' } : {}),
+          duration: p.value.duration ?? 0,
+          name: p.value.name ?? '',
+          order: p.controls['order'].value ?? 0,
+          questions: p.value.questions ?? 0,
+        })) ?? [];
+
+      const data = {
+        ...(isUpdate ? { id: this.testTypeId } : {}),
+        categorySkillId: this.form.controls['categorySkillId'].value ?? 0,
+        duration: this.form.controls['duration'].value ?? 0,
+        name: this.form.value.name ?? '',
         parts: partsData,
-        questions: this.form.value.questions ?? 0
+        questions: this.form.controls['questions'].value ?? 0,
+      };
+
+      if (isUpdate) {
+        console.log("data: ", data);
+
+        this.store.dispatch(TestConfigurationActions.update(data as UpdateTestTypeRequest));
+      } else {
+        this.store.dispatch(TestConfigurationActions.create(data as CreateTestTypeRequest));
       }
-      
-      this.store.dispatch(TestConfigurationActions.create(data));
     } else {
       Object.values(this.form.controls).forEach((control) => {
         if (control instanceof FormArray) {
-          // For FormArray (parts), we also mark the controls inside it as dirty
           control.controls.forEach((group: FormGroup) => {
             Object.values(group.controls).forEach((nestedControl) => {
               if (nestedControl.invalid) {

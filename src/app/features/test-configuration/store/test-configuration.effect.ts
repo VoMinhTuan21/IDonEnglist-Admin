@@ -42,4 +42,21 @@ export class TestConfigurationEffects {
       )
     )
   );
+
+  update$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(TestConfigurationActions.update),
+      mergeMap(({ type, ...data }) =>
+        this.testConfigurationService.update(data).pipe(
+          map((value) => {
+            if (value.id) {
+              this.messageService.success('Create success');
+            }
+            return TestConfigurationActions.updateSuccess(value);
+          }),
+          catchError(() => of(TestConfigurationActions.updateFailure()))
+        )
+      )
+    )
+  );
 }

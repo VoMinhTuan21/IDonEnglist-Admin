@@ -38,26 +38,6 @@ import { Observable, Subject, takeUntil } from 'rxjs';
   styleUrl: './test-configuration-list.component.scss',
 })
 export class TestConfigurationListComponent implements OnInit, OnDestroy {
-  testConfigurations: ITestTypeTableItem[] = [
-    {
-      id: 1,
-      categorySkill: {
-        id: 1,
-        skill: Skill.Listening,
-        category: {
-          id: 1,
-          code: 'toeic-reading-listening',
-          name: 'Toeic Reading & Listening',
-        },
-      },
-      durations: 100,
-      name: 'Toeic Reading Test',
-      code: 'toeic-reading-test',
-      parts: 4,
-      questions: 100,
-    },
-  ];
-
   table!: PaginatedList<ITestTypeTableItem>;
   loading$!: Observable<boolean>;
   private unsubscribe$ = new Subject<void>();

@@ -26,7 +26,9 @@
     <tbody>
       @for (data of testConfigurationTable.data; track data.id) {
       <tr>
-        <td>{{ data.name }}</td>
+        <td>
+          <a [routerLink]="[data.id]">{{ data.name }}</a>
+        </td>
         <td>
           <a
             [routerLink]="[
@@ -45,10 +47,10 @@
         </td>
         <td>{{ data.questions }}</td>
         <td>{{ data.parts }}</td>
-        <td>{{ data.durations }}</td>
+        <td>{{ data.duration }}</td>
         <td>
           <div nz-flex [nzGap]="'large'">
-            <a>
+            <a [routerLink]="[data.id]">
               <span nz-icon nzType="edit" nzTheme="twotone"></span>
             </a>
             <a nz-popconfirm nzPopconfirmTitle="Are you sure?">

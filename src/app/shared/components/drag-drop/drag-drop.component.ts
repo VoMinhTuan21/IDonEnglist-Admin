@@ -4,7 +4,7 @@ import { NzTagModule } from 'ng-zorro-antd/tag';
 
 export type ItemDragDrop = {
   label: string;
-  id: string
+  id: string;
 }
 
 @Component({

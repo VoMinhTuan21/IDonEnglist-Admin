@@ -29,6 +29,35 @@ const testConfigurationReducer = createReducer(
   }),
   mutableOn(TestConfigurationActions.getPaginationFailure, (state) => {
     state.loading = false;
+  }),
+
+  mutableOn(TestConfigurationActions.update, (state) => {
+    state.isSubmitting = true;
+    state.submitStatus = "idle";
+  }),
+  mutableOn(TestConfigurationActions.updateSuccess, (state, {type, ...updatedData}) => {
+    state.isSubmitting = false;
+    state.submitStatus = "success";
+
+    let testType = state.table.items.find(e => e.id === updatedData.id);
+
+    if (testType) {
+      testType.categorySkill = updatedData.categorySkill;
+      testType.code = updatedData.code,
+      testType.duration = updatedData.duration,
+      testType.id = updatedData.id,
+      testType.name = updatedData.name,
+      testType.parts = updatedData.parts,
+      testType.questions = updatedData.questions
+    }
+  }),
+  mutableOn(TestConfigurationActions.updateFailure, (state) => {
+    state.isSubmitting = false;
+    state.submitStatus = "error";
+  }),
+
+  mutableOn(TestConfigurationActions.resetSubmitStatus, (state) => {
+    state.submitStatus = "idle";
   })
 )
 
