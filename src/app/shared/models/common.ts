@@ -8,7 +8,7 @@ export interface Breadcrumb {
   url: string
 }
 
-export type SubmitStatus = "idle" | "success" | "error";
+export type SubmitStatus = "idle" | "pending" | "success" | "error";
 
 export interface PaginationRequest {
   [key: string] : any;
@@ -27,4 +27,9 @@ export interface PaginatedList<T> {
   totalRecords: number;
   hasNextPage: boolean;
   hasPreviousPage: boolean;
+}
+
+export interface FileModel {
+  publicId: string;
+  url: string;
 }

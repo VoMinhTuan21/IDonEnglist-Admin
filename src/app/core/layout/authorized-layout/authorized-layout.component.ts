@@ -10,7 +10,6 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzLayoutModule } from 'ng-zorro-antd/layout';
 import { NzMenuModule } from 'ng-zorro-antd/menu';
 import { selectUser } from '../../../features/auth/store/auth.selector';
-
 @Component({
   selector: 'app-authorized-layout',
   standalone: true,

@@ -30,6 +30,8 @@ import categoryReducer from './features/category/store/category.reducer';
 import { resetOnLogout } from './core/store/auth.meta-reducer';
 import { TestConfigurationEffects } from '@features/test-configuration/store/test-configuration.effect';
 import testConfigurationReducer from '@features/test-configuration/store/test-configuration.reducer';
+import { CollectionEffects } from '@features/collection/store/collection.effect';
+import collectionReducer from '@features/collection/store/collection.reducer';
 
 registerLocaleData(en);
 
@@ -48,10 +50,16 @@ export const appConfig: ApplicationConfig = {
         auth: authReducer,
         category: categoryReducer,
         testConfiguration: testConfigurationReducer,
+        collection: collectionReducer,
       },
       { metaReducers: [resetOnLogout] }
     ),
     provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),
-    provideEffects([AuthEffects, CategoryEffects, TestConfigurationEffects]),
+    provideEffects([
+      AuthEffects,
+      CategoryEffects,
+      TestConfigurationEffects,
+      CollectionEffects,
+    ]),
   ],
 };
