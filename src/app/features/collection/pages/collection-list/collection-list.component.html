@@ -1,0 +1,96 @@
+<div class="collection-list">
+  <app-box>
+    <form
+      nz-form
+      [formGroup]="searchForm"
+      [nzLayout]="'vertical'"
+      class="collection-list__search-form"
+      (ngSubmit)="handleSearch()"
+    >
+      <nz-form-item>
+        <nz-form-label> Keywords</nz-form-label>
+        <nz-form-control>
+          <input nz-input placeholder="abcd" formControlName="keywords" />
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label> Category</nz-form-label>
+        <nz-form-control>
+          <nz-select
+            formControlName="categoryId"
+            nzPlaceHolder="select category"
+            nzAllowClear
+          >
+            @for (category of categories; track $index) {
+            <nz-option
+              [nzValue]="category.id"
+              [nzLabel]="category.name"
+            ></nz-option>
+            }
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+      <div class="collection-list__search-form--group-buttons">
+        <button nz-button type="button" (click)="clearSearch()">Clear</button>
+        <button
+          nz-button
+          nzType="primary"
+          [nzLoading]="loadingTable"
+          [disabled]="loadingTable"
+        >
+          <span nz-icon nzType="search" nzTheme="outline"></span>Search
+        </button>
+      </div>
+    </form>
+  </app-box>
+  <app-box>
+    <nz-table
+      #basicTable
+      [nzData]="table.items"
+      [nzLoading]="loadingTable"
+      [nzTotal]="table.totalRecords"
+      [nzPageSize]="table.pageSize"
+      [nzPageIndex]="table.pageIndex"
+      [nzFrontPagination]="false"
+      (nzPageIndexChange)="handlePageIndexChange($event)"
+    >
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Category</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (data of basicTable.data; track data.id) {
+        <tr>
+          <td>
+            <a [routerLink]="['/collection', data.id]">{{ data.name }}</a>
+          </td>
+          <td>
+            {{ utils.findCategoryInTree(categories, data.categoryId)?.name }}
+          </td>
+          <td nz-flex nzGap="large">
+            <a [routerLink]="['/collection', data.id]">
+              <span nz-icon nzType="edit" nzTheme="twotone"></span>
+            </a>
+            <a
+              nz-popconfirm
+              nzPopconfirmTitle="Are you sure delete this collection?"
+              (nzOnConfirm)="handleDelete(data.id)"
+            >
+              <span
+                nz-icon
+                nzType="delete"
+                nzTheme="twotone"
+                [nzTwotoneColor]="'#FF4C4C'"
+              ></span>
+            </a>
+          </td>
+        </tr>
+        }
+      </tbody>
+    </nz-table>
+  </app-box>
+</div>
+<app-create-update-collection [(drawerVisible)]="drawerVisible"></app-create-update-collection>

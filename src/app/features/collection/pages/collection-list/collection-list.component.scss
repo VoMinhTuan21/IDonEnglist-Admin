@@ -1,0 +1,21 @@
+.collection-list {
+  display: grid;
+  row-gap: 16px;
+
+  &__search-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 16px;
+
+    &--group-buttons {
+      grid-column-start: 2;
+      width: fit-content;
+      margin-right: 0;
+      margin-left: auto;
+
+      & > * + * {
+        margin-left: 8px;
+      }
+    }
+  }
+}

@@ -1,0 +1,82 @@
+<div class="create-update-collection">
+  <button
+    nz-button
+    nzType="primary"
+    nzShape="circle"
+    class="create-update-collection__show-button"
+    (click)="open()"
+  >
+    <span nz-icon nzType="plus" nzTheme="outline"></span>
+  </button>
+  <nz-drawer
+    [nzBodyStyle]="{ overflow: 'auto' }"
+    [nzMaskClosable]="false"
+    [nzWidth]="500"
+    [nzVisible]="drawerVisible"
+    [nzTitle]="drawerTitle"
+    [nzFooter]="footerTpl"
+    (nzOnClose)="close()"
+  >
+    <form nz-form [formGroup]="form" *nzDrawerContent nzLayout="vertical">
+      <nz-form-item>
+        <nz-form-label nzRequired>Name</nz-form-label>
+        <nz-form-control nzErrorTip="Please enter name">
+          <input nz-input placeholder="abcd" formControlName="name" />
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label nzRequired> Category </nz-form-label>
+        <nz-form-control nzErrorTip="Please select category">
+          <nz-select
+            nzPlaceHolder="Select category"
+            formControlName="categoryId"
+          >
+            @for (category of categories; track $index) {
+            <nz-option
+              [nzValue]="category.id"
+              [nzLabel]="category.name"
+            ></nz-option>
+            }
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label nzRequired>Thumbnail</nz-form-label>
+        <nz-form-control nzErrorTip="Please upload a thumbnail">
+          <nz-upload
+            [nzAction]="uploadUrl"
+            nzName="file"
+            nzListType="picture-card"
+            [nzShowUploadList]="false"
+            [nzBeforeUpload]="beforeUpload"
+            (nzChange)="handleChange($event)"
+          >
+            @if (!thumbnail?.url) {
+            <span
+              class="upload-icon"
+              nz-icon
+              [nzType]="uploading ? 'loading' : 'plus'"
+            ></span>
+            <div class="ant-upload-text">Upload</div>
+            } @else {
+              <div class="create-update-collection__preview-image">
+                <div class="create-update-collection__preview-image--loading" [hidden]="!uploading">
+                  <span nz-icon nzType="loading" nzTheme="outline"></span>
+                </div>
+                <img [src]="thumbnail?.url" style="width: 100%; height: 100%; object-fit: contain;" />
+              </div>
+            }
+          </nz-upload>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+    <ng-template #footerTpl>
+      <div style="float: right">
+        <button nz-button style="margin-right: 8px" (click)="close()">
+          Cancel
+        </button>
+        <button nz-button nzType="primary" [disabled]="isSubmitting" (click)="submitForm()">Submit</button>
+      </div>
+    </ng-template>
+  </nz-drawer>
+</div>
