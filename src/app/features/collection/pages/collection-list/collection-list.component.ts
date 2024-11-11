@@ -29,6 +29,7 @@ import { map, Subject, takeUntil } from 'rxjs';
 import { BoxComponent } from '../../../../shared/components/box/box.component';
 import { CreateUpdateCollectionComponent } from '../create-update-collection/create-update-collection.component';
 import { ActivatedRoute, ParamMap, Router, RouterLink } from '@angular/router';
+import { UrlCodePipe } from '@core/pipes/url.pipe';
 
 @Component({
   selector: 'app-collection-list',
@@ -46,7 +47,8 @@ import { ActivatedRoute, ParamMap, Router, RouterLink } from '@angular/router';
     NzInputModule,
     NzSelectModule,
     NzButtonModule,
-    RouterLink
+    RouterLink,
+    UrlCodePipe
   ],
   templateUrl: './collection-list.component.html',
   styleUrl: './collection-list.component.scss',
@@ -106,7 +108,7 @@ export class CollectionListComponent implements OnInit, OnDestroy {
         const filter: GetPaginationCollectionRequest = {
           keywords: queryParams.get('keywords') ?? '',
           categoryId: Number(queryParams.get('categoryId')) ?? 0,
-          pageNumber: this.table?.pageIndex ?? 1,
+          pageNumber: this.table?.pageNumber ?? 1,
           pageSize: this.table?.pageSize ?? 5,
         };
 
@@ -116,7 +118,7 @@ export class CollectionListComponent implements OnInit, OnDestroy {
     this.route.paramMap
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(params => {
-        if (Number(params.get("id"))) {
+        if (Number(params.get("id")?.split("-").pop())) {
           this.drawerVisible = true;
         }
       })

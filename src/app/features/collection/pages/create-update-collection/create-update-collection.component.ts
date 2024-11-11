@@ -13,25 +13,25 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Category } from '@features/category/models/category.model';
 import { CategorySelect } from '@features/category/store/category.selector';
-import { select, Store } from '@ngrx/store';
+import CollectionActions from '@features/collection/store/collection.action';
+import { CollectionSelect } from '@features/collection/store/collection.selector';
+import { Store } from '@ngrx/store';
 import { FileModel } from '@shared/models/common';
+import { UploadImageUrl } from '@shared/models/constants';
+import { Utils } from '@shared/utils/utils';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzDrawerModule } from 'ng-zorro-antd/drawer';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzInputModule } from 'ng-zorro-antd/input';
-import { NzSelectModule } from 'ng-zorro-antd/select';
-import { filter, map, Observable, Subject, take, takeUntil, withLatestFrom } from 'rxjs';
-import { NzUploadFile, NzUploadModule } from 'ng-zorro-antd/upload';
-import { UploadImageUrl } from '@shared/models/constants';
 import { NzMessageService } from 'ng-zorro-antd/message';
-import { Utils } from '@shared/utils/utils';
-import CollectionActions from '@features/collection/store/collection.action';
-import { CollectionSelect } from '@features/collection/store/collection.selector';
-import { ActivatedRoute, Router } from '@angular/router';
+import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
+import { NzUploadFile, NzUploadModule } from 'ng-zorro-antd/upload';
+import { filter, map, Observable, Subject, takeUntil, withLatestFrom } from 'rxjs';
 
 @Component({
   selector: 'app-create-update-collection',
@@ -140,9 +140,9 @@ export class CreateUpdateCollectionComponent implements OnInit, OnDestroy {
       })
 
     this.route.paramMap
-      .pipe(takeUntil(this.unsubscribe$), filter(params => !!Number(params.get("id"))), withLatestFrom(this.store.select(CollectionSelect.table)))
+      .pipe(takeUntil(this.unsubscribe$), filter(params => !!Number(params.get("id")?.split("-").pop())), withLatestFrom(this.store.select(CollectionSelect.table)))
       .subscribe(([params, table])=> {
-        this.collectionId = Number(params.get("id"));
+        this.collectionId = Number(params.get("id")?.split("-").pop());
         const collection = table.items?.find(cl => cl.id === this.collectionId);
 
         if (collection) {

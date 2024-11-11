@@ -1,36 +1,48 @@
-<div class="collection-list">
+<div class="final-test-list">
   <app-box>
     <form
       nz-form
       [formGroup]="searchForm"
       [nzLayout]="'vertical'"
-      class="collection-list__search-form"
+      class="final-test-list__search-form"
       (ngSubmit)="handleSearch()"
     >
       <nz-form-item>
-        <nz-form-label> Keywords</nz-form-label>
+        <nz-form-label>Keywords</nz-form-label>
         <nz-form-control>
           <input nz-input placeholder="abcd" formControlName="keywords" />
         </nz-form-control>
       </nz-form-item>
       <nz-form-item>
-        <nz-form-label> Category</nz-form-label>
+        <nz-form-label>Collection</nz-form-label>
         <nz-form-control>
           <nz-select
-            formControlName="categoryId"
-            nzPlaceHolder="select category"
+            formControlName="collectionId"
+            nzPlaceHolder="select collection"
             nzAllowClear
+            nzShowSearch
+            nzServerSearch
+            (nzOnSearch)="handleSearchCollection($event)"
           >
-            @for (category of categories; track $index) {
-            <nz-option
-              [nzValue]="category.id"
-              [nzLabel]="category.name"
-            ></nz-option>
+            @if (!loadingCollections) 
+            { 
+              @for (collection of collections; track $index) 
+              {
+                <nz-option
+                  [nzValue]="collection.id"
+                  [nzLabel]="collection.name"
+                ></nz-option>
+              } 
+            } @else {
+              <nz-option nzDisabled nzCustomContent>
+                <span nz-icon nzType="loading" class="loading-icon"></span>
+                Loading Data...
+              </nz-option>
             }
           </nz-select>
         </nz-form-control>
       </nz-form-item>
-      <div class="collection-list__search-form--group-buttons">
+      <div class="final-test-list__search-form--group-buttons">
         <button nz-button type="button" (click)="clearSearch()">Clear</button>
         <button
           nz-button
@@ -52,12 +64,11 @@
       [nzPageSize]="table.pageSize"
       [nzPageIndex]="table.pageNumber"
       [nzFrontPagination]="false"
-      (nzPageIndexChange)="handlePageIndexChange($event)"
     >
       <thead>
         <tr>
           <th>Name</th>
-          <th>Category</th>
+          <th>Collection</th>
           <th>Action</th>
         </tr>
       </thead>
@@ -65,26 +76,31 @@
         @for (data of basicTable.data; track data.id) {
         <tr>
           <td>
-            <a [routerLink]="['/collection', (data.code | urlCode: data.id)]">{{ data.name }}</a>
+            <a [routerLink]="['/final-test', data.code | urlCode : data.id]">{{
+              data.name
+            }}</a>
           </td>
           <td>
-            {{ utils.findCategoryInTree(categories, data.categoryId)?.name }}
+            <a
+              [routerLink]="[
+                '/collection',
+                data.collection.code | urlCode : data.collection.id
+              ]"
+              >{{ data.collection.name }}</a
+            >
           </td>
           <td nz-flex nzGap="large">
-            <a [routerLink]="['/collection', (data.code | urlCode: data.id)]">
+            <a [routerLink]="['/final-test', data.code | urlCode : data.id]">
               <span nz-icon nzType="edit" nzTheme="twotone"></span>
             </a>
-            <a
-              nz-popconfirm
-              nzPopconfirmTitle="Are you sure delete this collection?"
-              (nzOnConfirm)="handleDelete(data.id)"
-            >
+            <a nz-popconfirm nzPopconfirmTitle="Are you sure delete this?">
               <span
                 nz-icon
-                nzType="delete"
                 nzTheme="twotone"
+                nzType="delete"
                 [nzTwotoneColor]="'#FF4C4C'"
-              ></span>
+              >
+              </span>
             </a>
           </td>
         </tr>
@@ -93,4 +109,4 @@
     </nz-table>
   </app-box>
 </div>
-<app-create-update-collection [(drawerVisible)]="drawerVisible"></app-create-update-collection>
+<app-create-update-final-test></app-create-update-final-test>

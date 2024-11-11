@@ -1,0 +1,28 @@
+<div class="drawer">
+  <button
+    nz-button
+    nzType="primary"
+    nzShape="circle"
+    class="drawer__show-button"
+    (click)="handleOpen()"
+  >
+    <span nz-icon nzType="plus" nzTheme="outline"></span>
+  </button>
+  <nz-drawer
+    [nzBodyStyle]="{ overflow: 'auto' }"
+    [nzMaskClosable]="false"
+    [nzWidth]="500"
+    [nzVisible]="visible"
+    [nzTitle]="title"
+    [nzFooter]="footerTpl"
+    (nzOnClose)="handleClose()"
+  >
+    <ng-container *nzDrawerContent>
+      <ng-content select="drawer-body"></ng-content>
+    </ng-container>
+    
+    <ng-template #footerTpl>
+      <ng-content select="drawer-footer"></ng-content>
+    </ng-template>
+  </nz-drawer>
+</div>

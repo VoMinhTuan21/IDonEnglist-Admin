@@ -13,7 +13,7 @@ export const initialTestConfigurationState: TestConfigurationState = {
     hasNextPage: false,
     hasPreviousPage: false,
     items: [],
-    pageIndex: 1,
+    pageNumber: 1,
     pageSize: 10,
     totalPages: 0,
     totalRecords: 0

@@ -1,0 +1,47 @@
+<app-drawer [title]="drawerTitle" [visible]="drawerVisible" (close)="close()" (open)="open()">
+  <form
+    nz-form
+    ngProjectAs="drawer-body"
+    [formGroup]="form"
+    nzLayout="vertical"
+  >
+    <nz-form-item>
+      <nz-form-label nzRequired>Name</nz-form-label>
+      <nz-form-control nzErrorTip="Please enter name">
+        <input nz-input placeholder="abcd" formControlName="name"/>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzRequired="">Collection</nz-form-label>
+      <nz-form-control nzErrorTip="Please select collection">
+        <nz-select
+          nzPlaceHolder="Select collection"
+          formControlName="collectionId"
+          nzAllowClear
+          nzServerSearch
+          nzShowSearch
+          (nzOnSearch)="handleSearch($event)"
+        >
+          @if (!loadingCollections) {
+            @for (collection of collections; track collection.id) {
+              <nz-option [nzValue]="collection.id" [nzLabel]="collection.name"></nz-option>
+            }
+          } @else {
+            <nz-option nzDisabled nzCustomContent>
+              <span nz-icon nzType="loading" class="loading-icon"></span>
+              Loading Data...
+            </nz-option>
+          }
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
+  </form>
+  <div ngProjectAs="drawer-footer">
+    <div style="float: right;">
+      <button nz-button style="margin-right: 8px;" (click)="close()">
+        Cancel
+      </button>
+      <button nz-button nzType="primary" [disabled]="isSubmitting" (click)="submitForm()">Submit</button>
+    </div>
+  </div>
+</app-drawer>
