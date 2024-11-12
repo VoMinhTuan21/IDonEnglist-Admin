@@ -16,3 +16,12 @@ export interface GetPaginationFinalTestsRequest extends PaginationRequest {
 export type CreateFinalTestRequest = Pick<FinalTestTableItem, 'name'> & {
   collectionId: number;
 }
+
+export type UpdateFinalTestRequest = CreateFinalTestRequest & {
+  id: number;
+}
+
+export type FinalTestSearch = {
+  keywords?: string;
+  collectionId?: number;
+}

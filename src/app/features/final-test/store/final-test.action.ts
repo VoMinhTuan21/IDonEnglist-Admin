@@ -1,6 +1,6 @@
 import { createAction, props } from "@ngrx/store";
 import { PaginatedList } from "@shared/models/common";
-import { CreateFinalTestRequest, FinalTestTableItem, GetPaginationFinalTestsRequest } from "../models/final-test.model";
+import { CreateFinalTestRequest, FinalTestSearch, FinalTestTableItem, GetPaginationFinalTestsRequest, UpdateFinalTestRequest } from "../models/final-test.model";
 
 const getPagination = createAction(
   '[Final Test] Get Pagination',
@@ -24,10 +24,44 @@ const createSuccess = createAction(
 );
 const createFailure = createAction(
   '[Final Test] Create Failure'
-)
+);
 
 const resetSubmitStatus = createAction(
   '[Final Test] Reset Submit Status'
+);
+
+const update = createAction(
+  '[Final Test] Update',
+  props<{data: UpdateFinalTestRequest}>()
+);
+const updateSuccess = createAction(
+  '[Final Test] Update Success',
+  props<{response: number}>()
+);
+const updateFailure = createAction(
+  '[Final Test] Update'
+);
+
+const setSearch = createAction(
+  '[Final Test]  Set Search',
+  props<{search: FinalTestSearch}>()
+);
+
+const setSelectedFinalTest = createAction(
+  '[Final Test] Set Selected Final Test',
+  props<{ id: number }>()
+);
+
+const remove = createAction(
+  '[Final Test] Remove',
+  props<{id: number}>()
+);
+const removeSuccess = createAction(
+  '[Final Test] Remove Success',
+  props<{response: number}>()
+);
+const removeFailure = createAction(
+  '[Final Test] Remove Failure'
 )
 
 const FinalTestActions = {
@@ -39,7 +73,19 @@ const FinalTestActions = {
   createSuccess,
   createFailure,
 
-  resetSubmitStatus
+  resetSubmitStatus,
+
+  update,
+  updateFailure,
+  updateSuccess,
+
+  setSearch,
+
+  setSelectedFinalTest,
+
+  remove,
+  removeSuccess,
+  removeFailure
 }
 
 export default FinalTestActions;

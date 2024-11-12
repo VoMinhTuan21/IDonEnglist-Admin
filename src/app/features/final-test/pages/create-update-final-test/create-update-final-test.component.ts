@@ -15,7 +15,7 @@ import {
 } from '@angular/forms';
 import { CollectionService } from '@features/collection/collection.service';
 import { CollectionMin } from '@features/collection/models/collection.model';
-import CollectionActions from '@features/collection/store/collection.action';
+import { UpdateFinalTestRequest } from '@features/final-test/models/final-test.model';
 import FinalTestActions from '@features/final-test/store/final-test.action';
 import { FinalTestSelect } from '@features/final-test/store/final-test.selector';
 import { Store } from '@ngrx/store';
@@ -27,9 +27,11 @@ import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import {
   debounceTime,
+  filter,
   Subject,
   switchMap,
-  takeUntil
+  takeUntil,
+  withLatestFrom
 } from 'rxjs';
 
 @Component({
@@ -42,7 +44,7 @@ import {
     NzSelectModule,
     DrawerComponent,
     NzInputModule,
-    NzIconModule
+    NzIconModule,
   ],
   templateUrl: './create-update-final-test.component.html',
   styleUrl: './create-update-final-test.component.scss',
@@ -55,6 +57,7 @@ export class CreateUpdateFinalTestComponent implements OnInit, OnDestroy {
   loadingCollections: boolean = false;
   collectionSearchChange$ = new Subject<string>();
   isSubmitting: boolean = false;
+  finalTestId: number = 0;
   unsubscribe$ = new Subject<void>();
 
   form: FormGroup<{
@@ -68,7 +71,7 @@ export class CreateUpdateFinalTestComponent implements OnInit, OnDestroy {
   constructor(
     private fb: NonNullableFormBuilder,
     private collectionService: CollectionService,
-    private store: Store,
+    private store: Store
   ) {}
 
   ngOnInit(): void {
@@ -80,7 +83,7 @@ export class CreateUpdateFinalTestComponent implements OnInit, OnDestroy {
           this.collectionService.getPagination({
             minSize: true,
             pageNumber: 1,
-            pageSize: 10,
+            pageSize: 5,
             keywords,
           })
         )
@@ -99,13 +102,36 @@ export class CreateUpdateFinalTestComponent implements OnInit, OnDestroy {
       .select(FinalTestSelect.submitStatus)
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((value) => {
-        if (value === "success" && this.drawerVisible) {
+        if (value === 'success' && this.drawerVisible) {
           this.form.reset();
           this.close();
-          this.drawerTitle = "Create";
-          this.store.dispatch(CollectionActions.resetSubmitStatus());
+          this.store.dispatch(FinalTestActions.resetSubmitStatus());
         }
-      })
+      });
+
+    this.store
+      .select(FinalTestSelect.selectedFinalTestId)
+      .pipe(
+        takeUntil(this.unsubscribe$),
+        filter((id) => id !== 0),
+        withLatestFrom(this.store.select(FinalTestSelect.table))
+      )
+      .subscribe(([id, table]) => {
+        this.finalTestId = id;
+        this.open();
+        this.drawerTitle = "Update";
+        
+        const finalTest = table?.items?.find(ft => ft.id === id);
+
+        if (finalTest) {
+          this.form.patchValue({
+            name: finalTest.name,
+            collectionId: finalTest.collection.id
+          });
+
+          this.collections = [finalTest.collection];
+        }
+      });
   }
 
   ngOnDestroy(): void {
@@ -119,8 +145,12 @@ export class CreateUpdateFinalTestComponent implements OnInit, OnDestroy {
   }
 
   close() {
+    this.form.reset();
+    this.drawerTitle = "Create";
+    this.store.dispatch(FinalTestActions.setSelectedFinalTest({ id: 0 }));
     this.drawerVisible = false;
     this.drawerVisibleChange.emit(this.drawerVisible);
+    this.finalTestId = 0;
   }
 
   handleSearch(value: string) {
@@ -131,22 +161,28 @@ export class CreateUpdateFinalTestComponent implements OnInit, OnDestroy {
   submitForm(): void {
     if (this.form.valid) {
       const { name, collectionId } = this.form.value;
+      const isUpdate = this.finalTestId !== 0;
 
-      this.store.dispatch(
-        FinalTestActions.create({
-          data: {
-            collectionId: collectionId ?? 0,
-            name: name ?? ""
-          }
-        })
-      );
+      const data = {
+        collectionId: collectionId ?? 0,
+        name: name ?? '',
+        ...(isUpdate ? { id: this.finalTestId } : {}),
+      };
+
+      if (this.finalTestId) {
+        this.store.dispatch(
+          FinalTestActions.update({ data: data as UpdateFinalTestRequest })
+        );
+      } else {
+        this.store.dispatch(FinalTestActions.create({ data }));
+      }
     } else {
       Object.values(this.form.controls).forEach((control) => {
         if (control.invalid) {
           control.markAsDirty();
           control.updateValueAndValidity({ onlySelf: true });
         }
-      })
+      });
     }
   }
 }

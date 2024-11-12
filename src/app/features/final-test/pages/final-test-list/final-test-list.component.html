@@ -64,6 +64,7 @@
       [nzPageSize]="table.pageSize"
       [nzPageIndex]="table.pageNumber"
       [nzFrontPagination]="false"
+      (nzPageIndexChange)="handlePageIndexChange($event)"
     >
       <thead>
         <tr>
@@ -75,11 +76,7 @@
       <tbody>
         @for (data of basicTable.data; track data.id) {
         <tr>
-          <td>
-            <a [routerLink]="['/final-test', data.code | urlCode : data.id]">{{
-              data.name
-            }}</a>
-          </td>
+          <td (click)="handleOpenUpdateDrawer(data.id)">{{ data.name }}</td>
           <td>
             <a
               [routerLink]="[
@@ -90,10 +87,8 @@
             >
           </td>
           <td nz-flex nzGap="large">
-            <a [routerLink]="['/final-test', data.code | urlCode : data.id]">
-              <span nz-icon nzType="edit" nzTheme="twotone"></span>
-            </a>
-            <a nz-popconfirm nzPopconfirmTitle="Are you sure delete this?">
+            <span (click)="handleOpenUpdateDrawer(data.id)" nz-icon nzType="edit" nzTheme="twotone"></span>
+            <a nz-popconfirm nzPopconfirmTitle="Are you sure delete this?" (nzOnConfirm)="handleDelete(data.id)">
               <span
                 nz-icon
                 nzTheme="twotone"

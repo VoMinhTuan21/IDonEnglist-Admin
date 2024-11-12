@@ -141,6 +141,7 @@ export class FinalTestListComponent implements OnInit, OnDestroy {
 
   handleSearch() {
     const { keywords, collectionId } = this.searchForm.value;
+    this.store.dispatch(FinalTestActions.setSearch({search: {...Utils.cleanObject({keywords, collectionId})}}))
     this.router.navigate(['/final-test'], {
       queryParams: { ...Utils.cleanObject({ keywords, collectionId })}
     })
@@ -149,5 +150,23 @@ export class FinalTestListComponent implements OnInit, OnDestroy {
   clearSearch() {
     this.searchForm.reset();
     this.router.navigate(['/final-test']);
+  }
+
+  handleOpenUpdateDrawer(id: number) {
+    this.store.dispatch(FinalTestActions.setSelectedFinalTest({id}))
+  }
+
+  handlePageIndexChange(pageNumber: number) {
+    const { keywords, collectionId } = this.searchForm.value;
+    this.getTableData({...Utils.cleanObject({
+      pageSize: 5,
+      pageNumber,
+      keywords,
+      collectionId
+    })})
+  }
+
+  handleDelete(id: number) {
+    this.store.dispatch(FinalTestActions.remove({ id }));
   }
 }

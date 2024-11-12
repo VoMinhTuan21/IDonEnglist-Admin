@@ -6,6 +6,7 @@ import { catchError, map, mergeMap, of, take, withLatestFrom } from 'rxjs';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { select, Store } from '@ngrx/store';
 import { FinalTestSelect } from './final-test.selector';
+import { Utils } from '@shared/utils/utils';
 
 @Injectable()
 export class FinalTestEffects {
@@ -51,11 +52,86 @@ export class FinalTestEffects {
     this.actions$.pipe(
       ofType(FinalTestActions.createSuccess),
       withLatestFrom(this.store.pipe(select(FinalTestSelect.table))),
-      take(1),
       mergeMap(([action, table]) => {
         return of(
           FinalTestActions.getPagination({
             filter: { pageNumber: table.pageNumber, pageSize: table.pageSize },
+          })
+        );
+      })
+    )
+  );
+
+  update$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(FinalTestActions.update),
+      mergeMap(({ data }) =>
+        this.finalTestService.update(data).pipe(
+          map((value) => {
+            this.messageService.success('Update Success');
+            return FinalTestActions.updateSuccess({ response: value });
+          }),
+          catchError(() => of(FinalTestActions.updateFailure()))
+        )
+      )
+    )
+  );
+
+  updateSuccess$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(FinalTestActions.updateSuccess),
+      withLatestFrom(
+        this.store.select(FinalTestSelect.table),
+        this.store.select(FinalTestSelect.search)
+      ),
+      mergeMap(([action, table, search]) => {
+        return of(
+          FinalTestActions.getPagination({
+            filter: {
+              ...Utils.cleanObject({
+                pageSize: table.pageSize,
+                pageNumber: table.pageNumber,
+                ...search,
+              }),
+            },
+          })
+        );
+      })
+    )
+  );
+
+  delete$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(FinalTestActions.remove),
+      mergeMap(({ id }) =>
+        this.finalTestService.delete(id).pipe(
+          map((value) => {
+            this.messageService.success('Delete success');
+            return FinalTestActions.removeSuccess({ response: value });
+          }),
+          catchError(() => of(FinalTestActions.removeFailure()))
+        )
+      )
+    )
+  );
+
+  deleteSuccess$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(FinalTestActions.removeSuccess),
+      withLatestFrom(
+        this.store.select(FinalTestSelect.table),
+        this.store.select(FinalTestSelect.search)
+      ),
+      mergeMap(([action, table, search]) => {
+        return of(
+          FinalTestActions.getPagination({
+            filter: {
+              ...Utils.cleanObject({
+                pageSize: table.pageSize,
+                pageNumber: table.pageNumber,
+                ...search,
+              }),
+            },
           })
         );
       })

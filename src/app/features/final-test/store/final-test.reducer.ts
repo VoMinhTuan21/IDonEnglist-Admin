@@ -32,6 +32,40 @@ const finalTestReducer = createReducer(
 
   mutableOn(FinalTestActions.resetSubmitStatus, (state) => {
     state.submitStatus = "idle";
+  }),
+
+  mutableOn(FinalTestActions.update, (state) => {
+    state.submitStatus = 'pending';
+    state.isSubmitting = true;
+  }),
+  mutableOn(FinalTestActions.updateSuccess, (state) => {
+    state.submitStatus = 'success';
+    state.isSubmitting = false;
+  }),
+  mutableOn(FinalTestActions.updateFailure, (state) => {
+    state.submitStatus = 'error';
+    state.isSubmitting = false;
+  }),
+
+  mutableOn(FinalTestActions.setSearch, (state, { search }) => {
+    state.search = search;
+  }),
+
+  mutableOn(FinalTestActions.setSelectedFinalTest, (state, { id }) => {
+    state.selectedFinalTestId = id;
+  }),
+
+  mutableOn(FinalTestActions.remove, (state) => {
+    state.isSubmitting = true;
+    state.submitStatus = "pending";
+  }),
+  mutableOn(FinalTestActions.removeSuccess, (state) => {
+    state.isSubmitting = false;
+    state.submitStatus = "success";
+  }),
+  mutableOn(FinalTestActions.removeFailure, (state) => {
+    state.isSubmitting = false;
+    state.submitStatus = "error";
   })
 );
 

@@ -48,7 +48,7 @@ import { UrlCodePipe } from '@core/pipes/url.pipe';
     NzSelectModule,
     NzButtonModule,
     RouterLink,
-    UrlCodePipe
+    UrlCodePipe,
   ],
   templateUrl: './collection-list.component.html',
   styleUrl: './collection-list.component.scss',
@@ -114,14 +114,14 @@ export class CollectionListComponent implements OnInit, OnDestroy {
 
         this.getTableData({ ...Utils.cleanObject(filter) });
       });
-    
+
     this.route.paramMap
       .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(params => {
-        if (Number(params.get("id")?.split("-").pop())) {
+      .subscribe((params) => {
+        if (Number(params.get('id')?.split('-').pop())) {
           this.drawerVisible = true;
         }
-      })
+      });
   }
 
   ngOnDestroy(): void {
@@ -134,7 +134,15 @@ export class CollectionListComponent implements OnInit, OnDestroy {
   }
 
   handlePageIndexChange(pageIndex: number) {
-    this.getTableData({ pageNumber: pageIndex, pageSize: 5 });
+    const { keywords, categoryId } = this.searchForm.value;
+    this.getTableData({
+      ...Utils.cleanObject({
+        pageNumber: pageIndex,
+        pageSize: 5,
+        keywords,
+        categoryId,
+      }),
+    });
   }
 
   handleSearch() {
@@ -157,6 +165,6 @@ export class CollectionListComponent implements OnInit, OnDestroy {
   }
 
   handleDelete(id: number) {
-    this.store.dispatch(CollectionActions.remove({id}));
+    this.store.dispatch(CollectionActions.remove({ id }));
   }
 }

@@ -4,6 +4,7 @@ import {
   CreateFinalTestRequest,
   FinalTestTableItem,
   GetPaginationFinalTestsRequest,
+  UpdateFinalTestRequest,
 } from './models/final-test.model';
 import { Observable } from 'rxjs';
 import { PaginatedList } from '@shared/models/common';
@@ -24,5 +25,13 @@ export class FinalTestService {
 
   create(data: CreateFinalTestRequest): Observable<number> {
     return this.httpService.post<number>(FinalTestAPI.create, data);
+  }
+
+  update(data: UpdateFinalTestRequest): Observable<number> {
+    return this.httpService.put<number>(FinalTestAPI.update, data);
+  }
+
+  delete(id: number): Observable<number> {
+    return this.httpService.delete<number>(`${FinalTestAPI.delete}/${id}`);
   }
 }

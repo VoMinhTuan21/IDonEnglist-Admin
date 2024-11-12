@@ -13,14 +13,5 @@ export const finalTestRoutes: Routes = [
     },
     data: { isAuthLayout: true },
     canActivate: [AuthGuard],
-  },
-  {
-    path: 'final-test/:id',
-    component: FinalTestListComponent,
-    resolve: {
-      layout: setLayout(PageLayout.Authorized),
-    },
-    data: { isAuthLayout: true },
-    canActivate: [AuthGuard],
-  },
+  }
 ];
