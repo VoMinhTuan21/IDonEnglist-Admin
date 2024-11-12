@@ -21,7 +21,7 @@ export interface PaginationRequest {
 
 export interface PaginatedList<T> {
   items: Array<T>;
-  pageIndex: number;
+  pageNumber: number;
   pageSize: number;
   totalPages: number;
   totalRecords: number;

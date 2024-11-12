@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpService } from '@core/http/http.service';
 import {
+  CollectionMin,
   CollectionTableItem,
   CreateCollectionRequest,
   GetPaginationCollectionRequest,
@@ -16,7 +17,7 @@ export class CollectionService {
 
   getPagination(
     filter: GetPaginationCollectionRequest
-  ): Observable<PaginatedList<CollectionTableItem>> {
+  ): Observable<PaginatedList<CollectionTableItem | CollectionMin>> {
     return this.httpService.get<PaginatedList<CollectionTableItem>>(
       CollectionAPI.getPagination,
       filter

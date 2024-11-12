@@ -6,6 +6,8 @@ import { catchError, map, mergeMap, of, take, withLatestFrom } from 'rxjs';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { select, Store } from '@ngrx/store';
 import { CollectionSelect } from './collection.selector';
+import { PaginatedList } from '@shared/models/common';
+import { CollectionTableItem } from '../models/collection.model';
 
 @Injectable()
 export class CollectionEffects {
@@ -23,7 +25,7 @@ export class CollectionEffects {
         this.collectionService.getPagination(filter).pipe(
           map((paginatedCollections) =>
             CollectionActions.getPaginationSuccess({
-              response: paginatedCollections,
+              response: paginatedCollections as PaginatedList<CollectionTableItem>,
             })
           ),
           catchError((error) => of(CollectionActions.getPaginationFailure()))
@@ -55,7 +57,7 @@ export class CollectionEffects {
       mergeMap(([action, table]) => {
         return of(
           CollectionActions.getPagination({
-            filter: { pageNumber: table.pageIndex, pageSize: table.pageSize },
+            filter: { pageNumber: table.pageNumber, pageSize: table.pageSize },
           })
         );
       })
@@ -99,7 +101,7 @@ export class CollectionEffects {
       take(1),
       mergeMap(([action, table]) => {
         const getPaginationAction = CollectionActions.getPagination({
-          filter: { pageNumber: table.pageIndex, pageSize: table.pageSize },
+          filter: { pageNumber: table.pageNumber, pageSize: table.pageSize },
         });
         const resetSubmitStatusAction = CollectionActions.resetSubmitStatus();
   

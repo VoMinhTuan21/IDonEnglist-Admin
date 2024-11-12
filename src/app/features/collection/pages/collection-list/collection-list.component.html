@@ -50,7 +50,7 @@
       [nzLoading]="loadingTable"
       [nzTotal]="table.totalRecords"
       [nzPageSize]="table.pageSize"
-      [nzPageIndex]="table.pageIndex"
+      [nzPageIndex]="table.pageNumber"
       [nzFrontPagination]="false"
       (nzPageIndexChange)="handlePageIndexChange($event)"
     >
@@ -65,13 +65,13 @@
         @for (data of basicTable.data; track data.id) {
         <tr>
           <td>
-            <a [routerLink]="['/collection', data.id]">{{ data.name }}</a>
+            <a [routerLink]="['/collection', (data.code | urlCode: data.id)]">{{ data.name }}</a>
           </td>
           <td>
             {{ utils.findCategoryInTree(categories, data.categoryId)?.name }}
           </td>
           <td nz-flex nzGap="large">
-            <a [routerLink]="['/collection', data.id]">
+            <a [routerLink]="['/collection', (data.code | urlCode: data.id)]">
               <span nz-icon nzType="edit" nzTheme="twotone"></span>
             </a>
             <a

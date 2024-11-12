@@ -1,0 +1,107 @@
+<div class="final-test-list">
+  <app-box>
+    <form
+      nz-form
+      [formGroup]="searchForm"
+      [nzLayout]="'vertical'"
+      class="final-test-list__search-form"
+      (ngSubmit)="handleSearch()"
+    >
+      <nz-form-item>
+        <nz-form-label>Keywords</nz-form-label>
+        <nz-form-control>
+          <input nz-input placeholder="abcd" formControlName="keywords" />
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label>Collection</nz-form-label>
+        <nz-form-control>
+          <nz-select
+            formControlName="collectionId"
+            nzPlaceHolder="select collection"
+            nzAllowClear
+            nzShowSearch
+            nzServerSearch
+            (nzOnSearch)="handleSearchCollection($event)"
+          >
+            @if (!loadingCollections) 
+            { 
+              @for (collection of collections; track $index) 
+              {
+                <nz-option
+                  [nzValue]="collection.id"
+                  [nzLabel]="collection.name"
+                ></nz-option>
+              } 
+            } @else {
+              <nz-option nzDisabled nzCustomContent>
+                <span nz-icon nzType="loading" class="loading-icon"></span>
+                Loading Data...
+              </nz-option>
+            }
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+      <div class="final-test-list__search-form--group-buttons">
+        <button nz-button type="button" (click)="clearSearch()">Clear</button>
+        <button
+          nz-button
+          nzType="primary"
+          [nzLoading]="loadingTable"
+          [disabled]="loadingTable"
+        >
+          <span nz-icon nzType="search" nzTheme="outline"></span>Search
+        </button>
+      </div>
+    </form>
+  </app-box>
+  <app-box>
+    <nz-table
+      #basicTable
+      [nzData]="table.items"
+      [nzLoading]="loadingTable"
+      [nzTotal]="table.totalRecords"
+      [nzPageSize]="table.pageSize"
+      [nzPageIndex]="table.pageNumber"
+      [nzFrontPagination]="false"
+      (nzPageIndexChange)="handlePageIndexChange($event)"
+    >
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Collection</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (data of basicTable.data; track data.id) {
+        <tr>
+          <td (click)="handleOpenUpdateDrawer(data.id)">{{ data.name }}</td>
+          <td>
+            <a
+              [routerLink]="[
+                '/collection',
+                data.collection.code | urlCode : data.collection.id
+              ]"
+              >{{ data.collection.name }}</a
+            >
+          </td>
+          <td nz-flex nzGap="large">
+            <span (click)="handleOpenUpdateDrawer(data.id)" nz-icon nzType="edit" nzTheme="twotone"></span>
+            <a nz-popconfirm nzPopconfirmTitle="Are you sure delete this?" (nzOnConfirm)="handleDelete(data.id)">
+              <span
+                nz-icon
+                nzTheme="twotone"
+                nzType="delete"
+                [nzTwotoneColor]="'#FF4C4C'"
+              >
+              </span>
+            </a>
+          </td>
+        </tr>
+        }
+      </tbody>
+    </nz-table>
+  </app-box>
+</div>
+<app-create-update-final-test></app-create-update-final-test>

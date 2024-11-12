@@ -32,6 +32,8 @@ import { TestConfigurationEffects } from '@features/test-configuration/store/tes
 import testConfigurationReducer from '@features/test-configuration/store/test-configuration.reducer';
 import { CollectionEffects } from '@features/collection/store/collection.effect';
 import collectionReducer from '@features/collection/store/collection.reducer';
+import finalTestReducer from '@features/final-test/store/final-test.reducer';
+import { FinalTestEffects } from '@features/final-test/store/final-test.effect';
 
 registerLocaleData(en);
 
@@ -51,6 +53,7 @@ export const appConfig: ApplicationConfig = {
         category: categoryReducer,
         testConfiguration: testConfigurationReducer,
         collection: collectionReducer,
+        finalTest: finalTestReducer
       },
       { metaReducers: [resetOnLogout] }
     ),
@@ -60,6 +63,7 @@ export const appConfig: ApplicationConfig = {
       CategoryEffects,
       TestConfigurationEffects,
       CollectionEffects,
+      FinalTestEffects
     ]),
   ],
 };

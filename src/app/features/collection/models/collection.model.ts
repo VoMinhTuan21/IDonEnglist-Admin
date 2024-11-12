@@ -11,6 +11,7 @@ export interface CollectionTableItem {
 export interface GetPaginationCollectionRequest extends PaginationRequest {
   categoryId?: number;
   keywords?: string;
+  minSize?: boolean;
 }
 
 export type CreateCollectionRequest = Pick<CollectionTableItem , "name" | "categoryId"> & {
@@ -20,3 +21,4 @@ export type CreateCollectionRequest = Pick<CollectionTableItem , "name" | "categ
 export type UpdateCollectionRequest = Partial<CreateCollectionRequest> & {
   id: number;
 }
+export type CollectionMin = Omit<CollectionTableItem, "thumbnail" | "categoryId">;
