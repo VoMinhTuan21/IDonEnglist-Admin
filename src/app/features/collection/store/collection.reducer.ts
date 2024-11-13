@@ -58,6 +58,14 @@ const collectionReducer = createReducer(
   mutableOn(CollectionActions.removeFailure, (state) => {
     state.isSubmitting = false;
     state.submitStatus = "error";
+  }),
+
+  mutableOn(CollectionActions.setSearch, (state, {search}) => {
+    state.search = search;
+  }),
+
+  mutableOn(CollectionActions.setSelectedCollectionId, (state, { id }) => {
+    state.selectedCollectionId = id;
   })
 );
 

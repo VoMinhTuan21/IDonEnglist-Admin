@@ -22,3 +22,8 @@ export type UpdateCollectionRequest = Partial<CreateCollectionRequest> & {
   id: number;
 }
 export type CollectionMin = Omit<CollectionTableItem, "thumbnail" | "categoryId">;
+
+export type CollectionSearch = {
+  keywords?: string;
+  categoryId?: number;
+}

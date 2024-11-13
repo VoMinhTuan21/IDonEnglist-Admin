@@ -13,14 +13,5 @@ export const collectionRoutes: Routes = [
     },
     data: { isAuthLayout: true },
     canActivate: [AuthGuard]
-  },
-  {
-    path: "collection/:id",
-    component: CollectionListComponent,
-    resolve: {
-      layout: setLayout(PageLayout.Authorized)
-    },
-    data: { isAuthLayout: true },
-    canActivate: [AuthGuard]
-  },
+  }
 ]
