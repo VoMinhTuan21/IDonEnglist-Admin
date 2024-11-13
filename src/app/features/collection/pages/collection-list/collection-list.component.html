@@ -64,16 +64,12 @@
       <tbody>
         @for (data of basicTable.data; track data.id) {
         <tr>
-          <td>
-            <a [routerLink]="['/collection', (data.code | urlCode: data.id)]">{{ data.name }}</a>
-          </td>
+          <td (click)="handleOpenUpdateDrawer(data.id)">{{ data.name }}</td>
           <td>
             {{ utils.findCategoryInTree(categories, data.categoryId)?.name }}
           </td>
           <td nz-flex nzGap="large">
-            <a [routerLink]="['/collection', (data.code | urlCode: data.id)]">
-              <span nz-icon nzType="edit" nzTheme="twotone"></span>
-            </a>
+            <span (click)="handleOpenUpdateDrawer(data.id)" nz-icon nzType="edit" nzTheme="twotone"></span>
             <a
               nz-popconfirm
               nzPopconfirmTitle="Are you sure delete this collection?"

@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { CollectionTableItem, CreateCollectionRequest, GetPaginationCollectionRequest, UpdateCollectionRequest } from '../models/collection.model';
+import { CollectionSearch, CollectionTableItem, CreateCollectionRequest, GetPaginationCollectionRequest, UpdateCollectionRequest } from '../models/collection.model';
 import { PaginatedList } from '@shared/models/common';
 
 const getPagination = createAction(
@@ -46,7 +46,17 @@ const removeSuccess = createAction(
 );
 const removeFailure = createAction(
   '[Collection] Remove Failure'
-)
+);
+
+const setSearch = createAction(
+  '[Collection] Set Search',
+  props<{search: CollectionSearch}>()
+);
+
+const setSelectedCollectionId = createAction(
+  '[Collection] Set Selected Collection Id',
+  props<{id: number}>()
+);
 
 const CollectionActions = {
   getPagination,
@@ -65,7 +75,11 @@ const CollectionActions = {
 
   remove,
   removeSuccess,
-  removeFailure
+  removeFailure,
+
+  setSearch,
+
+  setSelectedCollectionId
 }
 
 export default CollectionActions;

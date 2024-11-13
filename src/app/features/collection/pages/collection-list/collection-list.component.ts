@@ -5,6 +5,7 @@ import {
   NonNullableFormBuilder,
   ReactiveFormsModule,
 } from '@angular/forms';
+import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { Category } from '@features/category/models/category.model';
 import CategoryActions from '@features/category/store/category.action';
 import { CategorySelect } from '@features/category/store/category.selector';
@@ -28,8 +29,6 @@ import { NzTableModule } from 'ng-zorro-antd/table';
 import { map, Subject, takeUntil } from 'rxjs';
 import { BoxComponent } from '../../../../shared/components/box/box.component';
 import { CreateUpdateCollectionComponent } from '../create-update-collection/create-update-collection.component';
-import { ActivatedRoute, ParamMap, Router, RouterLink } from '@angular/router';
-import { UrlCodePipe } from '@core/pipes/url.pipe';
 
 @Component({
   selector: 'app-collection-list',
@@ -46,9 +45,7 @@ import { UrlCodePipe } from '@core/pipes/url.pipe';
     ReactiveFormsModule,
     NzInputModule,
     NzSelectModule,
-    NzButtonModule,
-    RouterLink,
-    UrlCodePipe,
+    NzButtonModule
   ],
   templateUrl: './collection-list.component.html',
   styleUrl: './collection-list.component.scss',
@@ -147,6 +144,15 @@ export class CollectionListComponent implements OnInit, OnDestroy {
 
   handleSearch() {
     const { keywords, categoryId } = this.searchForm.value;
+    this.store.dispatch(
+      CollectionActions.setSearch({
+        search: {
+          keywords,
+          categoryId,
+        },
+      })
+    );
+
     this.router.navigate(['/collection'], {
       queryParams: { ...Utils.cleanObject({ keywords, categoryId }) },
     });
@@ -161,10 +167,15 @@ export class CollectionListComponent implements OnInit, OnDestroy {
 
   clearSearch() {
     this.searchForm.reset();
+    this.store.dispatch(CollectionActions.setSearch({search: {}}));
     this.router.navigate(['/collection']);
   }
 
   handleDelete(id: number) {
     this.store.dispatch(CollectionActions.remove({ id }));
+  }
+
+  handleOpenUpdateDrawer(id: number) {
+    this.store.dispatch(CollectionActions.setSelectedCollectionId({ id }));
   }
 }

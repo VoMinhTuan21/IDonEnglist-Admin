@@ -8,6 +8,7 @@ import { select, Store } from '@ngrx/store';
 import { CollectionSelect } from './collection.selector';
 import { PaginatedList } from '@shared/models/common';
 import { CollectionTableItem } from '../models/collection.model';
+import { Utils } from '@shared/utils/utils';
 
 @Injectable()
 export class CollectionEffects {
@@ -25,7 +26,8 @@ export class CollectionEffects {
         this.collectionService.getPagination(filter).pipe(
           map((paginatedCollections) =>
             CollectionActions.getPaginationSuccess({
-              response: paginatedCollections as PaginatedList<CollectionTableItem>,
+              response:
+                paginatedCollections as PaginatedList<CollectionTableItem>,
             })
           ),
           catchError((error) => of(CollectionActions.getPaginationFailure()))
@@ -52,14 +54,24 @@ export class CollectionEffects {
   createSuccess$ = createEffect(() =>
     this.actions$.pipe(
       ofType(CollectionActions.createSuccess),
-      withLatestFrom(this.store.pipe(select(CollectionSelect.table))),
-      take(1),
-      mergeMap(([action, table]) => {
-        return of(
-          CollectionActions.getPagination({
-            filter: { pageNumber: table.pageNumber, pageSize: table.pageSize },
-          })
-        );
+      withLatestFrom(
+        this.store.pipe(select(CollectionSelect.table)),
+        this.store.pipe(select(CollectionSelect.search))
+      ),
+      mergeMap(([action, table, search]) => {
+        const getPagination = CollectionActions.getPagination({
+          filter: {
+            ...Utils.cleanObject({
+              pageNumber: table.pageNumber,
+              pageSize: table.pageSize,
+              ...search,
+            }),
+          },
+        });
+
+        const resetSubmitStatus = CollectionActions.resetSubmitStatus();
+
+        return of(getPagination, resetSubmitStatus);
       })
     )
   );
@@ -76,6 +88,31 @@ export class CollectionEffects {
           catchError((error) => of(CollectionActions.updateFailure()))
         )
       )
+    )
+  );
+
+  updateSuccess$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(CollectionActions.updateSuccess),
+      withLatestFrom(
+        this.store.pipe(select(CollectionSelect.table)),
+        this.store.pipe(select(CollectionSelect.search))
+      ),
+      mergeMap(([action, table, search]) => {
+        const getPagination = CollectionActions.getPagination({
+          filter: {
+            ...Utils.cleanObject({
+              pageSize: table.pageSize,
+              pageNumber: table.pageNumber,
+              ...search,
+            }),
+          },
+        });
+
+        const resetSubmitStatus = CollectionActions.resetSubmitStatus();
+
+        return of(getPagination, resetSubmitStatus);
+      })
     )
   );
 
@@ -97,14 +134,22 @@ export class CollectionEffects {
   deleteSuccess$ = createEffect(() =>
     this.actions$.pipe(
       ofType(CollectionActions.removeSuccess),
-      withLatestFrom(this.store.pipe(select(CollectionSelect.table))),
-      take(1),
-      mergeMap(([action, table]) => {
+      withLatestFrom(
+        this.store.pipe(select(CollectionSelect.table)),
+        this.store.pipe(select(CollectionSelect.search))
+      ),
+      mergeMap(([action, table, search]) => {
         const getPaginationAction = CollectionActions.getPagination({
-          filter: { pageNumber: table.pageNumber, pageSize: table.pageSize },
+          filter: {
+            ...Utils.cleanObject({
+              pageNumber: table.pageNumber,
+              pageSize: table.pageSize,
+              ...search,
+            }),
+          },
         });
         const resetSubmitStatusAction = CollectionActions.resetSubmitStatus();
-  
+
         return of(getPaginationAction, resetSubmitStatusAction);
       })
     )

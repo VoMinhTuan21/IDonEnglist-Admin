@@ -19,6 +19,7 @@ import { CategorySelect } from '@features/category/store/category.selector';
 import CollectionActions from '@features/collection/store/collection.action';
 import { CollectionSelect } from '@features/collection/store/collection.selector';
 import { Store } from '@ngrx/store';
+import { DrawerComponent } from '@shared/components/drawer/drawer.component';
 import { FileModel } from '@shared/models/common';
 import { UploadImageUrl } from '@shared/models/constants';
 import { Utils } from '@shared/utils/utils';
@@ -31,7 +32,14 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { NzUploadFile, NzUploadModule } from 'ng-zorro-antd/upload';
-import { filter, map, Observable, Subject, takeUntil, withLatestFrom } from 'rxjs';
+import {
+  filter,
+  map,
+  Observable,
+  Subject,
+  takeUntil,
+  withLatestFrom,
+} from 'rxjs';
 
 @Component({
   selector: 'app-create-update-collection',
@@ -45,7 +53,8 @@ import { filter, map, Observable, Subject, takeUntil, withLatestFrom } from 'rxj
     NzInputModule,
     NzSelectModule,
     NzUploadModule,
-    NzSpinModule
+    NzSpinModule,
+    DrawerComponent,
   ],
   templateUrl: './create-update-collection.component.html',
   styleUrl: './create-update-collection.component.scss',
@@ -86,6 +95,10 @@ export class CreateUpdateCollectionComponent implements OnInit, OnDestroy {
 
   close() {
     this.drawerVisible = false;
+    this.form.reset();
+    this.drawerTitle = 'Create';
+    this.collectionId = 0;
+    this.store.dispatch(CollectionActions.setSelectedCollectionId({ id: 0 }));
     this.drawerVisibleChange.emit(this.drawerVisible);
   }
 
@@ -112,51 +125,34 @@ export class CreateUpdateCollectionComponent implements OnInit, OnDestroy {
         if (value === 'success' && this.drawerVisible) {
           this.form.reset();
           this.close();
-          this.drawerTitle = "Create";
-          this.store.dispatch(CollectionActions.resetSubmitStatus());
-          if (this.collectionId) {
-            this.router.navigate(["/collection"])
-          }
         }
       });
-    
+
     this.store
-      .select(CollectionSelect.table)
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(value => {
-        const collection = value.items?.find(cl => cl.id === this.collectionId);
+      .select(CollectionSelect.selectedCollectionId)
+      .pipe(
+        takeUntil(this.unsubscribe$),
+        filter((id) => id !== 0),
+        withLatestFrom(this.store.select(CollectionSelect.table))
+      )
+      .subscribe(([id, table]) => {
+        this.collectionId = id;
+        this.open();
+        this.drawerTitle = 'Update';
 
-        if (collection) {
-          this.drawerTitle = "Update";
+        const finalTest = table?.items?.find((ft) => ft.id === id);
+
+        if (finalTest) {
           this.form.patchValue({
-            categoryId: collection.categoryId,
-            name: collection.name,
+            name: finalTest.name,
+            categoryId: finalTest.categoryId,
             thumbnail: {
-              publicId: "",
-              url: collection.thumbnail
-            }
-          })
+              publicId: '',
+              url: finalTest.thumbnail,
+            },
+          });
         }
-      })
-
-    this.route.paramMap
-      .pipe(takeUntil(this.unsubscribe$), filter(params => !!Number(params.get("id")?.split("-").pop())), withLatestFrom(this.store.select(CollectionSelect.table)))
-      .subscribe(([params, table])=> {
-        this.collectionId = Number(params.get("id")?.split("-").pop());
-        const collection = table.items?.find(cl => cl.id === this.collectionId);
-
-        if (collection) {
-          this.drawerTitle = "Update";
-          this.form.patchValue({
-            categoryId: collection.categoryId,
-            name: collection.name,
-            thumbnail: {
-              publicId: "",
-              url: collection.thumbnail
-            }
-          })
-        }
-      })
+      });
   }
 
   ngOnDestroy(): void {
@@ -206,8 +202,8 @@ export class CreateUpdateCollectionComponent implements OnInit, OnDestroy {
               id: this.collectionId,
               categoryId,
               name,
-              ...(thumbnail?.publicId ? {thumbnail} : {})
-            }
+              ...(thumbnail?.publicId ? { thumbnail } : {}),
+            },
           })
         );
       } else {
