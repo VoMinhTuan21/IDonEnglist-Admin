@@ -1,17 +1,20 @@
+import { FormArray, FormControl, FormGroup } from '@angular/forms';
+import { EToolList } from './constants';
+
 export interface Token {
   token: string;
   refreshToken: string;
 }
 
 export interface Breadcrumb {
-  label: string,
-  url: string
+  label: string;
+  url: string;
 }
 
-export type SubmitStatus = "idle" | "pending" | "success" | "error";
+export type SubmitStatus = 'idle' | 'pending' | 'success' | 'error';
 
 export interface PaginationRequest {
-  [key: string] : any;
+  [key: string]: any;
   sortBy?: string;
   ascending?: boolean;
   withDeleted?: boolean;
@@ -33,3 +36,58 @@ export interface FileModel {
   publicId: string;
   url: string;
 }
+
+export interface DragItem {
+  id: number;
+  name: string;
+}
+
+export interface FormControlItem {
+  id?: string;
+  controlType?: EToolList;
+  controlInstance?: string;
+  items?: FormControlItem[];
+}
+
+export type QuestionWithChoicesForm = FormGroup<{
+  text: FormControl<string>;
+  choices: FormArray<
+    FormGroup<{
+      text: FormControl<string>;
+      markAsAnswer: FormControl<boolean>;
+    }>
+  >;
+}>;
+
+export type QuestionWithChoicesFormValue = {
+  text: string;
+  choices: [{
+    text: string;
+    markAsAnser: boolean;
+  }]
+}
+
+export type GroupQuestionsForm = FormGroup<{
+  instruction?: FormControl<string | null>;
+  passage?: FormControl<string | null>;
+  questions?: FormArray<FormControl<QuestionWithChoicesFormValue | FillInTheBlankQuestionFormValue>>
+  clozeQuestions?: FormControl<ClozeTestQuestionFormValue>
+}>
+
+export type GroupQuestionsFormValue = {
+  instruction?: string;
+  passage?: string;
+  questions: QuestionWithChoicesForm[]
+}
+
+export type FillInTheBlankQuestionFormValue = {
+  text: string;
+  answer: string;
+}
+
+export type FillInBlankTextEditorOutput = {
+  text: string;
+  answers: string[];
+}
+
+export type ClozeTestQuestionFormValue = FillInBlankTextEditorOutput;

@@ -1,0 +1,30 @@
+<div class="fill-in-blank-text-editor">
+  <div
+    #editorInput
+    contenteditable="true"
+    (input)="onInput()"
+    class="fill-in-blank-text-editor__input"
+  ></div>
+  <p
+    class="fill-in-blank-text-editor__placeholder"
+    [class]="
+      content.length > 0 ? 'fill-in-blank-text-editor__placeholder--hidden' : ''
+    "
+  >
+    {{ placeholderText }}
+  </p>
+
+  <button
+    class="fill-in-blank-text-editor__add-blank-button"
+    nz-button
+    nz-tooltip
+    nzTooltipTitle="Add a blank"
+    nzSize="small"
+    nzShape="circle"
+    (click)="addBlank()"
+    type="button"
+    [disabled]="disableAddBlankButton"
+  >
+    <span nz-icon nzType="plus" nzTheme="outline"></span>
+  </button>
+</div>

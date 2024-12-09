@@ -1,0 +1,64 @@
+@import "../../../../../variables.scss";
+
+.fill-in-blank-text-editor {
+  width: 100%;
+  border: 1px solid map-get($gray-palette, lighter);
+  outline: 0;
+  border-radius: 6px;
+  position: relative;
+
+  &:hover, &:focus, &:focus-visible {
+    border-color: #a8caed;
+  }
+
+  &:focus, &:focus-within {
+    box-shadow: 0 0 2px rgba(123, 168, 224, 0.2);
+  }
+
+  &__placeholder {
+    color: map-get($gray-palette, light);
+    position: absolute;
+    top: 4px;
+    left: 11px;
+    z-index: 0;
+    display: block;
+
+    &--hidden {
+      display: none !important;
+    }
+  }
+
+  &__input {
+    min-height: 32px;
+    padding: 4px 11px;
+    font-size: 14px;
+    outline: 0;
+    z-index: 1;
+    position: relative;
+  }
+
+  &__add-blank-button {
+    position: absolute;
+    bottom: 4px;
+    right: 11px;
+    z-index: 1;
+  }
+
+  &__blank-box {
+    padding: 4px 11px;
+    font-size: 14px;
+    border: none;
+    outline: 0;
+    border-radius: 4px;
+    background-color: $background;
+    border: 2px dashed map-get($gray-palette, lighter);
+
+    &:hover, &:focus, &:focus-visible {
+      border-color: #a8caed;
+    }
+  
+    &:focus {
+      box-shadow: 0 0 2px rgba(123, 168, 224, 0.2);
+    }
+  }
+}

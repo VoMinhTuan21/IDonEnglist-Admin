@@ -1,0 +1,61 @@
+@import "../../../../variables.scss";
+
+.form-drag-drop {
+  &--left {
+    & > * + * {
+      margin-top: 10px;
+    }
+  }
+  
+  .dropped-area {
+    & > * + * {
+      margin-top: 10px;
+    }
+
+    &__title {
+      font-size: 14px;
+      color: map-get($gray-palette, dark);
+    }
+
+    &__container {
+      position: relative;
+      min-height: 100px;
+      padding: 8px;
+    }
+  }
+
+  .tool-list {
+    & > * + * {
+      margin-top: 10px;
+    }
+
+    &__header {
+      font-size: 14px;
+      color: map-get($gray-palette, dark);
+    }
+
+    &__body {
+      & > * + * {
+        margin-top: 10px;
+      }
+    }
+  }
+
+  .group-questions {
+    border: 1px solid $highlight;
+    border-radius: 10px;
+    padding: 10px;
+    position: relative;
+
+    &__title {
+      color: map-get($gray-palette, medium);
+      font-weight: 500;
+      position: absolute;
+      left: 0;
+      transform: translate(20px, -50%);
+      top: 0;
+      background: white;
+      padding: 0 8px;
+    }
+  }
+}

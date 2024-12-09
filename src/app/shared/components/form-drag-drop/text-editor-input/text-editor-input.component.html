@@ -1,0 +1,10 @@
+
+<ngx-editor-menu [editor]="editor" [toolbar]="toolbar">
+</ngx-editor-menu>
+<ngx-editor [editor]="editor" 
+  [(ngModel)]="content"
+  (blur)="onBlur()"
+  [placeholder]="placeholder"
+  (ngModelChange)="onContentChange($event)"
+>
+</ngx-editor>

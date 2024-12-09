@@ -1,0 +1,12 @@
+<div nz-flex nzGap="middle" class="fill-in-the-blank-question">
+  <span class="fill-in-the-blank-question--left">
+    {{ label }}
+  </span>
+  <div class="fill-in-the-blank-question--right">
+    <app-fill-in-blank-text-editor
+      [ngModel]="value"
+      (ngModelChange)="onInput($event)"
+      [numOfBlanks]="1"
+    ></app-fill-in-blank-text-editor>
+  </div>
+</div>

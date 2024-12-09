@@ -71,7 +71,7 @@ export class CreateUpdateCollectionComponent implements OnInit, OnDestroy {
     thumbnail: FormControl<FileModel>;
   }> = this.fb.group({
     name: ['', [Validators.required]],
-    categoryId: [0, [Validators.required]],
+    categoryId: [0, [Validators.required, Validators.min(1)]],
     thumbnail: [{} as FileModel, [Validators.required]],
   });
   categories: Category[] = [];

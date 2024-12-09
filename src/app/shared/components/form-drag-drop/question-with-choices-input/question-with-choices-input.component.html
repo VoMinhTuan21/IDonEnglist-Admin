@@ -1,0 +1,37 @@
+<div nz-flex nzGap="middle" class="question-with-choices">
+  <span class="question-with-choices--left">
+    {{label}}
+  </span>
+  <div class="question-with-choices--right">
+    <div [formGroup]="formGroup" class="question-with-choices">
+      <nz-form-item>
+        <nz-form-control>
+          <input nz-input formControlName="text"/>
+        </nz-form-control>
+      </nz-form-item>
+      <div formArrayName="choices">
+        @for (item of formGroupControls[1].items; track choiceIndex; let choiceIndex = $index) {
+          <div [formGroupName]="choiceIndex" nz-flex nzGap="middle" class="question-with-choices__option">
+            <span class="question-with-choices__option--label">{{choiceIndex | numberToChar}}</span>
+            <div class="question-with-choices__option--input">
+              <nz-form-item>
+                <input nz-input formControlName="text"/>
+              </nz-form-item>
+            </div>
+            <span nz-tooltip nzTooltipTitle="Mark as Answer">
+              <label nz-checkbox formControlName="markAsAnswer"></label>
+            </span>
+            <button nz-button nzDanger>
+              <span nz-icon nzType="delete" nzTheme="outline" (click)="handleRemoveOption(choiceIndex)"></span>
+            </button>
+          </div>
+        }
+      </div>
+      <button nz-button nzBlock type="button"
+        (click)="handleAddOption()"
+      >
+        <span nz-icon nzType="plus" nzTheme="outline"></span>Add option
+      </button>
+    </div>
+  </div>
+</div>

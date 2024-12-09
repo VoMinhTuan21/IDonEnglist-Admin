@@ -97,4 +97,40 @@ export const Utils = {
       )
     );
   },
+  beforeAudioUpload: (
+    msg: NzMessageService,
+    file: NzUploadFile,
+    _fileList: NzUploadFile[]
+  ): Observable<boolean> =>
+    new Observable((observer: Observer<boolean>) => {
+      const isMp3OrWav =
+        file.type === 'audio/mpeg' || file.type === 'audio/wav';
+      if (!isMp3OrWav) {
+        msg.error('You can only upload MP3 or WAV files!');
+        observer.complete();
+        return;
+      }
+      const isLt5M = file.size! / 1024 / 1024 < 5;
+      if (!isLt5M) {
+        msg.error('Audio file must be smaller than 5MB!');
+        observer.complete();
+        return;
+      }
+      observer.next(isMp3OrWav && isLt5M);
+      observer.complete();
+    }),
+  replaceInputTags: (inputString: string): string => {
+    // Use a regular expression to replace <input> tags with "__BLANK__"
+    const result = inputString.replace(/<input[^>]*>/g, '__BLANK__');
+    return result;
+  },
+  fillInBlanks: (template: string, answers: string[]): string => {
+    // Use a regular expression to replace "__BLANK__" with values from the answers array
+    let index = 0;
+    const result = template.replace(/__BLANK__/g, () => {
+        // Replace with the corresponding answer if available
+        return index < answers.length ? `<input type="text" class="fill-in-blank-text-editor__blank-box" placeholder="Type answer..." value="${answers[index++]}">` : '__BLANK__';
+    });
+    return result;
+}
 };

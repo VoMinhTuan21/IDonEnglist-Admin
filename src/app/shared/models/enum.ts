@@ -11,3 +11,9 @@ export enum Skill {
   Writing = 10,
   Speaking = 15
 }
+
+export enum CreateTestStep {
+  CreateTest = 1,
+  ChooseTestPart = 3,
+  CreateSections = 6,
+}

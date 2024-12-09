@@ -1,0 +1,42 @@
+@import "../../../../../../variables.scss";
+
+.create-test-sections {
+  &__header {
+    margin-bottom: 20px;
+
+    &--sub-title {
+      color: map-get($map: $gray-palette, $key: dark);
+      font-size: 14px;
+    }
+  }
+
+  &__body {
+    .sections-list {
+      flex: 1;
+      display: flex;
+      column-gap: 2px;
+
+      &__item {
+        &--active {
+          color: $primary;
+
+          [nz-icon] {
+            color: map-get($gray-palette, darkest);
+          }
+        }
+      }
+    }
+  }
+}
+
+.editor {
+  .NgxEditor {
+    transition: all 0.3s, height 0s;
+    
+    &:focus-within {
+      border-color: #a8caed;
+      box-shadow: 0 0 0 2px rgba(123, 168, 224, 0.2);
+    }
+  }
+}
+

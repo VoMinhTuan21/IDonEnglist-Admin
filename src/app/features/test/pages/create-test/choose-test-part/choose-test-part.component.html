@@ -1,0 +1,34 @@
+<div class="choose-test-part">
+  <div class="choose-test-part__header">
+    <h3 class="choose-test-part__header--title">Choose test part</h3>
+    <p class="choose-test-part__header--sub-title">Please choose the part you want to create questions</p>
+  </div>
+
+  @if (testParts.length > 0) {
+    <form (ngSubmit)="onSubmit()" [formGroup]="form">
+      <nz-form-item>
+        <nz-form-control nzErrorTip="Please choose one part">
+          <nz-radio-group class="choose-test-part__body" formControlName="part">
+            @for (item of testParts; track $index) {
+              <app-box [padding]="'8px 10px'" >
+                <label nz-radio [nzValue]="item.id">
+                  <div class="radio-item__label">
+                    <p class="radio-item__label--main">{{ item.name }}</p>
+                    <p class="radio-item__label--sub">
+                      <span>{{ item.questions }} questions</span>
+                      <span>|</span>
+                      <span>{{ item.duration }} minutes</span>
+                    </p>
+                  </div>
+                </label>
+              </app-box>
+            }
+          </nz-radio-group>
+        </nz-form-control>
+      </nz-form-item>
+      <div style="float: right">
+        <button nz-button nzType="primary">Next</button>
+      </div>
+    </form>
+  }
+</div>

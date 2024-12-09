@@ -1,0 +1,98 @@
+<h4>Create Test</h4>
+<app-box>
+  <form nz-form nzLayout="vertical" [formGroup]="form" (ngSubmit)="submitForm()">
+    <nz-form-item>
+      <nz-form-label>Name</nz-form-label>
+      <nz-form-control>
+        <input nz-input placeholder="abcd" formControlName="name" />
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzRequired>Collection</nz-form-label>
+      <nz-form-control nzErrorTip="Please choose collection">
+        <nz-select
+          nzPlaceHolder="Select collection"
+          nzAllowClear
+          formControlName="collectionId"
+          nzServerSearch
+          nzShowSearch
+          (nzOnSearch)="handleSearchCollection($event)"
+        >
+          @if (!loadingCollections) { @for (collection of collections; track
+          collection.id) {
+          <nz-option
+            [nzValue]="collection.id"
+            [nzLabel]="collection.name"
+          ></nz-option>
+          } } @else {
+          <nz-option nzDisabled nzCustomContent>
+            <span nz-icon nzType="loading"></span>
+            Loading Data...
+          </nz-option>
+          }
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzRequired>Final Test</nz-form-label>
+      <nz-form-control nzErrorTip="Please select final test">
+        <nz-select
+          nzPlaceHolder="Select final test"
+          nzAllowClear
+          formControlName="finalTestId"
+        >
+          @for (finalTest of finalTests; track finalTest.id) {
+          <nz-option
+            [nzValue]="finalTest.id"
+            [nzLabel]="finalTest.name"
+          ></nz-option>
+          }
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzRequired>Skill</nz-form-label>
+      <nz-form-control nzErrorTip="Please select test type">
+        <nz-select
+          nzPlaceHolder="Select test type"
+          nzAllowClear
+          formControlName="categorySkillId"
+        >
+          @for (categorySkill of categorySkills; track categorySkill.id) {
+          <nz-option
+            [nzValue]="categorySkill.id"
+            [nzLabel]="(categorySkill.skill | skill).name"
+          ></nz-option>
+          }
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
+    @if (showAudioUpload) {
+    <nz-form-item>
+      <nz-form-label nzRequired>Audio</nz-form-label>
+      <nz-form-control
+        nzErrorTip="Please upload audio"
+        [nzValidateStatus]="uploadError"
+      >
+        <nz-upload
+          [nzAction]="uploadUrl"
+          nzName="file"
+          [nzFileList]="fileList"
+          [nzShowUploadList]="false"
+          [nzBeforeUpload]="beforeUpload"
+          (nzChange)="handleChange($event)"
+          [nzShowUploadList]="true"
+        >
+          <button nz-button type="button">
+            <span nz-icon nzType="upload"></span>
+            Click to Upload
+          </button>
+        </nz-upload>
+      </nz-form-control>
+    </nz-form-item>
+    }
+    <div>
+      <button nz-button nzType="primary">Next</button>
+    </div>
+  </form>
+</app-box>

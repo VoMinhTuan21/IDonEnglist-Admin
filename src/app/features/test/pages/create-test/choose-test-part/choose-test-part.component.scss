@@ -1,0 +1,44 @@
+@import "../../../../../../variables.scss";
+
+.choose-test-part {
+  &__header {
+    margin-bottom: 30px;
+
+    &--title {
+      text-transform: capitalize;
+    }
+
+    &--sub-title {
+      color: map-get($gray-palette, dark);
+      font-size: 14px;
+    }
+  }
+
+  &__body {
+    display: grid;
+    row-gap: 8px;
+
+    .radio-item {
+      &__label {
+        display: flex;
+        column-gap: 8px;
+        align-items: baseline;
+
+        &--main {
+          font-size: 14px;
+          text-transform: capitalize;
+        }
+
+        &--sub {
+          display: flex;
+          column-gap: 6px;
+
+          span {
+            font-size: 12px;
+            color: map-get($gray-palette, medium);
+          }
+        }
+      }
+    }
+  }
+}

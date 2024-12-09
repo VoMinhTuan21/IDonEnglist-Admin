@@ -1,0 +1,13 @@
+<div class="create-test">
+  @switch (step) {
+    @case (createTestStepEnum.CreateTest) {
+      <app-create-test-form/>
+    }
+    @case (createTestStepEnum.ChooseTestPart) {
+      <app-choose-test-part/>
+    }
+    @case (createTestStepEnum.CreateSections) {
+      <app-create-test-sections/>
+    }
+  }
+</div>

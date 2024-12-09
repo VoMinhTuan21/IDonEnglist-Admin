@@ -1,0 +1,88 @@
+<div class="form-drag-drop" nz-row nzGutter="16">
+  <div nz-col nzSpan="18" class="form-drag-drop--left">
+    <div class="dropped-area">
+      <h3 class="dropped-area__title">Section form</h3>
+      <form
+        class="dropped-area__container"
+        [appDroppable]="true"
+        [acceptList]="acceptedItemsToolForSection"
+        (itemDropped)="handleItemDroppedForSectionForm($event)"
+        nz-form
+        nzLayout="vertical"
+        [formGroup]="sectionForm"
+        (ngSubmit)="handleSubmitSectionForm()"
+      >
+      @for (control of listOfSectionFormControls; track $index) {
+        <nz-form-item>
+          <nz-form-label nzRequired>{{ control?.controlType| toolLabel}}</nz-form-label>
+          @switch (control.controlType) {
+            @case (eToolList.Direction) {
+              <nz-form-control>
+                <textarea 
+                  nz-input 
+                  [nzAutosize]="{ minRows: 2, maxRows: 6 }" 
+                  [formControlName]="control.controlInstance ?? ''"
+                ></textarea>
+              </nz-form-control>
+            }
+            @case (eToolList.Passage) {
+              <nz-form-control>
+                <app-text-editor-input [formControlName]="control.controlInstance ?? ''"></app-text-editor-input>
+              </nz-form-control>
+            }
+          }
+        </nz-form-item>
+      }
+      <button>submit</button>
+      </form>
+    </div>
+    <form
+      nz-form
+      nzLayout="vertical"
+      [formGroup]="groupQuestionsFormList"
+      (ngSubmit)="handleSubmitGroupQuestionsListForm()"
+    >
+      <div 
+        class="dropped-area"
+        formArrayName="groups"
+      >
+        <h3 class="dropped-area__title">Group Questions</h3>
+        <nz-collapse>
+          @for (group of listOfFormGroupsFormListControl; track groupIndex; let groupIndex = $index) {
+            <nz-collapse-panel [nzHeader]="'Group ' + (groupIndex + 1)" [nzActive]="groupIndex === 0" [nzExtra]="extraTpl">
+              <app-questions-group-input [formControlName]="groupIndex"></app-questions-group-input>
+            </nz-collapse-panel>
+            <ng-template #extraTpl>
+              <p
+                (click)="$event.stopPropagation()"
+                nz-popconfirm
+                nzPopconfirmTitle="Are you sure delete this group?"
+                nzPopconfirmPlacement="bottom"
+                (nzOnConfirm)="handleRemoveGroup(groupIndex)"
+              >
+                <span 
+                  nz-icon 
+                  nzType="delete" 
+                  nzTheme="twotone" 
+                  nzTwotoneColor="#FF4C4C"
+                ></span>
+              </p>
+            </ng-template>
+          }
+        </nz-collapse>
+        <button nz-button nzBlock type="button" (click)="handleAddGroup()"><span nz-icon nzType="plus" nzTheme="outline"></span>Add group</button>
+      </div>
+      <button nz-button nzType="primary">submit</button>
+    </form>
+  </div>
+  <div nz-col nzSpan="6" class="tool-list">
+    <h3 class="tool-list__header">Tool items</h3>
+    <div class="tool-list__body">
+      @for (item of toolItems; track $index) {
+      <div class="drag-item" draggable="true" [appDraggable]="item">
+        {{ item.name }}
+      </div>
+      }
+    </div>
+  </div>
+</div>

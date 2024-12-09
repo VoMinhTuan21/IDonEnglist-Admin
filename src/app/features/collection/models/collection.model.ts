@@ -12,6 +12,7 @@ export interface GetPaginationCollectionRequest extends PaginationRequest {
   categoryId?: number;
   keywords?: string;
   minSize?: boolean;
+  forCreateTest?: boolean;
 }
 
 export type CreateCollectionRequest = Pick<CollectionTableItem , "name" | "categoryId"> & {

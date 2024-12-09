@@ -1,0 +1,39 @@
+@import "../../../../../variables.scss";
+
+.question-with-choices {
+  &__list {
+    & > * + * {
+      margin-top: 10px;
+    }
+  }
+
+  align-items: baseline;
+
+  &--right {
+    flex: 1;
+  }
+
+  &--left {
+    min-width: 75px;
+  }
+
+  &__option {
+    align-items: baseline;
+
+    &--label {
+      border-radius: 20px;
+      width: 24px;
+      aspect-ratio: 1 / 1;
+      background-color: $secondary;
+      color: white;
+      font-weight: 600;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    &--input {
+      flex: 1
+    }
+  }
+}

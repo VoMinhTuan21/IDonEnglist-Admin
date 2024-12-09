@@ -11,6 +11,7 @@ export interface FinalTestTableItem {
 export interface GetPaginationFinalTestsRequest extends PaginationRequest {
   collectionId?: number;
   keywords?: string;
+  forCreateTest?: boolean;
 }
 
 export type CreateFinalTestRequest = Pick<FinalTestTableItem, 'name'> & {
@@ -25,3 +26,5 @@ export type FinalTestSearch = {
   keywords?: string;
   collectionId?: number;
 }
+
+export type FinalTestMin = Omit<FinalTestTableItem, "collection">;

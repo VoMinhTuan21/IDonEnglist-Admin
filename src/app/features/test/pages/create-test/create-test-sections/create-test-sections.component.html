@@ -1,0 +1,37 @@
+<div class="create-test-sections">
+  <div class="create-test-sections__header">
+    <h3>Create Questions</h3>
+    <p class="create-test-sections__header--sub-title">
+      You are creating questions for Part 1
+    </p>
+  </div>
+
+  <div class="create-test-sections__body">
+    <div class="sections-list">
+      @for (item of tabs; track $index) {
+      <button
+        [class]="
+          activatedTabIndex === $index ? 'sections-list__item--active' : ''
+        "
+        nz-button
+        nzSize="large"
+        (click)="activatedTabIndex = $index"
+      >
+        {{ item
+        }}<span
+          nz-icon
+          nzType="close"
+          nzTheme="outline"
+          (click)="closeTab({ index: $index })"
+        ></span>
+      </button>
+      }
+      <button nz-button nzSize="large" (click)="newTab()">
+        <span nz-icon nzType="plus" nzTheme="outline"></span>
+      </button>
+    </div>
+    <app-box [styles]="{ padding: '16px', marginTop: '10px' }">
+      <app-form-drag-drop/>
+    </app-box>
+  </div>
+</div>
