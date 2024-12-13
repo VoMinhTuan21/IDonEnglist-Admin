@@ -136,8 +136,8 @@ export class QuestionsGroupInputComponent
           controlInstance: 'clozeQuestions'
         });
         this.formGroup.addControl("clozeQuestions", new FormControl({
-          text: "Dog is a pet __BLANK__ .<div>It is the oldest friend of human __BLANK__ .</div>",
-          answers: ["animal", "being"]
+          text: '<table style="width: 100%; border-collapse: collapse;"><tr><td contenteditable="true" style="border: 1px solid black; padding: 5px; height: 32px;">Test</td><td contenteditable="true" style="border: 1px solid black; padding: 5px; height: 32px;">Test</td></tr><tr><td contenteditable="true" style="border: 1px solid black; padding: 5px; height: 32px;">center the __BLANK__  or insertion point</td><td contenteditable="true" style="border: 1px solid black; padding: 5px; height: 32px;">__BLANK__  the selection or insertion point</td></tr></table><br>',
+          answers: ["selection", "justifies"]
       }))
         break;
       default:

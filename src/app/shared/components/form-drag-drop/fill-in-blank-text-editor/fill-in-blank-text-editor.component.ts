@@ -4,7 +4,7 @@ import {
   forwardRef,
   Input,
   ViewChild,
-  ViewEncapsulation,
+  ViewEncapsulation
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { FillInBlankTextEditorOutput } from '@shared/models/common';
@@ -37,6 +37,15 @@ export class FillInBlankTextEditorComponent implements ControlValueAccessor {
   @ViewChild('editorInput', { static: true })
   editorInput!: ElementRef<HTMLElement>;
 
+  formatText(command: string) {
+    document.execCommand(command, false, undefined);
+    this.onInput(); // Ensure the input is updated after formatting
+  }
+
+  isCommandActive(command: string): boolean {
+    return document.queryCommandState(command);
+  }
+
   private onChange: (value: FillInBlankTextEditorOutput) => void = () => {};
   private onTouched: () => void = () => {};
   private inputSubject = new Subject<string>();
@@ -55,13 +64,11 @@ export class FillInBlankTextEditorComponent implements ControlValueAccessor {
     const answers: string[] = [];
 
     const inputs = target.getElementsByClassName("fill-in-blank-text-editor__blank-box");
-    console.log("inputs: ", inputs);
     for (const input of Array.from(inputs) as HTMLInputElement[]) {
       answers.push(input.value);
     }
 
     this.content = Utils.replaceInputTags(target.innerHTML.toString()).trim();
-    console.log("target.innerHTML.toString(): ", target.innerHTML.toString());
     this.inputSubject.next(this.content);
     this.onChange({
       text: this.content,
@@ -138,6 +145,39 @@ export class FillInBlankTextEditorComponent implements ControlValueAccessor {
       this.disableAddBlankButton = true;
     } else {
       this.disableAddBlankButton = false;
+    }
+  }
+
+  insertTable() {
+    const rows = prompt("Enter the number of rows:", "2");
+    const cols = prompt("Enter the number of columns:", "2");
+    
+    if (rows && cols) {
+      const table = document.createElement('table');
+      table.style.width = '100%';
+      table.style.borderCollapse = 'collapse';
+      
+      for (let i = 0; i < parseInt(rows); i++) {
+        const row = document.createElement('tr');
+        for (let j = 0; j < parseInt(cols); j++) {
+          const cell = document.createElement('td');
+          cell.style.border = '1px solid black';
+          cell.style.padding = '5px';
+          cell.style.height = '32px';
+          cell.textContent = "abcd..."
+          cell.contentEditable = 'true'; // Make the cell editable
+          row.appendChild(cell);
+        }
+        table.appendChild(row);
+      }
+      
+      const selection = window.getSelection();
+      if (selection && selection.rangeCount > 0) {
+        const range = selection.getRangeAt(0);
+        range.insertNode(table);
+      }
+      
+      this.onInput(); // Update input state
     }
   }
 }

@@ -22,7 +22,7 @@ export enum EToolList {
   QuestionWithChoices = 3,
   FillInTheBlank = 4,
   ClozeTest = 5,
-  Matching = 6,
+  MatchingQuestion = 6,
   TrueFalseNotGiven = 7,
   Image = 8
 }
@@ -49,8 +49,8 @@ export const ToolList: DragItem[] = [
     name: "Cloze Test (Paragraph level)"
   },
   {
-    id: EToolList.Matching,
-    name: "Matching"
+    id: EToolList.MatchingQuestion,
+    name: "Matching Question"
   },
   {
     id: EToolList.TrueFalseNotGiven,

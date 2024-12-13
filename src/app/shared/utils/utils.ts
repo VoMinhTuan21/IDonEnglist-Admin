@@ -122,6 +122,9 @@ export const Utils = {
   replaceInputTags: (inputString: string): string => {
     // Use a regular expression to replace <input> tags with "__BLANK__"
     const result = inputString.replace(/<input[^>]*>/g, '__BLANK__');
+    if (result === "\<br\>") {
+      return "";
+    }
     return result;
   },
   fillInBlanks: (template: string, answers: string[]): string => {

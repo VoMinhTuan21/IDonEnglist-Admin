@@ -1,4 +1,61 @@
 <div class="fill-in-blank-text-editor">
+  <div class="fill-in-blank-text-editor__toolbar">
+    <button 
+      class="fill-in-blank-text-editor__toolbar__item" 
+      (click)="formatText('bold')" type="button"
+      [class]="isCommandActive('bold') ? 'fill-in-blank-text-editor__toolbar__item--active' : ''"
+    >
+      <span nz-icon nzType="bold" nzTheme="outline"></span>
+    </button>
+    <button 
+      class="fill-in-blank-text-editor__toolbar__item" 
+      (click)="formatText('underline')" type="button"
+      [class]="isCommandActive('underline') ? 'fill-in-blank-text-editor__toolbar__item--active' : ''"
+    >
+      <span nz-icon nzType="underline" nzTheme="outline"></span>
+    </button>
+    <button 
+      class="fill-in-blank-text-editor__toolbar__item" 
+      (click)="formatText('insertUnorderedList')" type="button"
+      [class]="isCommandActive('insertUnorderedList') ? 'fill-in-blank-text-editor__toolbar__item--active' : ''"
+    >
+      <span nz-icon nzType="unordered-list" nzTheme="outline"></span>
+    </button>
+    <button 
+      class="fill-in-blank-text-editor__toolbar__item" 
+      (click)="formatText('insertOrderedList')" type="button"
+      [class]="isCommandActive('insertOrderedList') ? 'fill-in-blank-text-editor__toolbar__item--active' : ''"
+    >
+      <span nz-icon nzType="ordered-list" nzTheme="outline"></span>
+    </button>
+    <button 
+      class="fill-in-blank-text-editor__toolbar__item" 
+      (click)="formatText('justifycenter')" type="button"
+      [class]="isCommandActive('justifycenter') ? 'fill-in-blank-text-editor__toolbar__item--active' : ''"
+    >
+      <span nz-icon nzType="align-center" nzTheme="outline"></span>
+    </button>
+    <button 
+    class="fill-in-blank-text-editor__toolbar__item" 
+    (click)="formatText('justifyleft')" type="button"
+    [class]="isCommandActive('justifyleft') ? 'fill-in-blank-text-editor__toolbar__item--active' : ''"
+    >
+      <span nz-icon nzType="align-left" nzTheme="outline"></span>
+    </button>
+    <button 
+    class="fill-in-blank-text-editor__toolbar__item" 
+    (click)="formatText('justifyright')" type="button"
+    [class]="isCommandActive('justifyright') ? 'fill-in-blank-text-editor__toolbar__item--active' : ''"
+    >
+      <span nz-icon nzType="align-right" nzTheme="outline"></span>
+    </button>
+    <button 
+      class="fill-in-blank-text-editor__toolbar__item" 
+      (click)="insertTable()" type="button"
+    >
+      <span nz-icon nzType="table" nzTheme="outline"></span>
+    </button>
+  </div>
   <div
     #editorInput
     contenteditable="true"

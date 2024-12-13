@@ -15,10 +15,32 @@
     box-shadow: 0 0 2px rgba(123, 168, 224, 0.2);
   }
 
+  &__toolbar {
+    margin-bottom: 10px;
+    padding: 6px 8px 0px;
+
+    & > * + * {
+      margin-left: 4px;
+    }
+
+    &__item {
+      cursor: pointer;
+      border-radius: 4px;
+
+      &:hover {
+        background-color: $background;
+      }
+
+      &--active {
+        background-color: $highlight;
+      }
+    }
+  }
+
   &__placeholder {
     color: map-get($gray-palette, light);
     position: absolute;
-    top: 4px;
+    top: 42px;
     left: 11px;
     z-index: 0;
     display: block;
