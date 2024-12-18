@@ -17,3 +17,24 @@ export enum CreateTestStep {
   ChooseTestPart = 3,
   CreateSections = 6,
 }
+
+export enum EMatchingQuestionType {
+  Heading = 1,
+  Information = 4
+}
+
+export enum EBinaryResponseQuestionType {
+  TrueFalseNotGiven = 1,
+  YesNoNotGiven = 2
+}
+
+export enum EToolList {
+  Direction = 1,
+  Passage = 2,
+  QuestionWithChoices = 3,
+  FillInTheBlank = 4,
+  ClozeTest = 5,
+  MatchingQuestion = 6,
+  BinaryResponseQuestion = 7,
+  Image = 8
+}

@@ -1,6 +1,6 @@
 import { environment } from '../../../environments/environment';
 import { DragItem } from './common';
-import { Skill } from './enum';
+import { EToolList, Skill } from './enum';
 
 export const TOKEN = 'i-don-englist-token';
 export const REFRESH_TOKEN = 'i-don-englist-refresh-token';
@@ -16,48 +16,67 @@ export const SkillColor: { [index: number]: string } = {
 export const UploadImageUrl = `${environment.baseUrl}/api/file/image`;
 export const UploadAudioUrl = `${environment.baseUrl}/api/file/audio`;
 
-export enum EToolList {
-  Direction = 1,
-  Passage = 2,
-  QuestionWithChoices = 3,
-  FillInTheBlank = 4,
-  ClozeTest = 5,
-  MatchingQuestion = 6,
-  TrueFalseNotGiven = 7,
-  Image = 8
-}
-
 export const ToolList: DragItem[] = [
   {
     id: EToolList.Direction,
-    name: "Direction"
+    name: 'Direction',
   },
   {
     id: EToolList.Passage,
-    name: "Passage"
+    name: 'Passage',
   },
   {
     id: EToolList.QuestionWithChoices,
-    name: "Question with choices"
+    name: 'Question with choices',
   },
   {
     id: EToolList.FillInTheBlank,
-    name: "Fill-in-the-Blank (Sentence level)"
+    name: 'Fill-in-the-Blank (Sentence level)',
   },
   {
     id: EToolList.ClozeTest,
-    name: "Cloze Test (Paragraph level)"
+    name: 'Cloze Test (Paragraph level)',
   },
   {
     id: EToolList.MatchingQuestion,
-    name: "Matching Question"
+    name: 'Matching Question',
   },
   {
-    id: EToolList.TrueFalseNotGiven,
-    name: "True/False/Not Given"
+    id: EToolList.BinaryResponseQuestion,
+    name: 'Binary Response Question',
   },
   {
     id: EToolList.Image,
-    name: "Image"
-  }
+    name: 'Image',
+  },
+];
+
+export const TrueFalseNotGivenSelect = [
+  {
+    label: 'True',
+    value: 'true',
+  },
+  {
+    label: 'False',
+    value: 'false',
+  },
+  {
+    label: 'Not given',
+    value: 'not given',
+  },
+];
+
+export const YesNoNotGivenSelect = [
+  {
+    label: 'Yes',
+    value: 'yes',
+  },
+  {
+    label: 'No',
+    value: 'no',
+  },
+  {
+    label: 'Not given',
+    value: 'not given',
+  },
 ];

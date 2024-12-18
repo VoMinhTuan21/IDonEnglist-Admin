@@ -14,7 +14,7 @@ import {
   FormControlItem,
   GroupQuestionsFormValue
 } from '@shared/models/common';
-import { EToolList, ToolList } from '@shared/models/constants';
+import { ToolList } from '@shared/models/constants';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzCollapseModule } from 'ng-zorro-antd/collapse';
 import { NzFormModule } from 'ng-zorro-antd/form';
@@ -27,6 +27,7 @@ import { Validators as EditorValidator } from 'ngx-editor';
 import { v4 as uuidv4 } from 'uuid';
 import { QuestionsGroupInputComponent } from './questions-group-input/questions-group-input.component';
 import { TextEditorInputComponent } from './text-editor-input/text-editor-input.component';
+import { EToolList } from '@shared/models/enum';
 
 @Component({
   selector: 'app-form-drag-drop',

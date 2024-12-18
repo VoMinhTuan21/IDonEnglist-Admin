@@ -1,5 +1,5 @@
 import { FormArray, FormControl, FormGroup } from '@angular/forms';
-import { EToolList } from './constants';
+import { EMatchingQuestionType, EToolList } from './enum';
 
 export interface Token {
   token: string;
@@ -71,7 +71,8 @@ export type GroupQuestionsForm = FormGroup<{
   instruction?: FormControl<string | null>;
   passage?: FormControl<string | null>;
   questions?: FormArray<FormControl<QuestionWithChoicesFormValue | FillInTheBlankQuestionFormValue>>
-  clozeQuestions?: FormControl<ClozeTestQuestionFormValue>
+  clozeQuestions?: FormControl<ClozeTestQuestionFormValue>;
+  matchingQuestions?: FormControl<MatchingQuestionFormValue>;
 }>
 
 export type GroupQuestionsFormValue = {
@@ -91,3 +92,27 @@ export type FillInBlankTextEditorOutput = {
 }
 
 export type ClozeTestQuestionFormValue = FillInBlankTextEditorOutput;
+
+export type MatchingQuestionForm = FormGroup<{
+  options: FormArray<FormGroup<{
+    id: FormControl<string>,
+    text: FormControl<string>
+  }>>,
+  questions: FormArray<FormGroup<{
+    text: FormControl<string>,
+    answer: FormControl<string>
+  }>>
+  type: FormControl<EMatchingQuestionType>
+}>
+
+export type MatchingQuestionFormValue = {
+  options: [{
+    id: string;
+    text: string;
+  }],
+  type: EMatchingQuestionType,
+  questions: [{
+    text: string;
+    answer: string;
+  }]
+}

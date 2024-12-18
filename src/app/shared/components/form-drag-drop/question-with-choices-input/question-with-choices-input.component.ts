@@ -10,7 +10,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { NumberToCharPipe } from '@core/pipes/number-to-char';
+import { NumberToCharPipe } from '@core/pipes/number-to-char.pipe';
 import {
   FormControlItem,
   QuestionWithChoicesForm,

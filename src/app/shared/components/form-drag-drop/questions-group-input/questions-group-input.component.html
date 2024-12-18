@@ -64,6 +64,17 @@
             </nz-form-control>
           </nz-form-item>
         }
+        @case (eToolList.MatchingQuestion) {
+          <nz-form-item>
+            <nz-form-label nzRequired="">{{ control.controlType | toolLabel }}</nz-form-label>
+            <nz-form-control>
+              <app-matching-question
+                [formControlName]="control.controlInstance ?? ''"
+              >
+              </app-matching-question>
+            </nz-form-control>
+          </nz-form-item>
+        }
       }
     }
 </div>

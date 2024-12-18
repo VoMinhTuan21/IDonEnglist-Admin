@@ -1,0 +1,119 @@
+<div [formGroup]="formGroup" class="matching-question">
+  <div class="matching-question__type">
+    <p>Type</p>
+    <nz-select formControlName="type">
+      @for (item of questionTypes; track $index) {
+      <nz-option [nzValue]="item.value" [nzLabel]="item.label"></nz-option>
+      }
+    </nz-select>
+  </div>
+  <nz-collapse [nzBordered]="false">
+    <nz-collapse-panel
+      nzHeader="Options"
+      [ngStyle]="customStyle"
+      [nzExtra]="optionsExtraTpl"
+      [formArrayName]="formGroupControls[1].controlInstance ?? ''"
+    >
+      @for (item of formGroupControls[1].items; track item.id; let optionIndex =
+      $index) {
+      <div class="box-item">
+        @if (type === eMatchingQuestionType.Heading) {
+        <p class="box-item__label">{{ optionIndex + 1 | romanNumeral }}</p>
+        } @else {
+        <p class="box-item__label">{{ optionIndex | numberToChar }}</p>
+        }
+        <div [formGroupName]="optionIndex" class="box-item__input">
+          <input hidden formControlName="id" />
+          <nz-form-item>
+            <nz-form-control>
+              <input nz-input formControlName="text" />
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+        <button
+          nz-button
+          nzDanger
+          nz-popconfirm
+          nzPopconfirmTitle="Are you sure delete this option?"
+          nzPopconfirmPlacement="bottom"
+          (nzOnConfirm)="handleRemoveOption(optionIndex)"
+          style="flex-shrink: 0;"
+        >
+          <span nz-icon nzType="delete" nzTheme="outline"></span>
+        </button>
+      </div>
+      }
+    </nz-collapse-panel>
+    <nz-collapse-panel
+      nzHeader="Questions"
+      [ngStyle]="customStyle"
+      [nzExtra]="questionsExtraTpl"
+      [formArrayName]="formGroupControls[2].controlInstance ?? ''"
+    >
+      @for (item of formGroupControls[2].items; track item.id; let questionIndex
+      = $index) {
+      <div class="box-item">
+        <p class="box-item__label">{{ questionIndex + 1 }}</p>
+        <div [formGroupName]="questionIndex" class="box-item__input">
+          <div nz-flex nzGap="small" class="box-item__input--question">
+            <nz-form-item>
+              <nz-form-control>
+                <input nz-input formControlName="text" />
+              </nz-form-control>
+            </nz-form-item>
+            <button
+              nz-button
+              nzDanger
+              nz-popconfirm
+              nzPopconfirmTitle="Are you sure delete this question?"
+              nzPopconfirmPlacement="bottom"
+              (nzOnConfirm)="handleRemoveQuestion(questionIndex)"
+            >
+              <span nz-icon nzType="delete" nzTheme="outline"></span>
+            </button>
+          </div>
+          <div nz-flex nzGap="small" class="box-item__input--option-select">
+            <p>Matching with</p>
+            <nz-form-item>
+              <nz-form-control>
+                <nz-select
+                  formControlName="answer"
+                  nzPlaceHolder="Select option"
+                  [nzDropdownMatchSelectWidth]="false"
+                >
+                  @for (item of matchingSelectionList; track $index) {
+                  <nz-option
+                    [nzValue]="item.value"
+                    [nzLabel]="item.label"
+                  ></nz-option>
+                  }
+                </nz-select>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+        </div>
+      </div>
+      }
+    </nz-collapse-panel>
+  </nz-collapse>
+  <ng-template #optionsExtraTpl>
+    <span
+      nz-tooltip
+      nzTooltipTitle="Add option"
+      nz-icon
+      nzType="plus"
+      nzTheme="outline"
+      (click)="$event.stopPropagation(); handleAddOption()"
+    ></span>
+  </ng-template>
+  <ng-template #questionsExtraTpl>
+    <span
+      nz-tooltip
+      nzTooltipTitle="Add question"
+      nz-icon
+      nzType="plus"
+      nzTheme="outline"
+      (click)="$event.stopPropagation(); handleAddQuestion()"
+    ></span>
+  </ng-template>
+</div>

@@ -18,13 +18,15 @@ import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { TextEditorInputComponent } from '../text-editor-input/text-editor-input.component';
 import { DroppableDirective } from '@core/directives/droppable.directive';
-import { EToolList, ToolList } from '@shared/models/constants';
+import { ToolList } from '@shared/models/constants';
 import { ToolLabelPipe } from '@core/pipes/tool-label.pipe';
 import { v4 as uuidv4 } from 'uuid';
 import { Validators as EditorValidator } from 'ngx-editor';
 import { QuestionWithChoicesInputComponent } from '../question-with-choices-input/question-with-choices-input.component';
 import { FillInTheBlankInputComponent } from '../fill-in-the-blank-input/fill-in-the-blank-input.component';
 import { ClozeTestInputComponent } from '../cloze-test-input/cloze-test-input.component';
+import { MatchingQuestionComponent } from "../matching-question/matching-question.component";
+import { EMatchingQuestionType, EToolList } from '@shared/models/enum';
 
 @Component({
   selector: 'app-questions-group-input',
@@ -41,7 +43,8 @@ import { ClozeTestInputComponent } from '../cloze-test-input/cloze-test-input.co
     TextEditorInputComponent,
     FillInTheBlankInputComponent,
     ClozeTestInputComponent,
-  ],
+    MatchingQuestionComponent
+],
   templateUrl: './questions-group-input.component.html',
   styleUrl: './questions-group-input.component.scss',
   providers: [
@@ -139,6 +142,28 @@ export class QuestionsGroupInputComponent
           text: '<table style="width: 100%; border-collapse: collapse;"><tr><td contenteditable="true" style="border: 1px solid black; padding: 5px; height: 32px;">Test</td><td contenteditable="true" style="border: 1px solid black; padding: 5px; height: 32px;">Test</td></tr><tr><td contenteditable="true" style="border: 1px solid black; padding: 5px; height: 32px;">center the __BLANK__  or insertion point</td><td contenteditable="true" style="border: 1px solid black; padding: 5px; height: 32px;">__BLANK__  the selection or insertion point</td></tr></table><br>',
           answers: ["selection", "justifies"]
       }))
+        break;
+      case EToolList.MatchingQuestion:
+        this.formGroupControls.push({
+          id: uuidv4(),
+          controlType: EToolList.MatchingQuestion,
+          controlInstance: 'matchingQuestions'
+        });
+        this.formGroup.addControl("matchingQuestions", new FormControl({
+          options: [
+            { id: '2', text: "abcd"},
+            { id: '1', text: "efgh"},
+          ],
+          type: EMatchingQuestionType.Information,
+          questions: [{
+            text: "don not hurry up",
+            answer: '2'
+          },
+          {
+            text: "I don't care",
+            answer: '1'
+          }]
+        }));
         break;
       default:
         break;

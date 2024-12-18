@@ -1,0 +1,59 @@
+@import "../../../../../variables.scss";
+
+.matching-question {
+  & > * + * {
+    margin-top: 20px;
+  }
+
+  &__type {
+    width: 200px;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    column-gap: 8px;
+    align-items: baseline;
+
+    :nth-child(2) {
+      width: 100%;
+    }
+  }
+
+  .box-item {
+    display: flex;
+    column-gap: 12px;
+
+    &__label {
+      min-width: 12px;
+      border-radius: 20px;
+      width: 24px;
+      aspect-ratio: 1 / 1;
+      background-color: $secondary;
+      color: white;
+      font-weight: 600;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: fit-content;
+      margin-top: 4px;
+    }
+
+    &__input {
+      width: 100%;
+
+      &--question {
+        nz-form-item {
+          flex: 1
+        }
+      }
+
+      &--option-select {
+        align-items: baseline;
+        
+        nz-form-item {
+          flex: 1;
+        }
+      }
+    }
+  }
+}
+

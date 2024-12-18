@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { EToolList } from '@shared/models/constants';
+import { EToolList } from '@shared/models/enum';
 
 @Pipe({
   name: 'toolLabel',
@@ -14,6 +14,8 @@ export class ToolLabelPipe implements PipeTransform {
         return 'Direction';
       case EToolList.ClozeTest:
         return 'Cloze Question';
+      case EToolList.MatchingQuestion:
+        return 'Matching Question'
       default:
         return '';
     }
