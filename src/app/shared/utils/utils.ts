@@ -122,8 +122,8 @@ export const Utils = {
   replaceInputTags: (inputString: string): string => {
     // Use a regular expression to replace <input> tags with "__BLANK__"
     const result = inputString.replace(/<input[^>]*>/g, '__BLANK__');
-    if (result === "\<br\>") {
-      return "";
+    if (result === '<br>') {
+      return '';
     }
     return result;
   },
@@ -131,9 +131,21 @@ export const Utils = {
     // Use a regular expression to replace "__BLANK__" with values from the answers array
     let index = 0;
     const result = template.replace(/__BLANK__/g, () => {
-        // Replace with the corresponding answer if available
-        return index < answers.length ? `<input type="text" class="fill-in-blank-text-editor__blank-box" placeholder="Type answer..." value="${answers[index++]}">` : '__BLANK__';
+      // Replace with the corresponding answer if available
+      return index < answers.length
+        ? `<input type="text" class="fill-in-blank-text-editor__blank-box" placeholder="Type answer..." value="${
+            answers[index++]
+          }">`
+        : '__BLANK__';
     });
     return result;
-}
+  },
+  getQuestionTypes: <T extends object>(enumObj: T): { value: number; label: string }[] => {
+    return Object.keys(enumObj)
+      .filter((key) => !isNaN(Number(enumObj[key as keyof T])))
+      .map((key) => ({
+        value: enumObj[key as keyof T] as number,
+        label: key,
+      }));
+  },
 };

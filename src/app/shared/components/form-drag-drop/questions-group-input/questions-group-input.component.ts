@@ -26,7 +26,8 @@ import { QuestionWithChoicesInputComponent } from '../question-with-choices-inpu
 import { FillInTheBlankInputComponent } from '../fill-in-the-blank-input/fill-in-the-blank-input.component';
 import { ClozeTestInputComponent } from '../cloze-test-input/cloze-test-input.component';
 import { MatchingQuestionComponent } from "../matching-question/matching-question.component";
-import { EMatchingQuestionType, EToolList } from '@shared/models/enum';
+import { EBinaryResponseQuestionType, EMatchingQuestionType, EToolList } from '@shared/models/enum';
+import { BinaryResponseQuestionComponent } from "../binary-response-question/binary-response-question.component";
 
 @Component({
   selector: 'app-questions-group-input',
@@ -43,7 +44,8 @@ import { EMatchingQuestionType, EToolList } from '@shared/models/enum';
     TextEditorInputComponent,
     FillInTheBlankInputComponent,
     ClozeTestInputComponent,
-    MatchingQuestionComponent
+    MatchingQuestionComponent,
+    BinaryResponseQuestionComponent
 ],
   templateUrl: './questions-group-input.component.html',
   styleUrl: './questions-group-input.component.scss',
@@ -163,6 +165,26 @@ export class QuestionsGroupInputComponent
             text: "I don't care",
             answer: '1'
           }]
+        }));
+        break;
+      case EToolList.BinaryResponseQuestion:
+        this.formGroupControls.push({
+          id: uuidv4(),
+          controlType: EToolList.BinaryResponseQuestion,
+          controlInstance: 'binaryResponseQuestions'
+        });
+        this.formGroup.addControl('binaryResponseQuestions', new FormControl({
+          type: EBinaryResponseQuestionType.YesNoNotGiven,
+          questions: [
+            {
+              text: "Dan ate the clouds like cotton candy.",
+              answer: "yes"
+            },
+            {
+              text: "It was obvious she was hot, sweaty, and tired.",
+              answer: "not given"
+            }
+          ]
         }));
         break;
       default:

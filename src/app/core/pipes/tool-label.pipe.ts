@@ -16,6 +16,8 @@ export class ToolLabelPipe implements PipeTransform {
         return 'Cloze Question';
       case EToolList.MatchingQuestion:
         return 'Matching Question'
+      case EToolList.BinaryResponseQuestion:
+        return 'Binary Response Question'
       default:
         return '';
     }

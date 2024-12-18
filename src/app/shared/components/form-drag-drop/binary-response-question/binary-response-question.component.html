@@ -1,0 +1,63 @@
+<div [formGroup]="formGroup" class="binary-response-question">
+  <div nz-flex>
+    <div class="binary-response-question__type">
+      <p>Type</p>
+      <nz-select formControlName="type">
+        @for (item of questionTypes; track $index) {
+        <nz-option [nzValue]="item.value" [nzLabel]="item.label"></nz-option>
+        }
+      </nz-select>
+    </div>
+    <button
+      nz-button
+      nz-tooltip
+      nzTooltipTitle="Add question"
+      (click)="handleAddQuestion()"
+    >
+      <span nz-icon nzType="plus" nzTheme="outline"></span>
+    </button>
+  </div>
+  <div formArrayName="questions">
+    @for (item of formGroupControls[1].items; track item.id; let questionIndex =
+    $index) {
+    <div class="question">
+      <p class="question__label">{{ questionIndex + 1 }}</p>
+      <div [formGroupName]="questionIndex" class="question__input">
+        <div nz-flex nzGap="small" class="question__input--question">
+          <nz-form-item>
+            <nz-form-control>
+              <input nz-input formControlName="text" />
+            </nz-form-control>
+          </nz-form-item>
+          <button
+            nz-button
+            nzDanger
+            nz-popconfirm
+            nzPopconfirmTitle="Are you sure delete this question?"
+            nzPopconfirmPlacement="bottom"
+            (nzOnConfirm)="handleRemoveQuestion(questionIndex)"
+          >
+            <span nz-icon nzType="delete" nzTheme="outline"></span>
+          </button>
+        </div>
+        <div nz-flex nzGap="small" class="question__input--option-select">
+          <p>Answer:</p>
+          <nz-form-item>
+            <nz-form-control>
+              <nz-radio-group formControlName="answer">
+                @if (formGroup.get("type")?.value ===
+                eBinaryResponseQuestionType.TrueFalseNotGiven) { @for (item of
+                trueFalseNotGivenSelect; track $index) {
+                <label nz-radio [nzValue]="item.value">{{ item.label }}</label>
+                } } @else { @for (item of yesNoNotGivenSelect; track $index) {
+                <label nz-radio [nzValue]="item.value">{{ item.label }}</label>
+                } }
+              </nz-radio-group>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+      </div>
+    </div>
+    }
+  </div>
+</div>

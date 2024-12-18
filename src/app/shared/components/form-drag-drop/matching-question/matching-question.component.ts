@@ -1,3 +1,4 @@
+import { NgStyle } from '@angular/common';
 import { Component, forwardRef, OnInit } from '@angular/core';
 import {
   ControlValueAccessor,
@@ -8,26 +9,25 @@ import {
   NG_VALUE_ACCESSOR,
   ReactiveFormsModule,
 } from '@angular/forms';
+import { NumberToCharPipe } from '@core/pipes/number-to-char.pipe';
 import { RomanNumeralPipe } from '@core/pipes/number-to-roman-numeral.pipe';
 import {
   FormControlItem,
   MatchingQuestionForm,
   MatchingQuestionFormValue,
 } from '@shared/models/common';
+import { EMatchingQuestionType } from '@shared/models/enum';
+import { Utils } from '@shared/utils/utils';
 import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzCollapseModule } from 'ng-zorro-antd/collapse';
+import { NzFlexModule } from 'ng-zorro-antd/flex';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzInputModule } from 'ng-zorro-antd/input';
-import { NzSelectModule } from 'ng-zorro-antd/select';
-import { v4 as uuidv4 } from 'uuid';
-import { NzCollapseModule } from 'ng-zorro-antd/collapse';
-import { NgStyle } from '@angular/common';
-import { NzFlexModule } from 'ng-zorro-antd/flex';
-import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
-import { pipe } from 'rxjs';
-import { NumberToCharPipe } from '@core/pipes/number-to-char.pipe';
 import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
-import { EMatchingQuestionType } from '@shared/models/enum';
+import { NzSelectModule } from 'ng-zorro-antd/select';
+import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
+import { v4 as uuidv4 } from 'uuid';
 
 interface Panel {
   active: boolean;
@@ -139,43 +139,23 @@ export class MatchingQuestionComponent implements ControlValueAccessor, OnInit {
   ];
 
   constructor() {
-    this.questionTypes = Object.keys(EMatchingQuestionType)
-      .filter(
-        (key) =>
-          !isNaN(
-            Number(
-              EMatchingQuestionType[key as keyof typeof EMatchingQuestionType]
-            )
-          )
-      )
-      .map((key) => ({
-        value: EMatchingQuestionType[key as keyof typeof EMatchingQuestionType],
-        label: key,
-      }));
+    this.questionTypes = Utils.getQuestionTypes(EMatchingQuestionType);
 
     this.formGroup = new FormGroup({
       options: new FormArray([
         new FormGroup({
           id: new FormControl(uuidv4()),
           text: new FormControl(''),
-        }) as FormGroup<{
-          id: FormControl<string>;
-          text: FormControl<string>;
-        }>,
+        }),
       ]),
       questions: new FormArray([
         new FormGroup({
           text: new FormControl(''),
           answer: new FormControl(''),
-        }) as FormGroup<{
-          text: FormControl<string>;
-          answer: FormControl<string>;
-        }>,
+        }),
       ]),
-      type: new FormControl(
-        EMatchingQuestionType.Heading
-      ) as FormControl<number>,
-    });
+      type: new FormControl(EMatchingQuestionType.Heading),
+    }) as FormGroup;
 
     this.formGroup
       .get('type')
@@ -211,7 +191,7 @@ export class MatchingQuestionComponent implements ControlValueAccessor, OnInit {
     };
 
     const optionsArray = new FormArray(
-      createFormGroup(value.options.map(() => ({ text: '', id: "" })))
+      createFormGroup(value.options.map(() => ({ text: '', id: '' })))
     );
     const optionControlsArray = createControlsArray(value.options.length, [
       'id',
@@ -219,7 +199,7 @@ export class MatchingQuestionComponent implements ControlValueAccessor, OnInit {
     ]);
 
     const questionsArray = new FormArray(
-      createFormGroup(value.questions.map(() => ({ answer: '', text: "" })))
+      createFormGroup(value.questions.map(() => ({ answer: '', text: '' })))
     );
     const questionControlsArray = createControlsArray(value.questions.length, [
       'text',

@@ -1,6 +1,6 @@
 import { environment } from '../../../environments/environment';
 import { DragItem } from './common';
-import { EToolList, Skill } from './enum';
+import { EBinaryResponseQuestionType, EToolList, Skill } from './enum';
 
 export const TOKEN = 'i-don-englist-token';
 export const REFRESH_TOKEN = 'i-don-englist-refresh-token';
@@ -80,3 +80,8 @@ export const YesNoNotGivenSelect = [
     value: 'not given',
   },
 ];
+
+export const BinaryResponseQuestionTypeLabel: { [index: number]: string} = {
+  [EBinaryResponseQuestionType.TrueFalseNotGiven]: "True/False/Not Given",
+  [EBinaryResponseQuestionType.YesNoNotGiven]: "Yes/No/Not Given"
+};

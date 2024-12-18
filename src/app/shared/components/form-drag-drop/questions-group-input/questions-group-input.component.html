@@ -75,6 +75,17 @@
             </nz-form-control>
           </nz-form-item>
         }
+        @case (eToolList.BinaryResponseQuestion) {
+          <nz-form-item>
+            <nz-form-label nzRequired="">{{ control.controlType | toolLabel }}</nz-form-label>
+            <nz-form-control>
+              <app-binary-response-question
+                [formControlName]="control.controlInstance ?? ''"
+              >
+              </app-binary-response-question>
+            </nz-form-control>
+          </nz-form-item>
+        }
       }
     }
 </div>
