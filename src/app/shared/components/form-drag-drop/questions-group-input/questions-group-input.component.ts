@@ -28,6 +28,9 @@ import { ClozeTestInputComponent } from '../cloze-test-input/cloze-test-input.co
 import { MatchingQuestionComponent } from "../matching-question/matching-question.component";
 import { EBinaryResponseQuestionType, EMatchingQuestionType, EToolList } from '@shared/models/enum';
 import { BinaryResponseQuestionComponent } from "../binary-response-question/binary-response-question.component";
+import { UploadImageComponent } from "../upload-image/upload-image.component";
+import { NzButtonComponent } from 'ng-zorro-antd/button';
+import { NzIconModule } from 'ng-zorro-antd/icon';
 
 @Component({
   selector: 'app-questions-group-input',
@@ -45,7 +48,10 @@ import { BinaryResponseQuestionComponent } from "../binary-response-question/bin
     FillInTheBlankInputComponent,
     ClozeTestInputComponent,
     MatchingQuestionComponent,
-    BinaryResponseQuestionComponent
+    BinaryResponseQuestionComponent,
+    UploadImageComponent,
+    NzButtonComponent,
+    NzIconModule
 ],
   templateUrl: './questions-group-input.component.html',
   styleUrl: './questions-group-input.component.scss',
@@ -185,6 +191,17 @@ export class QuestionsGroupInputComponent
               answer: "not given"
             }
           ]
+        }));
+        break;
+      case EToolList.Image:
+        this.formGroupControls.push({
+          id: uuidv4(),
+          controlType: EToolList.Image,
+          controlInstance: 'image'
+        });
+        this.formGroup.addControl('image', new FormControl({
+          publicId: uuidv4(),
+          url: "https://i.pinimg.com/736x/0f/f9/b1/0ff9b16e504071ac52053ae2a08b3ae6.jpg"
         }));
         break;
       default:

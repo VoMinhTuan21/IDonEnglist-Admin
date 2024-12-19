@@ -18,6 +18,8 @@ export class ToolLabelPipe implements PipeTransform {
         return 'Matching Question'
       case EToolList.BinaryResponseQuestion:
         return 'Binary Response Question'
+      case EToolList.Image:
+        return "Image"
       default:
         return '';
     }

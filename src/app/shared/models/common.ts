@@ -73,7 +73,8 @@ export type GroupQuestionsForm = FormGroup<{
   questions?: FormArray<FormControl<QuestionWithChoicesFormValue | FillInTheBlankQuestionFormValue>>
   clozeQuestions?: FormControl<ClozeTestQuestionFormValue>;
   matchingQuestions?: FormControl<MatchingQuestionFormValue>;
-  binaryResponseQuestions?: FormControl<BinaryResponseQuestionFormValue>
+  binaryResponseQuestions?: FormControl<BinaryResponseQuestionFormValue>;
+  image?: FormControl<ImageUploadFormValue>
 }>
 
 export type GroupQuestionsFormValue = {
@@ -132,4 +133,9 @@ export type BinaryResponseQuestionFormValue = {
     text: string,
     answer: string
   }]
+}
+
+export type ImageUploadFormValue = {
+  publicId: string;
+  url: string;
 }

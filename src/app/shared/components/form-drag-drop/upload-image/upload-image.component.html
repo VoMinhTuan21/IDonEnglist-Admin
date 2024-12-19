@@ -1,0 +1,18 @@
+<div class="upload-image">
+  <nz-upload 
+    [nzAction]="uploadUrl" 
+    nzName="file" 
+    nzListType="picture-card"
+    [(nzFileList)]="fileList"
+    [nzShowButton]="fileList.length === 0"
+    [nzBeforeUpload]="beforeUpload"
+    [nzPreview]="handlePreview"
+    [nzRemove]="handleRemove"
+    (nzChange)="handleFileListChange($event)"
+  >
+  <div>
+    <span nz-icon nzType="plus"></span>
+    <div style="margin-top: 8px">Upload</div>
+  </div>
+  </nz-upload>
+</div>

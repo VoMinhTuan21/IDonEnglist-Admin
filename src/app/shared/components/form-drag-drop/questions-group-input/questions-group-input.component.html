@@ -86,6 +86,17 @@
             </nz-form-control>
           </nz-form-item>
         }
+        @case (eToolList.Image) {
+          <nz-form-item>
+            <nz-form-label nzRequired="">{{ control.controlType | toolLabel }}</nz-form-label>
+            <nz-form-control>
+              <app-upload-image
+                [formControlName]="control.controlInstance ?? ''"
+              >
+              </app-upload-image>
+            </nz-form-control>
+          </nz-form-item>
+        }
       }
     }
 </div>
