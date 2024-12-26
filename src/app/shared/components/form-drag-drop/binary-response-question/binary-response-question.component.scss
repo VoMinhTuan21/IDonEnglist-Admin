@@ -1,10 +1,6 @@
 @import "../../../../../variables.scss";
 
 .binary-response-question {
-  & > * + * {
-    margin-top: 20px;
-  }
-
   &__type {
     width: 200px;
     margin-left: auto;

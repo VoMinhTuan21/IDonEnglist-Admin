@@ -1,37 +1,54 @@
-import { Component, forwardRef, OnInit } from '@angular/core';
 import {
+  Component,
+  forwardRef,
+  OnDestroy,
+  OnInit
+} from '@angular/core';
+import {
+  AbstractControl,
   ControlValueAccessor,
   FormArray,
   FormControl,
   FormGroup,
   FormsModule,
+  NG_VALIDATORS,
   NG_VALUE_ACCESSOR,
   ReactiveFormsModule,
-  Validators,
+  ValidationErrors,
+  Validator,
+  Validators
 } from '@angular/forms';
+import { DroppableDirective } from '@core/directives/droppable.directive';
+import { ToolLabelPipe } from '@core/pipes/tool-label.pipe';
+import { requiredAllFields } from '@core/validators/required-group-question-validator';
 import {
   DragItem,
   FormControlItem,
   GroupQuestionsForm,
+  GroupQuestionsFormValue,
+  GroupQuestionsMapping,
 } from '@shared/models/common';
-import { NzFormModule } from 'ng-zorro-antd/form';
-import { NzInputModule } from 'ng-zorro-antd/input';
-import { TextEditorInputComponent } from '../text-editor-input/text-editor-input.component';
-import { DroppableDirective } from '@core/directives/droppable.directive';
 import { ToolList } from '@shared/models/constants';
-import { ToolLabelPipe } from '@core/pipes/tool-label.pipe';
-import { v4 as uuidv4 } from 'uuid';
-import { Validators as EditorValidator } from 'ngx-editor';
-import { QuestionWithChoicesInputComponent } from '../question-with-choices-input/question-with-choices-input.component';
-import { FillInTheBlankInputComponent } from '../fill-in-the-blank-input/fill-in-the-blank-input.component';
-import { ClozeTestInputComponent } from '../cloze-test-input/cloze-test-input.component';
-import { MatchingQuestionComponent } from "../matching-question/matching-question.component";
-import { EBinaryResponseQuestionType, EMatchingQuestionType, EToolList } from '@shared/models/enum';
-import { BinaryResponseQuestionComponent } from "../binary-response-question/binary-response-question.component";
-import { UploadImageComponent } from "../upload-image/upload-image.component";
-import { NzButtonComponent } from 'ng-zorro-antd/button';
+import {
+  EBinaryResponseQuestionType,
+  EToolList
+} from '@shared/models/enum';
+import { Utils } from '@shared/utils/utils';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzIconModule } from 'ng-zorro-antd/icon';
-
+import { NzInputModule } from 'ng-zorro-antd/input';
+import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
+import { Validators as EditorValidator } from 'ngx-editor';
+import { combineLatest, filter, Subject, takeUntil } from 'rxjs';
+import { v4 as uuidv4 } from 'uuid';
+import { BinaryResponseQuestionComponent } from '../binary-response-question/binary-response-question.component';
+import { ClozeTestInputComponent } from '../cloze-test-input/cloze-test-input.component';
+import { FillInTheBlankInputComponent } from '../fill-in-the-blank-input/fill-in-the-blank-input.component';
+import { MatchingQuestionComponent } from '../matching-question/matching-question.component';
+import { QuestionWithChoicesInputComponent } from '../question-with-choices-input/question-with-choices-input.component';
+import { TextEditorInputComponent } from '../text-editor-input/text-editor-input.component';
+import { UploadImageComponent } from '../upload-image/upload-image.component';
 @Component({
   selector: 'app-questions-group-input',
   standalone: true,
@@ -50,9 +67,10 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
     MatchingQuestionComponent,
     BinaryResponseQuestionComponent,
     UploadImageComponent,
-    NzButtonComponent,
-    NzIconModule
-],
+    NzButtonModule,
+    NzIconModule,
+    NzPopconfirmModule,
+  ],
   templateUrl: './questions-group-input.component.html',
   styleUrl: './questions-group-input.component.scss',
   providers: [
@@ -61,11 +79,21 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
       useExisting: forwardRef(() => QuestionsGroupInputComponent),
       multi: true,
     },
+    {
+      provide: NG_VALIDATORS,
+      useExisting: forwardRef(() => QuestionsGroupInputComponent),
+      multi: true,
+    },
   ],
 })
 export class QuestionsGroupInputComponent
-  implements ControlValueAccessor, OnInit
+  implements ControlValueAccessor, OnInit, Validator, OnDestroy
 {
+  $hasErrors = new Subject<boolean>();
+  $touched = new Subject<boolean>();
+  $unsubscribe = new Subject<void>();
+
+  private isUpdatingValidity = false; 
   eToolList = EToolList;
   excludeItemsToolForGroupQuestions = ToolList.filter((item) =>
     [EToolList.Passage].includes(item.id)
@@ -80,9 +108,92 @@ export class QuestionsGroupInputComponent
     this.formGroup = new FormGroup({});
   }
 
-  writeValue(value: any): void {
-    if (value) {
-      this.formGroup.setValue(value, { emitEvent: false });
+  ngOnInit(): void {
+    this.initializeForm();
+
+    combineLatest([
+      this.$hasErrors.asObservable(),
+      this.$touched.asObservable(),
+    ])
+      .pipe(
+        filter(
+          ([hasErrors, touched]) => hasErrors === true && touched === true
+        ),
+        takeUntil(this.$unsubscribe)
+      )
+      .subscribe(() => {
+        Utils.markAllAsTouched(this.formGroup);
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.$unsubscribe.next();
+    this.$unsubscribe.complete();
+  }
+
+  validate(control: AbstractControl): ValidationErrors | null {
+    if (!this.isUpdatingValidity) {
+      this.isUpdatingValidity = true;
+      this.$hasErrors.next(control.errors ? true : false);
+      this.$touched.next(control.touched);
+      this.isUpdatingValidity = false;
+    }
+
+    if (this.formGroup.invalid) {
+      return { required : true }
+    }
+
+    if (Utils.isObjectHasEmptyField(this.formGroup.value)) {
+      return { required: true }
+    }
+    
+    return null;
+  }
+
+  writeValue(value: GroupQuestionsFormValue): void {
+    if (!value) {
+      return;
+    }
+
+    for (const key of Object.keys(value)) {
+      switch (key) {
+        case 'instruction':
+        case 'passage':
+        case 'image':
+        case 'clozeQuestions':
+        case 'matchingQuestions':
+        case 'binaryResponseQuestions':
+          this.formGroup.addControl(key, new FormControl(value[key], [key === 'passage' ? EditorValidator.required() : Validators.required]));
+          if (!this.formGroupControls.find(item => item.controlInstance === key)) {
+            this.formGroupControls.push({
+              id: uuidv4(),
+              controlType: GroupQuestionsMapping[key],
+              controlInstance: key,
+            });
+          }
+          break;
+        case 'choicesQuestions':
+        case 'fillInBlankQuestions':
+          if (value[key]?.length) {
+            this.formGroup.addControl(
+              key,
+              new FormArray(
+                value[key]?.map((item) =>
+                  new FormControl(item, [requiredAllFields()])
+                ) ?? []
+              )
+            );
+            this.formGroupControls.push({
+              id: uuidv4(),
+              controlType: GroupQuestionsMapping[key],
+              controlInstance: key,
+              items: value[key]?.map((item) => ({ id: uuidv4() })) ?? [],
+            });
+          }
+          break;
+        default:
+          break;
+      }
     }
   }
 
@@ -93,7 +204,7 @@ export class QuestionsGroupInputComponent
   registerOnTouched(fn: any): void {
     this.onTouched = fn;
   }
-  
+
   setDisabledState?(isDisabled: boolean): void {
     if (isDisabled) {
       this.formGroup.disable();
@@ -103,13 +214,11 @@ export class QuestionsGroupInputComponent
   }
 
   private initializeForm(): void {
-    this.formGroup.valueChanges.subscribe((value) => {
-      this.onChange(value);
-    });
-  }
-
-  ngOnInit(): void {
-    this.initializeForm();
+    this.formGroup.valueChanges
+      .pipe(takeUntil(this.$unsubscribe))
+      .subscribe((value) => {
+        this.onChange(value);
+      });
   }
 
   handleItemDropped(event: DragItem) {
@@ -137,79 +246,86 @@ export class QuestionsGroupInputComponent
         );
         break;
       case EToolList.QuestionWithChoices:
+        this.addQuestion(event, 'choicesQuestions');
+        break;
       case EToolList.FillInTheBlank:
-        this.addQuestion(event)
+        this.addQuestion(event, 'fillInBlankQuestions');
         break;
       case EToolList.ClozeTest:
         this.formGroupControls.push({
           id: uuidv4(),
           controlType: EToolList.ClozeTest,
-          controlInstance: 'clozeQuestions'
+          controlInstance: 'clozeQuestions',
         });
-        this.formGroup.addControl("clozeQuestions", new FormControl({
-          text: '<table style="width: 100%; border-collapse: collapse;"><tr><td contenteditable="true" style="border: 1px solid black; padding: 5px; height: 32px;">Test</td><td contenteditable="true" style="border: 1px solid black; padding: 5px; height: 32px;">Test</td></tr><tr><td contenteditable="true" style="border: 1px solid black; padding: 5px; height: 32px;">center the __BLANK__  or insertion point</td><td contenteditable="true" style="border: 1px solid black; padding: 5px; height: 32px;">__BLANK__  the selection or insertion point</td></tr></table><br>',
-          answers: ["selection", "justifies"]
-      }))
+        this.formGroup.addControl(
+          'clozeQuestions',
+          new FormControl({
+            text: '<table style="width: 100%; border-collapse: collapse;"><tr><td contenteditable="true" style="border: 1px solid black; padding: 5px; height: 32px;">Test</td><td contenteditable="true" style="border: 1px solid black; padding: 5px; height: 32px;">Test</td></tr><tr><td contenteditable="true" style="border: 1px solid black; padding: 5px; height: 32px;">center the __BLANK__  or insertion point</td><td contenteditable="true" style="border: 1px solid black; padding: 5px; height: 32px;">__BLANK__  the selection or insertion point</td></tr></table><br>',
+            answers: ['selection', 'justifies'],
+          }, [requiredAllFields()])
+        );
         break;
       case EToolList.MatchingQuestion:
         this.formGroupControls.push({
           id: uuidv4(),
           controlType: EToolList.MatchingQuestion,
-          controlInstance: 'matchingQuestions'
+          controlInstance: 'matchingQuestions',
         });
-        this.formGroup.addControl("matchingQuestions", new FormControl({
-          options: [
-            { id: '2', text: "abcd"},
-            { id: '1', text: "efgh"},
-          ],
-          type: EMatchingQuestionType.Information,
-          questions: [{
-            text: "don not hurry up",
-            answer: '2'
-          },
-          {
-            text: "I don't care",
-            answer: '1'
-          }]
-        }));
+        this.formGroup.addControl(
+          'matchingQuestions',
+          new FormControl({
+            options: [
+              { id: '2', text: '' },
+            ],
+            type: 0,
+            questions: [
+              {
+                text: '',
+                answer: '',
+              }
+            ],
+          }, [requiredAllFields()])
+        );
         break;
       case EToolList.BinaryResponseQuestion:
         this.formGroupControls.push({
           id: uuidv4(),
           controlType: EToolList.BinaryResponseQuestion,
-          controlInstance: 'binaryResponseQuestions'
+          controlInstance: 'binaryResponseQuestions',
         });
-        this.formGroup.addControl('binaryResponseQuestions', new FormControl({
-          type: EBinaryResponseQuestionType.YesNoNotGiven,
-          questions: [
-            {
-              text: "Dan ate the clouds like cotton candy.",
-              answer: "yes"
-            },
-            {
-              text: "It was obvious she was hot, sweaty, and tired.",
-              answer: "not given"
-            }
-          ]
-        }));
+        this.formGroup.addControl(
+          'binaryResponseQuestions',
+          new FormControl({
+            type: 0,
+            questions: [
+              {
+                text: '',
+                answer: '',
+              }
+            ],
+          }, [requiredAllFields()])
+        );
         break;
       case EToolList.Image:
         this.formGroupControls.push({
           id: uuidv4(),
           controlType: EToolList.Image,
-          controlInstance: 'image'
+          controlInstance: 'image',
         });
-        this.formGroup.addControl('image', new FormControl({
-          publicId: uuidv4(),
-          url: "https://i.pinimg.com/736x/0f/f9/b1/0ff9b16e504071ac52053ae2a08b3ae6.jpg"
-        }));
+        this.formGroup.addControl(
+          'image',
+          new FormControl({
+            publicId: uuidv4(),
+            url: 'https://i.pinimg.com/736x/0f/f9/b1/0ff9b16e504071ac52053ae2a08b3ae6.jpg',
+          }, [Validators.required])
+        );
         break;
       default:
         break;
     }
   }
 
-  addQuestion(question: DragItem) {
+  addQuestion(question: DragItem, controlInstance: string) {
     const existed = this.formGroupControls.find(
       (ctr) => ctr.controlType === question.id
     );
@@ -228,41 +344,59 @@ export class QuestionsGroupInputComponent
       this.formGroupControls.push({
         id: uuidv4(),
         controlType: question.id,
-        controlInstance: 'questions',
+        controlInstance,
         items: [newQuestion],
       });
     }
 
-    let questionsControl = this.formGroup.get('questions') as FormArray;
+    let questionsControl = this.formGroup.get(controlInstance) as FormArray;
     if (!questionsControl) {
-      this.formGroup.addControl("questions", new FormArray([]));
-      questionsControl = this.formGroup.get('questions') as FormArray;
+      this.formGroup.addControl(controlInstance, new FormArray([]));
+      questionsControl = this.formGroup.get(controlInstance) as FormArray;
     }
 
     switch (question.id) {
       case EToolList.QuestionWithChoices:
         questionsControl.push(
           new FormControl({
-            text: '',
+            text: 'Which is the National Date of Vietnam?',
             choices: [
               {
-                text: '',
+                text: '2/9/1945',
+                markAsAnswer: true,
+              },
+              {
+                text: '30/4/1975',
                 markAsAnswer: false,
               },
             ],
-          })
+          }, [requiredAllFields()])
         );
         break;
       case EToolList.FillInTheBlank:
         questionsControl.push(
           new FormControl({
-            text: 'I love __BLANK__ .',
-            answer: 'cooking'
-          })
-        )
+            text: '',
+            answer: '',
+          }, [requiredAllFields()])
+        );
         break;
       default:
         break;
     }
+  }
+
+  removeControl(control: string) {
+    this.formGroupControls = this.formGroupControls.filter(
+      (item) => item.controlInstance !== control
+    );
+    this.formGroup.removeControl(control);
+  }
+
+  removeQuestion(controlInstance: string, index: number) {
+    this.formGroupControls
+      .find((item) => item.controlInstance === controlInstance)
+      ?.items?.splice(index, 1);
+    (this.formGroup.get(controlInstance) as FormArray)?.removeAt(index);
   }
 }

@@ -3,13 +3,17 @@ import {
   ElementRef,
   forwardRef,
   Input,
+  OnChanges,
+  SimpleChanges,
   ViewChild,
-  ViewEncapsulation
+  ViewEncapsulation,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { FillInBlankTextEditorOutput } from '@shared/models/common';
+import { BLANK } from '@shared/models/constants';
 import { Utils } from '@shared/utils/utils';
 import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 import { debounceTime, Subject } from 'rxjs';
@@ -17,7 +21,7 @@ import { debounceTime, Subject } from 'rxjs';
 @Component({
   selector: 'app-fill-in-blank-text-editor',
   standalone: true,
-  imports: [NzIconModule, NzButtonModule, NzToolTipModule],
+  imports: [NzIconModule, NzButtonModule, NzToolTipModule, NzFormModule],
   templateUrl: './fill-in-blank-text-editor.component.html',
   styleUrl: './fill-in-blank-text-editor.component.scss',
   encapsulation: ViewEncapsulation.None,
@@ -29,13 +33,24 @@ import { debounceTime, Subject } from 'rxjs';
     },
   ],
 })
-export class FillInBlankTextEditorComponent implements ControlValueAccessor {
+export class FillInBlankTextEditorComponent
+  implements ControlValueAccessor, OnChanges
+{
+  private blankBoxClass = 'fill-in-blank-text-editor__blank-box';
+  private blankBoxClassError = 'fill-in-blank-text-editor--error-answer';
+
+  private editorErrorClass = 'fill-in-blank-text-editor--error-text';
+
   content: string = '';
   placeholderText: string = 'Type something...';
+  helperText: string = 'This field is required.';
   disableAddBlankButton = false;
 
   @ViewChild('editorInput', { static: true })
   editorInput!: ElementRef<HTMLElement>;
+
+  @ViewChild('editorWrapper', { static: true })
+  editorWrapper!: ElementRef<HTMLElement>;
 
   formatText(command: string) {
     document.execCommand(command, false, undefined);
@@ -51,6 +66,7 @@ export class FillInBlankTextEditorComponent implements ControlValueAccessor {
   private inputSubject = new Subject<string>();
 
   @Input() numOfBlanks = 0;
+  @Input() shouldValidate = 0;
 
   constructor() {
     this.inputSubject
@@ -58,12 +74,21 @@ export class FillInBlankTextEditorComponent implements ControlValueAccessor {
       .subscribe((input) => this.disableAddBlank(input));
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (
+      changes['shouldValidate'] &&
+      changes['shouldValidate'].currentValue > 0
+    ) {
+      this.toggleError();
+    }
+  }
+
   onInput() {
     const target = this.editorInput.nativeElement;
 
     const answers: string[] = [];
 
-    const inputs = target.getElementsByClassName("fill-in-blank-text-editor__blank-box");
+    const inputs = target.getElementsByClassName(this.blankBoxClass);
     for (const input of Array.from(inputs) as HTMLInputElement[]) {
       answers.push(input.value);
     }
@@ -72,8 +97,48 @@ export class FillInBlankTextEditorComponent implements ControlValueAccessor {
     this.inputSubject.next(this.content);
     this.onChange({
       text: this.content,
-      answers
+      answers,
     });
+
+    this.toggleError();
+  }
+
+  toggleError() {
+    let isAllInputsHaveValue = true;
+    const wrapperTarget = this.editorWrapper.nativeElement;
+    if (this.shouldValidate) {
+      wrapperTarget.classList.add(this.editorErrorClass);
+    }
+
+    const editorTarget = this.editorInput.nativeElement;
+
+    const inputs = Array.from(
+      editorTarget.getElementsByClassName(this.blankBoxClass)
+    );
+    for (const input of inputs as HTMLInputElement[]) {
+      const inputValue = input.value;
+
+      if (this.shouldValidate > 0) {
+        if (!inputValue) {
+          input.classList.add(this.blankBoxClassError);
+          isAllInputsHaveValue = false;
+          continue;
+        }
+        input.classList.remove(this.blankBoxClassError);
+      }
+    }
+
+    if (inputs.length > 0) {
+      wrapperTarget.classList.remove(this.editorErrorClass);
+    }
+
+    if (this.content.length === 0) {
+      this.helperText = 'This field is required.';
+    }
+
+    if (this.content.length > 0 && inputs.length === 0) {
+      this.helperText = 'Please add at least a blank';
+    }
   }
 
   addBlank(defaultValue: string = '') {
@@ -122,7 +187,10 @@ export class FillInBlankTextEditorComponent implements ControlValueAccessor {
 
   writeValue(obj?: FillInBlankTextEditorOutput): void {
     if (obj && obj.text && obj.answers.length > 0) {
-      this.editorInput.nativeElement.innerHTML = Utils.fillInBlanks(obj.text, obj.answers)
+      this.editorInput.nativeElement.innerHTML = Utils.fillInBlanks(
+        obj.text,
+        obj.answers
+      );
       this.content = obj.text;
       this.inputSubject.next(this.content);
     }
@@ -149,14 +217,14 @@ export class FillInBlankTextEditorComponent implements ControlValueAccessor {
   }
 
   insertTable() {
-    const rows = prompt("Enter the number of rows:", "2");
-    const cols = prompt("Enter the number of columns:", "2");
-    
+    const rows = prompt('Enter the number of rows:', '2');
+    const cols = prompt('Enter the number of columns:', '2');
+
     if (rows && cols) {
       const table = document.createElement('table');
       table.style.width = '100%';
       table.style.borderCollapse = 'collapse';
-      
+
       for (let i = 0; i < parseInt(rows); i++) {
         const row = document.createElement('tr');
         for (let j = 0; j < parseInt(cols); j++) {
@@ -164,19 +232,19 @@ export class FillInBlankTextEditorComponent implements ControlValueAccessor {
           cell.style.border = '1px solid black';
           cell.style.padding = '5px';
           cell.style.height = '32px';
-          cell.textContent = "abcd..."
+          cell.textContent = 'abcd...';
           cell.contentEditable = 'true'; // Make the cell editable
           row.appendChild(cell);
         }
         table.appendChild(row);
       }
-      
+
       const selection = window.getSelection();
       if (selection && selection.rangeCount > 0) {
         const range = selection.getRangeAt(0);
         range.insertNode(table);
       }
-      
+
       this.onInput(); // Update input state
     }
   }

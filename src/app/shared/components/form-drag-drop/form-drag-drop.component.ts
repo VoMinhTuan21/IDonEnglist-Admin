@@ -9,12 +9,15 @@ import {
 import { DraggableDirective } from '@core/directives/draggable.directive';
 import { DroppableDirective } from '@core/directives/droppable.directive';
 import { ToolLabelPipe } from '@core/pipes/tool-label.pipe';
+import { requiredAllFields } from '@core/validators/required-group-question-validator';
 import {
   DragItem,
   FormControlItem,
   GroupQuestionsFormValue
 } from '@shared/models/common';
 import { ToolList } from '@shared/models/constants';
+import { EToolList } from '@shared/models/enum';
+import { Utils } from '@shared/utils/utils';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzCollapseModule } from 'ng-zorro-antd/collapse';
 import { NzFormModule } from 'ng-zorro-antd/form';
@@ -27,7 +30,6 @@ import { Validators as EditorValidator } from 'ngx-editor';
 import { v4 as uuidv4 } from 'uuid';
 import { QuestionsGroupInputComponent } from './questions-group-input/questions-group-input.component';
 import { TextEditorInputComponent } from './text-editor-input/text-editor-input.component';
-import { EToolList } from '@shared/models/enum';
 
 @Component({
   selector: 'app-form-drag-drop',
@@ -46,7 +48,7 @@ import { EToolList } from '@shared/models/enum';
     NzCollapseModule,
     NzPopconfirmModule,
     TextEditorInputComponent,
-    QuestionsGroupInputComponent,
+    QuestionsGroupInputComponent
   ],
   templateUrl: './form-drag-drop.component.html',
   styleUrl: './form-drag-drop.component.scss',
@@ -66,7 +68,12 @@ export class FormDragDropComponent {
   groupQuestionsFormList: FormGroup<{
     groups: FormArray<FormControl<GroupQuestionsFormValue>>;
   }> = new FormGroup({
-    groups: new FormArray([new FormControl()]),
+    groups: new FormArray([new FormControl({
+      image: {
+        publicId: '',
+        url: 'https://i.pinimg.com/736x/69/bf/70/69bf70c243eae9affd3832f0c1c3b7ac.jpg',
+      }
+    }, [requiredAllFields()])]) as FormArray<FormControl<GroupQuestionsFormValue>>,
   });
 
   listOfFormGroupsFormListControl: FormControlItem[] = [
@@ -110,7 +117,7 @@ export class FormDragDropComponent {
     });
 
     (this.groupQuestionsFormList.get('groups') as FormArray).push(
-      new FormControl()
+      new FormControl({}, [Validators.min(1)])
     );
   }
 
@@ -126,9 +133,13 @@ export class FormDragDropComponent {
   }
 
   handleSubmitGroupQuestionsListForm() {
-    console.log(
-      'this.groupQuestionsFormList.value: ',
-      this.groupQuestionsFormList.value
-    );
+    if (this.groupQuestionsFormList.valid) {
+      console.log(
+        'this.groupQuestionsFormList.value: ',
+        this.groupQuestionsFormList.value
+      );
+    } else {
+      Utils.markAllAsTouched(this.groupQuestionsFormList);
+    }
   }
 }

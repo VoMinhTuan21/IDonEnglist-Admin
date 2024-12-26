@@ -7,4 +7,30 @@
     grid-template-columns: 1fr;
     row-gap: 10px;
   }
+
+  &__item {
+    display: flex;
+    column-gap: 12px;
+    align-items: center;
+
+    & > :nth-child(2) {
+      flex: 1;
+      // padding: 10px;
+      border: none;
+      outline-offset: 6px;
+      border-radius: 6px;
+      outline: 2px dashed transparent;
+      transition: outline-color 0.3s ease;
+    }
+
+    [nz-icon] {
+      height: fit-content;
+      cursor: pointer;
+      flex-shrink: 0;
+
+      &:hover ~ * {
+        outline-color: lightblue;
+      }
+    }
+  }
 }

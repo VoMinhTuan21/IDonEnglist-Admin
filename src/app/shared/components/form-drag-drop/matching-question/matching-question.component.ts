@@ -1,13 +1,18 @@
 import { NgStyle } from '@angular/common';
-import { Component, forwardRef, OnInit } from '@angular/core';
+import { Component, forwardRef, OnDestroy, OnInit } from '@angular/core';
 import {
+  AbstractControl,
   ControlValueAccessor,
   FormArray,
   FormControl,
   FormGroup,
   FormsModule,
+  NG_VALIDATORS,
   NG_VALUE_ACCESSOR,
   ReactiveFormsModule,
+  ValidationErrors,
+  Validator,
+  Validators,
 } from '@angular/forms';
 import { NumberToCharPipe } from '@core/pipes/number-to-char.pipe';
 import { RomanNumeralPipe } from '@core/pipes/number-to-roman-numeral.pipe';
@@ -27,6 +32,7 @@ import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
+import { combineLatest, filter, Subject, takeUntil } from 'rxjs';
 import { v4 as uuidv4 } from 'uuid';
 
 interface Panel {
@@ -62,11 +68,25 @@ interface Panel {
       useExisting: forwardRef(() => MatchingQuestionComponent),
       multi: true,
     },
+    {
+      provide: NG_VALIDATORS,
+      useExisting: forwardRef(() => MatchingQuestionComponent),
+      multi: true,
+    },
   ],
 })
-export class MatchingQuestionComponent implements ControlValueAccessor, OnInit {
+export class MatchingQuestionComponent implements ControlValueAccessor, OnInit, Validator, OnDestroy {
+  private isUpdatingValidity = false;
+
+  private onChange: (value: any) => void = () => {};
+  private onTouched: () => void = () => {};
+  
   type: EMatchingQuestionType = EMatchingQuestionType.Heading;
   eMatchingQuestionType = EMatchingQuestionType;
+
+  $hasErrors = new Subject<boolean>();
+  $touched = new Subject<boolean>();
+  $unsubscribe = new Subject<void>();
 
   formGroup!: MatchingQuestionForm;
 
@@ -115,9 +135,6 @@ export class MatchingQuestionComponent implements ControlValueAccessor, OnInit {
     },
   ];
 
-  private onChange: (value: any) => void = () => {};
-  private onTouched: () => void = () => {};
-
   matchingSelectionList: {
     value: string;
     label: string;
@@ -144,17 +161,17 @@ export class MatchingQuestionComponent implements ControlValueAccessor, OnInit {
     this.formGroup = new FormGroup({
       options: new FormArray([
         new FormGroup({
-          id: new FormControl(uuidv4()),
-          text: new FormControl(''),
+          id: new FormControl(uuidv4(), [Validators.required]),
+          text: new FormControl('', [Validators.required]),
         }),
       ]),
       questions: new FormArray([
         new FormGroup({
-          text: new FormControl(''),
-          answer: new FormControl(''),
+          text: new FormControl('', [Validators.required]),
+          answer: new FormControl('', [Validators.required]),
         }),
       ]),
-      type: new FormControl(EMatchingQuestionType.Heading),
+      type: new FormControl(EMatchingQuestionType.Heading, [Validators.required, Validators.min(1)]),
     }) as FormGroup;
 
     this.formGroup
@@ -164,6 +181,40 @@ export class MatchingQuestionComponent implements ControlValueAccessor, OnInit {
 
   ngOnInit(): void {
     this.initializeForm();
+
+    combineLatest([
+      this.$hasErrors.asObservable(),
+      this.$touched.asObservable(),
+    ])
+      .pipe(
+        filter(
+          ([hasErrors, touched]) => hasErrors === true && touched === true
+        ),
+        takeUntil(this.$unsubscribe)
+      )
+      .subscribe(() => {
+        Utils.markAllAsTouched(this.formGroup);
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.$unsubscribe.next();
+    this.$unsubscribe.complete();
+  }
+
+  validate(control: AbstractControl): ValidationErrors | null {
+    if (!this.isUpdatingValidity) {
+      this.isUpdatingValidity = true;
+      this.$hasErrors.next(control.errors ? true : false);
+      this.$touched.next(control.touched);
+      this.isUpdatingValidity = false;
+    }
+
+    if (this.formGroup.invalid) {
+      return { hasError: true }
+    }
+    
+    return null;
   }
 
   writeValue(value: MatchingQuestionFormValue): void {
@@ -174,7 +225,7 @@ export class MatchingQuestionComponent implements ControlValueAccessor, OnInit {
         (field) =>
           new FormGroup({
             ...Object.fromEntries(
-              Object.entries(field).map(([key]) => [key, new FormControl('')])
+              Object.entries(field).map(([key]) => [key, new FormControl('', [Validators.required])])
             ),
           })
       );
@@ -263,8 +314,8 @@ export class MatchingQuestionComponent implements ControlValueAccessor, OnInit {
 
     (this.formGroup.get('options') as FormArray)?.push(
       new FormGroup({
-        id: new FormControl(uuidv4()),
-        text: new FormControl(''),
+        id: new FormControl(uuidv4(), [Validators.required]),
+        text: new FormControl('', [Validators.required]),
       })
     );
   }
@@ -314,8 +365,8 @@ export class MatchingQuestionComponent implements ControlValueAccessor, OnInit {
 
     (this.formGroup.get('questions') as FormArray)?.push(
       new FormGroup({
-        text: new FormControl(''),
-        answer: new FormControl(''),
+        text: new FormControl('', [Validators.required]),
+        answer: new FormControl('', [Validators.required]),
       })
     );
   }

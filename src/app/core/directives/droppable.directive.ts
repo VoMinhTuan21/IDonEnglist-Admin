@@ -4,9 +4,10 @@ import {
   EventEmitter,
   HostListener,
   Input,
+  OnDestroy,
   OnInit,
   Output,
-  Renderer2,
+  Renderer2
 } from '@angular/core';
 import { DragDropService } from '@core/services/drag-drop.service';
 import { DragItem } from '@shared/models/common';
@@ -15,7 +16,7 @@ import { DragItem } from '@shared/models/common';
   selector: '[appDroppable]',
   standalone: true,
 })
-export class DroppableDirective implements OnInit {
+export class DroppableDirective implements OnInit, OnDestroy {
   @Input() appDroppable: boolean = false;
   @Input() acceptList?: DragItem[];
   @Input() excludeList?: DragItem[];
@@ -23,16 +24,23 @@ export class DroppableDirective implements OnInit {
 
   dropCover!: HTMLDivElement;
   private isDraggingOver = false;
-  private isItemAllowed = false;
+  private isItemAllowed = true;
+  private observer: MutationObserver;
+  private isUpdating = false;
 
   constructor(
     private el: ElementRef,
     private renderer: Renderer2,
-    private dragDropService: DragDropService
+    private dragDropService: DragDropService,
   ) {
     this.dropCover = this.renderer.createElement('div');
     this.renderer.addClass(this.dropCover, 'drop-cover');
     this.renderer.setProperty(this.dropCover, 'textContent', 'Drop item here');
+    this.observer = new MutationObserver(() => {
+      if (!this.isUpdating) {
+        this.updateDropCover();
+      }
+    });
   }
 
   private notHasChildren() {
@@ -45,31 +53,65 @@ export class DroppableDirective implements OnInit {
     );
   }
 
-  ngOnInit(): void {
+  private updateDropCover() {
+    this.isUpdating = true;
     if (this.notHasChildren()) {
       this.renderer.appendChild(this.el.nativeElement, this.dropCover);
+    } else {
+      this.renderer.removeChild(this.el.nativeElement, this.dropCover);
     }
+
+    setTimeout(() => {
+      this.isUpdating = false;
+    }, 300);
+  }
+
+  ngOnInit(): void {
+    this.observer.observe(this.el.nativeElement, { childList: true});
+  }
+
+  ngOnDestroy(): void {
+    this.observer.disconnect();
   }
 
   onDragEnter(event: MouseEvent): void {
     event.preventDefault();
     if (this.appDroppable && this.dragDropService.draggedItem) {
-      if (this.isItemAllowed) {
-        this.renderer.removeClass(this.dropCover, 'drop-cover--error');
-        this.renderer.setProperty(
-          this.dropCover,
-          'textContent',
-          'Drop item here'
-        );
+      let existed = (this.el.nativeElement as HTMLDivElement).getElementsByClassName('drop-cover')?.[0] as HTMLDivElement;
+      if (!existed) {
+        if (this.isItemAllowed) {
+          this.renderer.removeClass(this.dropCover, 'drop-cover--error');
+          this.renderer.setProperty(
+            this.dropCover,
+            'textContent',
+            'Drop item here'
+          );
+        } else {
+          this.renderer.addClass(this.dropCover, 'drop-cover--error');
+          this.renderer.setProperty(
+            this.dropCover,
+            'innerHTML',
+            'Item is not allowed'
+          );
+        }
+        this.renderer.appendChild(this.el.nativeElement, this.dropCover); 
       } else {
-        this.renderer.addClass(this.dropCover, 'drop-cover--error');
-        this.renderer.setProperty(
-          this.dropCover,
-          'innerHTML',
-          'Item is not allowed'
-        );
+        if (this.isItemAllowed) {
+          this.renderer.removeClass(existed, 'drop-cover--error');
+          this.renderer.setProperty(
+            existed,
+            'textContent',
+            'Drop item here'
+          );
+        } else {
+          this.renderer.addClass(existed, 'drop-cover--error');
+          this.renderer.setProperty(
+            existed,
+            'innerHTML',
+            'Item is not allowed'
+          );
+        }
       }
-      this.renderer.appendChild(this.el.nativeElement, this.dropCover);
     }
   }
 
@@ -132,9 +174,9 @@ export class DroppableDirective implements OnInit {
       }
     }
 
-    setTimeout(() => {
-      this.onDragLeave(event);
-    }, 100);
+    // setTimeout(() => {
+    //   this.onDragLeave(event);
+    // }, 100);
 
     this.isItemAllowed = true;
   }

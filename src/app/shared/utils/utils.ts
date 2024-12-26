@@ -2,6 +2,8 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzUploadFile } from 'ng-zorro-antd/upload';
 import { Observable, Observer } from 'rxjs';
 import { Category } from '../../features/category/models/category.model';
+import { FormArray, FormGroup } from '@angular/forms';
+import { BLANK, BlankRegex } from '@shared/models/constants';
 
 export const Utils = {
   findCategoryInTree: (categories: Category[], id: number): Category | null => {
@@ -121,7 +123,7 @@ export const Utils = {
     }),
   replaceInputTags: (inputString: string): string => {
     // Use a regular expression to replace <input> tags with "__BLANK__"
-    const result = inputString.replace(/<input[^>]*>/g, '__BLANK__');
+    const result = inputString.replace(/<input[^>]*>/g, BLANK);
     if (result === '<br>') {
       return '';
     }
@@ -130,13 +132,13 @@ export const Utils = {
   fillInBlanks: (template: string, answers: string[]): string => {
     // Use a regular expression to replace "__BLANK__" with values from the answers array
     let index = 0;
-    const result = template.replace(/__BLANK__/g, () => {
+    const result = template.replace(BlankRegex, () => {
       // Replace with the corresponding answer if available
       return index < answers.length
         ? `<input type="text" class="fill-in-blank-text-editor__blank-box" placeholder="Type answer..." value="${
             answers[index++]
           }">`
-        : '__BLANK__';
+        : BLANK;
     });
     return result;
   },
@@ -148,4 +150,24 @@ export const Utils = {
         label: key,
       }));
   },
+  isObjectHasEmptyField: (obj: Record<string, any>): boolean => {
+    if (Object.keys(obj).length === 0) {
+        return true;
+    }
+
+    return Object.values(obj).some(value => 
+        value === undefined || value === null || value === '' || 
+        (typeof value === 'object' && Utils.isObjectHasEmptyField(value))
+    );
+  },
+  markAllAsTouched: (control: FormGroup | FormArray): void => {
+    Object.values(control.controls).forEach((ctrl) => {
+      if (ctrl instanceof FormGroup || ctrl instanceof FormArray) {
+        Utils.markAllAsTouched(ctrl);
+      } else {
+        ctrl.markAsTouched();
+        ctrl.updateValueAndValidity();
+      }
+    });
+  }
 };

@@ -1,4 +1,4 @@
-import { Component, forwardRef, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, forwardRef, Input, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
 import {
   Editor,
@@ -12,6 +12,7 @@ import {
   imports: [NgxEditorModule, ReactiveFormsModule, FormsModule],
   templateUrl: './text-editor-input.component.html',
   styleUrl: './text-editor-input.component.scss',
+  encapsulation: ViewEncapsulation.None,
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -46,7 +47,6 @@ export class TextEditorInputComponent implements ControlValueAccessor, OnInit, O
 
   registerOnChange(fn: (value: string) => void): void {
     this.onChange = fn;
-    console.log("fn: ", fn);
   }
 
   registerOnTouched(fn: () => void): void {

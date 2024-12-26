@@ -1,7 +1,8 @@
 import { Component, forwardRef } from '@angular/core';
 import { FillInBlankTextEditorComponent } from "../fill-in-blank-text-editor/fill-in-blank-text-editor.component";
-import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { AbstractControl, ControlValueAccessor, FormsModule, NG_VALIDATORS, NG_VALUE_ACCESSOR, ValidationErrors, Validator } from '@angular/forms';
 import { ClozeTestQuestionFormValue, FillInBlankTextEditorOutput } from '@shared/models/common';
+import { Utils } from '@shared/utils/utils';
 
 @Component({
   selector: 'app-cloze-test-input',
@@ -14,11 +15,17 @@ import { ClozeTestQuestionFormValue, FillInBlankTextEditorOutput } from '@shared
       provide: NG_VALUE_ACCESSOR,
       useExisting: forwardRef(() => ClozeTestInputComponent),
       multi: true,
+    },
+    {
+      provide: NG_VALIDATORS,
+      useExisting: forwardRef(() => ClozeTestInputComponent),
+      multi: true
     }
   ]
 })
-export class ClozeTestInputComponent implements ControlValueAccessor {
+export class ClozeTestInputComponent implements ControlValueAccessor, Validator {
   value: FillInBlankTextEditorOutput = { text: '', answers: [] };
+  shouldValidate = 0;
 
   private onChange: (value: ClozeTestQuestionFormValue) => void = () => {};
   private onTouched: () => void = () => {};
@@ -36,9 +43,20 @@ export class ClozeTestInputComponent implements ControlValueAccessor {
   }
 
   onInput(value: FillInBlankTextEditorOutput) {
+    this.value = value;
     this.onChange({
       text: value.text,
       answers: value.answers
     })
+  }
+
+  validate(control: AbstractControl): ValidationErrors | null {
+    if (Utils.isObjectHasEmptyField(this.value)) {
+      this.shouldValidate = Math.round(Math.random() * 1000000);
+      return { required: true }
+    }
+    
+    this.shouldValidate = 0;
+    return null;
   }
 }

@@ -6,6 +6,7 @@
   outline: 0;
   border-radius: 6px;
   position: relative;
+  margin-bottom: 24px;
 
   &:hover, &:focus, &:focus-visible {
     border-color: #a8caed;
@@ -81,6 +82,34 @@
   
     &:focus {
       box-shadow: 0 0 2px rgba(123, 168, 224, 0.2);
+    }
+  }
+
+  &--error-text {
+    border-color: $error !important;
+    margin-bottom: 0px;
+
+    &:focus, &:focus-within {
+      box-shadow: 0 0 0 2px rgba($error, $alpha: 0.2) !important
+    }
+
+    & ~ .helper-text {
+      display: block !important;
+    }
+  }
+
+  &--error-answer {
+    border-color: $error !important;
+    background-color: rgba($error, $alpha: 0.1) !important;
+  }
+
+  &__container {
+    .helper-text {
+      display: none;
+      color: $error;
+      font-size: 14px;
+      line-height: 1.5;
+      min-height: 24px;
     }
   }
 }

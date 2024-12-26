@@ -50,7 +50,9 @@
         <nz-collapse>
           @for (group of listOfFormGroupsFormListControl; track groupIndex; let groupIndex = $index) {
             <nz-collapse-panel [nzHeader]="'Group ' + (groupIndex + 1)" [nzActive]="groupIndex === 0" [nzExtra]="extraTpl">
-              <app-questions-group-input [formControlName]="groupIndex"></app-questions-group-input>
+              <app-questions-group-input 
+                [formControlName]="groupIndex" 
+              ></app-questions-group-input>
             </nz-collapse-panel>
             <ng-template #extraTpl>
               <p

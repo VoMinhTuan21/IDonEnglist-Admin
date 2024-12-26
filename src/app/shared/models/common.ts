@@ -63,14 +63,15 @@ export type QuestionWithChoicesFormValue = {
   text: string;
   choices: [{
     text: string;
-    markAsAnser: boolean;
+    markAsAnswer: boolean;
   }]
 }
 
 export type GroupQuestionsForm = FormGroup<{
   instruction?: FormControl<string | null>;
   passage?: FormControl<string | null>;
-  questions?: FormArray<FormControl<QuestionWithChoicesFormValue | FillInTheBlankQuestionFormValue>>
+  choicesQuestions?: FormArray<FormControl<QuestionWithChoicesFormValue>>;
+  fillInBlankQuestions?: FormArray<FormControl<FillInTheBlankQuestionFormValue>>;
   clozeQuestions?: FormControl<ClozeTestQuestionFormValue>;
   matchingQuestions?: FormControl<MatchingQuestionFormValue>;
   binaryResponseQuestions?: FormControl<BinaryResponseQuestionFormValue>;
@@ -80,7 +81,23 @@ export type GroupQuestionsForm = FormGroup<{
 export type GroupQuestionsFormValue = {
   instruction?: string;
   passage?: string;
-  questions: QuestionWithChoicesForm[]
+  choicesQuestions?: QuestionWithChoicesFormValue[];
+  fillInBlankQuestions?: FillInTheBlankQuestionFormValue[];
+  clozeQuestions?: ClozeTestQuestionFormValue;
+  matchingQuestions?: MatchingQuestionFormValue;
+  binaryResponseQuestions?: BinaryResponseQuestionFormValue;
+  image?: ImageUploadFormValue
+}
+
+export const GroupQuestionsMapping = {
+  instruction: EToolList.Direction,
+  passage: EToolList.Passage,
+  choicesQuestions: EToolList.QuestionWithChoices,
+  fillInBlankQuestions: EToolList.FillInTheBlank,
+  clozeQuestions: EToolList.ClozeTest,
+  matchingQuestions: EToolList.MatchingQuestion,
+  binaryResponseQuestions: EToolList.BinaryResponseQuestion,
+  image: EToolList.Image
 }
 
 export type FillInTheBlankQuestionFormValue = {
@@ -108,15 +125,15 @@ export type MatchingQuestionForm = FormGroup<{
 }>
 
 export type MatchingQuestionFormValue = {
-  options: [{
+  options: {
     id: string;
     text: string;
-  }],
+  }[],
   type: EMatchingQuestionType,
-  questions: [{
+  questions: {
     text: string;
     answer: string;
-  }]
+  }[]
 }
 
 export type  BinaryResponseQuestionForm = FormGroup<{
@@ -129,10 +146,10 @@ export type  BinaryResponseQuestionForm = FormGroup<{
 
 export type BinaryResponseQuestionFormValue = {
   type: EBinaryResponseQuestionType,
-  questions: [{
+  questions: {
     text: string,
     answer: string
-  }]
+  }[]
 }
 
 export type ImageUploadFormValue = {

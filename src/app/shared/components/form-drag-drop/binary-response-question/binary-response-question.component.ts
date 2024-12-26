@@ -1,12 +1,17 @@
-import { Component, forwardRef, OnInit } from '@angular/core';
+import { Component, forwardRef, OnDestroy, OnInit } from '@angular/core';
 import {
+  AbstractControl,
   ControlValueAccessor,
   FormArray,
   FormControl,
   FormGroup,
   FormsModule,
+  NG_VALIDATORS,
   NG_VALUE_ACCESSOR,
   ReactiveFormsModule,
+  ValidationErrors,
+  Validator,
+  Validators,
 } from '@angular/forms';
 import {
   BinaryResponseQuestionForm,
@@ -26,6 +31,7 @@ import { NzRadioModule } from 'ng-zorro-antd/radio';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { v4 as uuidv4 } from 'uuid';
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
+import { combineLatest, filter, Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-binary-response-question',
@@ -51,13 +57,24 @@ import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
       useExisting: forwardRef(() => BinaryResponseQuestionComponent),
       multi: true,
     },
+    {
+      provide: NG_VALIDATORS,
+      useExisting: forwardRef(() => BinaryResponseQuestionComponent),
+      multi: true,
+    },
   ],
 })
 export class BinaryResponseQuestionComponent
-  implements ControlValueAccessor, OnInit
+  implements ControlValueAccessor, OnInit, Validator, OnDestroy
 {
+  private isUpdatingValidity = false;
+
   private onChange: (value: any) => void = () => {};
   private onTouched: () => void = () => {};
+
+  $hasErrors = new Subject<boolean>();
+  $touched = new Subject<boolean>();
+  $unsubscribe = new Subject<void>();
 
   eBinaryResponseQuestionType = EBinaryResponseQuestionType;
 
@@ -101,11 +118,11 @@ export class BinaryResponseQuestionComponent
     }));
 
     this.formGroup = new FormGroup({
-      type: new FormControl(EBinaryResponseQuestionType.TrueFalseNotGiven),
+      type: new FormControl(EBinaryResponseQuestionType.TrueFalseNotGiven, [Validators.required, Validators.min(1)]),
       questions: new FormArray([
         new FormGroup({
-          text: new FormControl(''),
-          answer: new FormControl(''),
+          text: new FormControl('', [Validators.required]),
+          answer: new FormControl('', [Validators.required]),
         }),
       ]),
     }) as FormGroup;
@@ -117,8 +134,8 @@ export class BinaryResponseQuestionComponent
     }
 
     const questionsArray = new FormArray(Array.from({length: value.questions.length},  () => new FormGroup({
-      text: new FormControl(''),
-          answer: new FormControl(''),
+      text: new FormControl('', [Validators.required]),
+          answer: new FormControl('', [Validators.required]),
     })));
 
     const questionControlsArray = Array.from({length: value.questions.length}, () => ({
@@ -154,6 +171,40 @@ export class BinaryResponseQuestionComponent
 
   ngOnInit(): void {
     this.initializeForm();
+
+    combineLatest([
+      this.$hasErrors.asObservable(),
+      this.$touched.asObservable(),
+    ])
+      .pipe(
+        filter(
+          ([hasErrors, touched]) => hasErrors === true && touched === true
+        ),
+        takeUntil(this.$unsubscribe)
+      )
+      .subscribe(() => {
+        Utils.markAllAsTouched(this.formGroup);
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.$unsubscribe.next();
+    this.$unsubscribe.complete();
+  }
+
+  validate(control: AbstractControl): ValidationErrors | null {
+    if (!this.isUpdatingValidity) {
+      this.isUpdatingValidity = true;
+      this.$hasErrors.next(control.errors ? true : false);
+      this.$touched.next(control.touched);
+      this.isUpdatingValidity = false;
+    }
+
+    if (this.formGroup.invalid) {
+      return { hasError: true }
+    }
+    
+    return null;
   }
 
   private initializeForm(): void {
@@ -179,8 +230,8 @@ export class BinaryResponseQuestionComponent
 
     (this.formGroup.get('questions') as FormArray)?.push(
       new FormGroup({
-        text: new FormControl(""),
-        answer: new FormControl("")
+        text: new FormControl("", [Validators.required]),
+        answer: new FormControl("", [Validators.required])
       })
     );
   }

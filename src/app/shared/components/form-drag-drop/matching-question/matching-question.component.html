@@ -1,11 +1,15 @@
 <div [formGroup]="formGroup" class="matching-question">
   <div class="matching-question__type">
     <p>Type</p>
-    <nz-select formControlName="type">
-      @for (item of questionTypes; track $index) {
-      <nz-option [nzValue]="item.value" [nzLabel]="item.label"></nz-option>
-      }
-    </nz-select>
+    <nz-form-item>
+      <nz-form-control nzErrorTip="This field is required">
+        <nz-select formControlName="type">
+          @for (item of questionTypes; track $index) {
+          <nz-option [nzValue]="item.value" [nzLabel]="item.label"></nz-option>
+          }
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
   </div>
   <nz-collapse [nzBordered]="false">
     <nz-collapse-panel
@@ -25,7 +29,7 @@
         <div [formGroupName]="optionIndex" class="box-item__input">
           <input hidden formControlName="id" />
           <nz-form-item>
-            <nz-form-control>
+            <nz-form-control nzErrorTip="This field is required">
               <input nz-input formControlName="text" />
             </nz-form-control>
           </nz-form-item>
@@ -57,7 +61,7 @@
         <div [formGroupName]="questionIndex" class="box-item__input">
           <div nz-flex nzGap="small" class="box-item__input--question">
             <nz-form-item>
-              <nz-form-control>
+              <nz-form-control nzErrorTip="This field is required">
                 <input nz-input formControlName="text" />
               </nz-form-control>
             </nz-form-item>
@@ -75,7 +79,7 @@
           <div nz-flex nzGap="small" class="box-item__input--option-select">
             <p>Matching with</p>
             <nz-form-item>
-              <nz-form-control>
+              <nz-form-control nzErrorTip="This field is required">
                 <nz-select
                   formControlName="answer"
                   nzPlaceHolder="Select option"

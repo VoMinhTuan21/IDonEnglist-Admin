@@ -85,3 +85,6 @@ export const BinaryResponseQuestionTypeLabel: { [index: number]: string} = {
   [EBinaryResponseQuestionType.TrueFalseNotGiven]: "True/False/Not Given",
   [EBinaryResponseQuestionType.YesNoNotGiven]: "Yes/No/Not Given"
 };
+
+export const BLANK = '__BLANK__'
+export const BlankRegex = /__BLANK__/g;
