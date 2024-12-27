@@ -37,6 +37,7 @@ export class DroppableDirective implements OnInit, OnDestroy {
     this.renderer.addClass(this.dropCover, 'drop-cover');
     this.renderer.setProperty(this.dropCover, 'textContent', 'Drop item here');
     this.observer = new MutationObserver(() => {
+      console.log("this.isUpdating: ", this.isUpdating);
       if (!this.isUpdating) {
         this.updateDropCover();
       }
@@ -55,19 +56,22 @@ export class DroppableDirective implements OnInit, OnDestroy {
 
   private updateDropCover() {
     this.isUpdating = true;
+    this.observer.disconnect();
     if (this.notHasChildren()) {
       this.renderer.appendChild(this.el.nativeElement, this.dropCover);
     } else {
       this.renderer.removeChild(this.el.nativeElement, this.dropCover);
     }
-
-    setTimeout(() => {
-      this.isUpdating = false;
-    }, 300);
   }
 
   ngOnInit(): void {
     this.observer.observe(this.el.nativeElement, { childList: true});
+
+    if (this.notHasChildren()) {
+      this.renderer.appendChild(this.el.nativeElement, this.dropCover);
+    } else {
+      this.renderer.removeChild(this.el.nativeElement, this.dropCover);
+    }
   }
 
   ngOnDestroy(): void {
@@ -174,9 +178,9 @@ export class DroppableDirective implements OnInit, OnDestroy {
       }
     }
 
-    // setTimeout(() => {
-    //   this.onDragLeave(event);
-    // }, 100);
+    setTimeout(() => {
+      this.onDragLeave(event);
+    }, 100);
 
     this.isItemAllowed = true;
   }

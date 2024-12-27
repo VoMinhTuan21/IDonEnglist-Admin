@@ -156,3 +156,13 @@ export type ImageUploadFormValue = {
   publicId: string;
   url: string;
 }
+
+export type SectionForm = FormGroup<{
+  instruction?: FormControl<string | null>;
+  passage?: FormControl<string | null>;
+}>
+
+export type SectionFormValue = {
+  instruction?: string;
+  passage?: string;
+}

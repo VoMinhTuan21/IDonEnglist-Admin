@@ -13,7 +13,8 @@ import { requiredAllFields } from '@core/validators/required-group-question-vali
 import {
   DragItem,
   FormControlItem,
-  GroupQuestionsFormValue
+  GroupQuestionsFormValue,
+  SectionForm
 } from '@shared/models/common';
 import { ToolList } from '@shared/models/constants';
 import { EToolList } from '@shared/models/enum';
@@ -62,17 +63,17 @@ export class FormDragDropComponent {
 
   droppedItems: any[] = [];
 
-  sectionForm: FormGroup<any> = new FormGroup<any>({});
+  sectionForm: SectionForm = new FormGroup({});
   listOfSectionFormControls: FormControlItem[] = [];
 
   groupQuestionsFormList: FormGroup<{
     groups: FormArray<FormControl<GroupQuestionsFormValue>>;
   }> = new FormGroup({
     groups: new FormArray([new FormControl({
-      image: {
-        publicId: '',
-        url: 'https://i.pinimg.com/736x/69/bf/70/69bf70c243eae9affd3832f0c1c3b7ac.jpg',
-      }
+      // image: {
+      //   publicId: "",
+      //   url: "https://i.pinimg.com/736x/9c/91/43/9c9143df22befa7e5008b06017203879.jpg",
+      // }
     }, [requiredAllFields()])]) as FormArray<FormControl<GroupQuestionsFormValue>>,
   });
 
@@ -140,6 +141,14 @@ export class FormDragDropComponent {
       );
     } else {
       Utils.markAllAsTouched(this.groupQuestionsFormList);
+    }
+  }
+
+  triggerSectionFormSubmit() {
+    if (this.sectionForm.valid) {
+      console.log('this.sectionForm.value: ', this.sectionForm.value);
+    } else {
+      Utils.markAllAsTouched(this.sectionForm);
     }
   }
 }
