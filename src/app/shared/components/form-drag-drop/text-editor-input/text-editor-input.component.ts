@@ -1,15 +1,28 @@
-import { Component, forwardRef, Input, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
-import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 import {
-  Editor,
-  NgxEditorModule,
-  Toolbar
-} from 'ngx-editor';
+  Component,
+  forwardRef,
+  Input,
+  OnDestroy,
+  OnInit,
+  ViewEncapsulation,
+} from '@angular/core';
+import {
+  AbstractControl,
+  ControlValueAccessor,
+  FormsModule,
+  NG_VALIDATORS,
+  NG_VALUE_ACCESSOR,
+  ReactiveFormsModule,
+  ValidationErrors,
+  Validator,
+} from '@angular/forms';
+import { Editor, NgxEditorModule, Toolbar } from 'ngx-editor';
 
 @Component({
   selector: 'app-text-editor-input',
   standalone: true,
-  imports: [NgxEditorModule, ReactiveFormsModule, FormsModule],
+  imports: [NgxEditorModule, ReactiveFormsModule, FormsModule, CommonModule],
   templateUrl: './text-editor-input.component.html',
   styleUrl: './text-editor-input.component.scss',
   encapsulation: ViewEncapsulation.None,
@@ -17,14 +30,23 @@ import {
     {
       provide: NG_VALUE_ACCESSOR,
       useExisting: forwardRef(() => TextEditorInputComponent),
-      multi: true
-    }
-  ]
+      multi: true,
+    },
+    {
+      provide: NG_VALIDATORS,
+      useExisting: forwardRef(() => TextEditorInputComponent),
+      multi: true,
+    },
+  ],
 })
-export class TextEditorInputComponent implements ControlValueAccessor, OnInit, OnDestroy {
+export class TextEditorInputComponent
+  implements ControlValueAccessor, OnInit, OnDestroy, Validator
+{
   @Input() placeholder: string = 'Enter text here...';
   content: string = '';
   isDisabled: boolean = false;
+  errorClass = 'text-editor--error';
+  control: AbstractControl | null = null;
 
   toolbar: Toolbar = [
     ['bold', 'italic'],
@@ -53,14 +75,6 @@ export class TextEditorInputComponent implements ControlValueAccessor, OnInit, O
     this.onTouched = fn;
   }
 
-  // setDisabledState(isDisabled: boolean): void {
-  //   if (isDisabled) {
-  //     this.editor.disable();
-  //   } else {
-  //     this.editor.enable();
-  //   }
-  // }
-
   onContentChange(value: string): void {
     this.content = value;
     this.onChange(value);
@@ -76,5 +90,14 @@ export class TextEditorInputComponent implements ControlValueAccessor, OnInit, O
 
   ngOnDestroy(): void {
     this.editor.destroy();
+  }
+
+  validate(control: AbstractControl): ValidationErrors | null {
+    this.control = control;
+    return null;
+  }
+
+  get isInvalid(): boolean {
+    return this.control ? this.control.invalid && (this.control.dirty || this.control.touched) : false;
   }
 }

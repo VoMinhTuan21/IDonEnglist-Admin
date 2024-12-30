@@ -1,4 +1,4 @@
-<div class="text-editor">
+<div class="text-editor" [ngClass]="{'text-editor--error': isInvalid}">
   <ngx-editor-menu
     [editor]="editor"
     [toolbar]="toolbar"

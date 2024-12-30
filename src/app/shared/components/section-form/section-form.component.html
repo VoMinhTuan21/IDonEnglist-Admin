@@ -1,0 +1,66 @@
+<div class="section-form" nz-row nzGutter="16">
+  <form
+    nz-form
+    nzLayout="vertical"
+    [formGroup]="sectionForm"
+    (ngSubmit)="handleSubmitForm()" 
+    nz-col 
+    nzSpan="18"
+    class="section-form--left"
+  >
+    <div class="dropped-area">
+      <h3 class="dropped-area__title">Section form</h3>
+      <app-form-drag-drop 
+        [acceptedToolList]="acceptedToolItemsForExtraSectionInfo"
+        formControlName="extraSectionInfo" 
+      ></app-form-drag-drop>
+    </div>
+    <div>
+      <div 
+        class="dropped-area"
+        formArrayName="groups"
+      >
+        <h3 class="dropped-area__title">Group Questions</h3>
+        <nz-collapse>
+          @for (group of sectionFormControls[1].items; track groupIndex; let groupIndex = $index) {
+            <nz-collapse-panel [nzHeader]="'Group ' + (groupIndex + 1)" [nzActive]="activePanels[groupIndex]" [nzExtra]="extraTpl" (nzActiveChange)="handleActivePanelChange($event, groupIndex)">
+              <app-form-drag-drop
+                [disableDragDrop]="!activePanels[groupIndex]"
+                [excludeToolList]="excludedToolItemsForGroupQuestion"
+                [formControlName]="groupIndex" 
+              ></app-form-drag-drop>
+            </nz-collapse-panel>
+            <ng-template #extraTpl>
+              <p
+                (click)="$event.stopPropagation()"
+                nz-popconfirm
+                nzPopconfirmTitle="Are you sure delete this group?"
+                nzPopconfirmPlacement="bottom"
+                (nzOnConfirm)="handleRemoveGroup(groupIndex)"
+              >
+                <span 
+                  nz-icon 
+                  nzType="delete" 
+                  nzTheme="twotone" 
+                  nzTwotoneColor="#FF4C4C"
+                ></span>
+              </p>
+            </ng-template>
+          }
+        </nz-collapse>
+        <button nz-button nzBlock type="button" (click)="handleAddGroup()"><span nz-icon nzType="plus" nzTheme="outline"></span>Add group</button>
+      </div>
+      <button nz-button nzType="primary">submit</button>
+    </div>
+  </form>
+  <div nz-col nzSpan="6" class="tool-list">
+    <h3 class="tool-list__header">Tool items</h3>
+    <div class="tool-list__body">
+      @for (item of toolItems; track $index) {
+      <div class="drag-item" draggable="true" [appDraggable]="item">
+        {{ item.name }}
+      </div>
+      }
+    </div>
+  </div>
+</div>

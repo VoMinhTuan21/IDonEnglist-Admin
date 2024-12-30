@@ -116,4 +116,8 @@ button {
     background-color: rgba(variables.$error, $alpha: 0.1) !important;
     color: rgba(variables.$error, $alpha: 0.8) !important;
   }
+
+  &--hidden {
+    display: none;
+  }
 }

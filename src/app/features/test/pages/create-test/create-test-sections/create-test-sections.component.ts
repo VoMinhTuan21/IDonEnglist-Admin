@@ -8,7 +8,7 @@ import { FormControl, FormGroup, FormsModule, NonNullableFormBuilder, ReactiveFo
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { Editor, NgxEditorModule, schema, Toolbar } from 'ngx-editor';
 import { NzIconModule } from 'ng-zorro-antd/icon';
-import { FormDragDropComponent } from '@shared/components/form-drag-drop/form-drag-drop.component';
+import { SectionFormComponent } from '@shared/components/section-form/section-form.component';
 
 @Component({
   selector: 'app-create-test-sections',
@@ -24,8 +24,8 @@ import { FormDragDropComponent } from '@shared/components/form-drag-drop/form-dr
     NgxEditorModule,
     FormsModule,
     NzIconModule,
-    FormDragDropComponent
-  ],
+    SectionFormComponent
+],
   templateUrl: './create-test-sections.component.html',
   styleUrl: './create-test-sections.component.scss',
   encapsulation: ViewEncapsulation.None

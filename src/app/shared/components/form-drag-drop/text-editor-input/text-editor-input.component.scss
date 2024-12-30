@@ -33,13 +33,17 @@
       white-space: pre !important;
     }
   }
-}
 
-:host-context(.ng-invalid.ng-touched) .text-editor,
-:host-context(.ng-invalid.ng-dirty) .text-editor {
-  border-color: $error;
+  &--error {
+    border-color: $error;
 
-  &:focus, &:focus-within {
-    box-shadow: 0 0 0 2px rgba($error, 0.2) !important;
+    &:focus, &:focus-within {
+      box-shadow: 0 0 0 2px rgba($error, 0.2) !important;
+    }
+
+    &:hover, &:focus, &:focus-visible, &:focus-within {
+      border-color: $error;
+    }
+  
   }
 }

@@ -4,10 +4,12 @@ import {
   EventEmitter,
   HostListener,
   Input,
+  OnChanges,
   OnDestroy,
   OnInit,
   Output,
-  Renderer2
+  Renderer2,
+  SimpleChanges
 } from '@angular/core';
 import { DragDropService } from '@core/services/drag-drop.service';
 import { DragItem } from '@shared/models/common';
@@ -16,10 +18,12 @@ import { DragItem } from '@shared/models/common';
   selector: '[appDroppable]',
   standalone: true,
 })
-export class DroppableDirective implements OnInit, OnDestroy {
+export class DroppableDirective implements OnInit, OnDestroy, OnChanges {
   @Input() appDroppable: boolean = false;
+  @Input() isDisabled: boolean = false;
   @Input() acceptList?: DragItem[];
   @Input() excludeList?: DragItem[];
+  @Input() errorMessage?: string;
   @Output() itemDropped = new EventEmitter<DragItem>();
 
   dropCover!: HTMLDivElement;
@@ -27,6 +31,7 @@ export class DroppableDirective implements OnInit, OnDestroy {
   private isItemAllowed = true;
   private observer: MutationObserver;
   private isUpdating = false;
+  private dropCoverDom: HTMLDivElement | null = null;
 
   constructor(
     private el: ElementRef,
@@ -37,7 +42,6 @@ export class DroppableDirective implements OnInit, OnDestroy {
     this.renderer.addClass(this.dropCover, 'drop-cover');
     this.renderer.setProperty(this.dropCover, 'textContent', 'Drop item here');
     this.observer = new MutationObserver(() => {
-      console.log("this.isUpdating: ", this.isUpdating);
       if (!this.isUpdating) {
         this.updateDropCover();
       }
@@ -47,8 +51,9 @@ export class DroppableDirective implements OnInit, OnDestroy {
   private notHasChildren() {
     return (
       (this.el.nativeElement.hasChildNodes() &&
-        Array.from(this.el.nativeElement.childNodes).filter(
-          (node: any) => node.nodeName !== '#comment' && node != this.dropCover
+      Array.from(this.el.nativeElement.childNodes).filter(
+        (node: any) => {
+            return node.nodeName !== '#comment' && !(Array.from(node.classList ?? []) as string[]).includes('drop-cover')}
         ).length === 0) ||
       !this.el.nativeElement.hasChildNodes()
     );
@@ -58,20 +63,45 @@ export class DroppableDirective implements OnInit, OnDestroy {
     this.isUpdating = true;
     this.observer.disconnect();
     if (this.notHasChildren()) {
-      this.renderer.appendChild(this.el.nativeElement, this.dropCover);
+      this.dropCoverDom?.classList.remove('drop-cover--hidden');
     } else {
-      this.renderer.removeChild(this.el.nativeElement, this.dropCover);
+      this.dropCoverDom?.classList.add('drop-cover--hidden');
+
     }
   }
 
   ngOnInit(): void {
     this.observer.observe(this.el.nativeElement, { childList: true});
+    this.renderer.appendChild(this.el.nativeElement, this.dropCover);
+    this.dropCoverDom = this.el.nativeElement.getElementsByClassName('drop-cover')?.[0] as HTMLDivElement;
 
-    if (this.notHasChildren()) {
-      this.renderer.appendChild(this.el.nativeElement, this.dropCover);
-    } else {
-      this.renderer.removeChild(this.el.nativeElement, this.dropCover);
+    if (!this.notHasChildren()) {
+      this.dropCoverDom?.classList.add('drop-cover--hidden');
     }
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    setTimeout(() => {
+      if (changes['errorMessage']) {
+        if (this.dropCoverDom) {
+          if (changes['errorMessage'].currentValue) {
+            this.renderer.addClass(this.dropCoverDom, 'drop-cover--error');
+            this.renderer.setProperty(
+              this.dropCoverDom,
+              'textContent',
+              this.errorMessage?.trim()
+            );
+          } else {
+            this.renderer.removeClass(this.dropCoverDom, 'drop-cover--error');
+            this.renderer.setProperty(
+              this.dropCoverDom,
+              'textContent',
+              'Drop item here'
+            );
+          }
+        }
+      }
+    }, 200);
   }
 
   ngOnDestroy(): void {
@@ -80,9 +110,9 @@ export class DroppableDirective implements OnInit, OnDestroy {
 
   onDragEnter(event: MouseEvent): void {
     event.preventDefault();
+    this.dropCoverDom?.classList.remove('drop-cover--hidden');
     if (this.appDroppable && this.dragDropService.draggedItem) {
-      let existed = (this.el.nativeElement as HTMLDivElement).getElementsByClassName('drop-cover')?.[0] as HTMLDivElement;
-      if (!existed) {
+      if (!this.dropCoverDom) {
         if (this.isItemAllowed) {
           this.renderer.removeClass(this.dropCover, 'drop-cover--error');
           this.renderer.setProperty(
@@ -99,18 +129,19 @@ export class DroppableDirective implements OnInit, OnDestroy {
           );
         }
         this.renderer.appendChild(this.el.nativeElement, this.dropCover); 
+        this.dropCoverDom = this.el.nativeElement.getElementsByClassName('drop-cover')?.[0] as HTMLDivElement;
       } else {
         if (this.isItemAllowed) {
-          this.renderer.removeClass(existed, 'drop-cover--error');
+          this.renderer.removeClass(this.dropCoverDom, 'drop-cover--error');
           this.renderer.setProperty(
-            existed,
+            this.dropCoverDom,
             'textContent',
             'Drop item here'
           );
         } else {
-          this.renderer.addClass(existed, 'drop-cover--error');
+          this.renderer.addClass(this.dropCoverDom, 'drop-cover--error');
           this.renderer.setProperty(
-            existed,
+            this.dropCoverDom,
             'innerHTML',
             'Item is not allowed'
           );
@@ -122,21 +153,34 @@ export class DroppableDirective implements OnInit, OnDestroy {
   onDragLeave(event: MouseEvent): void {
     event.preventDefault();
     if (!this.notHasChildren()) {
-      this.renderer.removeChild(this.el.nativeElement, this.dropCover);
+      this.dropCoverDom?.classList.add('drop-cover--hidden');
     } else {
-      this.renderer.removeClass(this.dropCover, 'drop-cover--error');
-      this.renderer.setProperty(
-        this.dropCover,
-        'textContent',
-        'Drop item here'
-      );
-      this.renderer.appendChild(this.el.nativeElement, this.dropCover);
+      if (this.errorMessage) {
+        this.renderer.addClass(this.dropCover, 'drop-cover--error');
+        this.renderer.setProperty(
+          this.dropCover,
+          'textContent',
+          this.errorMessage?.trim()
+        );
+      } else {
+        this.renderer.removeClass(this.dropCover, 'drop-cover--error');
+        this.renderer.setProperty(
+          this.dropCover,
+          'textContent',
+          'Drop item here'
+        );
+      }
+      this.dropCoverDom?.classList.remove('drop-cover--hidden');
     }
   }
 
   // Listen for mousemove events on the document to track dragging
   @HostListener('document:mousemove', ['$event'])
   onMouseMove(event: MouseEvent): void {
+    if (this.isDisabled) {
+      return;
+    }
+
     if (this.dragDropService.draggedItem) {
       const rect = this.el.nativeElement.getBoundingClientRect();
       const isOver =
@@ -147,14 +191,14 @@ export class DroppableDirective implements OnInit, OnDestroy {
 
       if (isOver) {
         this.isDraggingOver = true;
-        if (this.acceptList) {
+        if (this.acceptList?.length) {
           const toolItem = this.acceptList.find(
             (item) => item.id === this.dragDropService.draggedItem?.id
           );
-          this.isItemAllowed = !!toolItem;
+          this.isItemAllowed = !!toolItem ? true : false;
         }
 
-        if (this.excludeList) {
+        if (this.excludeList?.length) {
           const toolItem = this.excludeList.find(
             (item) => item.id === this.dragDropService.draggedItem?.id
           );
@@ -170,6 +214,10 @@ export class DroppableDirective implements OnInit, OnDestroy {
 
   @HostListener('document:mouseup', ['$event'])
   onDrop(event: MouseEvent): void {
+    if (this.isDisabled) {
+      return;
+    }
+
     event.preventDefault();
     if (this.appDroppable && this.dragDropService.draggedItem) {
       if (this.isItemAllowed && this.isDraggingOver) {
@@ -178,9 +226,19 @@ export class DroppableDirective implements OnInit, OnDestroy {
       }
     }
 
-    setTimeout(() => {
-      this.onDragLeave(event);
-    }, 100);
+    const rect = this.el.nativeElement.getBoundingClientRect();
+    const isOver =
+      event.clientX >= rect.left &&
+      event.clientX <= rect.right &&
+      event.clientY >= rect.top &&
+      event.clientY <= rect.bottom;
+    this.isDraggingOver = isOver;
+    
+    if (this.isDraggingOver) {
+      setTimeout(() => {
+        this.onDragLeave(event);
+      }, 100);
+    }
 
     this.isItemAllowed = true;
   }

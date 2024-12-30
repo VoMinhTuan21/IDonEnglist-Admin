@@ -5,7 +5,7 @@ export function requiredAllFields(): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
 
     if (isEmpty(control.value)) {
-      return {require: true };
+      return { required: true };
     }
 
     if (Utils.isObjectHasEmptyField(control.value)) {

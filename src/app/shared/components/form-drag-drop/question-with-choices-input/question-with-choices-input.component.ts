@@ -229,7 +229,6 @@ export class QuestionWithChoicesInputComponent
 
   private initializeForm(): void {
     this.formGroup.valueChanges.subscribe((value) => {
-      console.log("value: ", value);
       this.onChange(value);
     });
   }

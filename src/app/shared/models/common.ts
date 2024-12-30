@@ -157,12 +157,12 @@ export type ImageUploadFormValue = {
   url: string;
 }
 
-export type SectionForm = FormGroup<{
+export type ExtraInfoForm = FormGroup<{
   instruction?: FormControl<string | null>;
   passage?: FormControl<string | null>;
 }>
 
-export type SectionFormValue = {
+export type ExtraInfoFormValue = {
   instruction?: string;
   passage?: string;
 }
