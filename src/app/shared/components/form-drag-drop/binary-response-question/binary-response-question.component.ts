@@ -34,35 +34,35 @@ import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 import { combineLatest, filter, Subject, takeUntil } from 'rxjs';
 
 @Component({
-  selector: 'app-binary-response-question',
-  standalone: true,
-  imports: [
-    ReactiveFormsModule,
-    FormsModule,
-    NzFormModule,
-    NzInputModule,
-    NzButtonModule,
-    NzIconModule,
-    NzPopconfirmModule,
-    NzSelectModule,
-    NzFlexModule,
-    NzRadioModule,
-    NzToolTipModule
-  ],
-  templateUrl: './binary-response-question.component.html',
-  styleUrl: './binary-response-question.component.scss',
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => BinaryResponseQuestionComponent),
-      multi: true,
-    },
-    {
-      provide: NG_VALIDATORS,
-      useExisting: forwardRef(() => BinaryResponseQuestionComponent),
-      multi: true,
-    },
-  ],
+    selector: 'app-binary-response-question',
+    standalone: true,
+    imports: [
+        ReactiveFormsModule,
+        FormsModule,
+        NzFormModule,
+        NzInputModule,
+        NzButtonModule,
+        NzIconModule,
+        NzPopconfirmModule,
+        NzSelectModule,
+        NzFlexModule,
+        NzRadioModule,
+        NzToolTipModule
+    ],
+    templateUrl: './binary-response-question.component.html',
+    styleUrl: './binary-response-question.component.scss',
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => BinaryResponseQuestionComponent),
+            multi: true,
+        },
+        {
+            provide: NG_VALIDATORS,
+            useExisting: forwardRef(() => BinaryResponseQuestionComponent),
+            multi: true,
+        },
+    ]
 })
 export class BinaryResponseQuestionComponent
   implements ControlValueAccessor, OnInit, Validator, OnDestroy

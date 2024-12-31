@@ -47,26 +47,26 @@ import {
 import { v4 as uuidv4 } from 'uuid';
 
 @Component({
-  selector: 'app-create-test-configuration',
-  standalone: true,
-  imports: [
-    BoxComponent,
-    NzGridModule,
-    NzFormModule,
-    NzInputModule,
-    NzSelectModule,
-    AsyncPipe,
-    ReactiveFormsModule,
-    NzTypographyModule,
-    NzButtonModule,
-    NzFlexModule,
-    NzIconModule,
-    NzBreadCrumbModule,
-    DragDropComponent,
-    NzAlertModule,
-  ],
-  templateUrl: './create-test-configuration.component.html',
-  styleUrl: './create-test-configuration.component.scss',
+    selector: 'app-create-test-configuration',
+    standalone: true,
+    imports: [
+        BoxComponent,
+        NzGridModule,
+        NzFormModule,
+        NzInputModule,
+        NzSelectModule,
+        AsyncPipe,
+        ReactiveFormsModule,
+        NzTypographyModule,
+        NzButtonModule,
+        NzFlexModule,
+        NzIconModule,
+        NzBreadCrumbModule,
+        DragDropComponent,
+        NzAlertModule,
+    ],
+    templateUrl: './create-test-configuration.component.html',
+    styleUrl: './create-test-configuration.component.scss'
 })
 export class CreateTestConfigurationComponent implements OnInit, OnDestroy {
   categories$!: Observable<Category[]>;

@@ -8,66 +8,74 @@
     nzSpan="18"
     class="section-form--left"
   >
-    <app-box [styles]="{ padding: '10px 12px'}">
-      <div>
-        <h3 class="box__title">General Info</h3>
+    <app-box [class]="'box-form'">
+      <div class="box-form__heading">
+        <h3 class="box-form__title">General Info</h3>
         <span 
           nz-tooltip 
-          nzTooltipTitle="Add instruction and passage for the part (if need) here"
+          nzTooltipTitle="Please include instructions and any relevant passages for this section, if necessary."
         >
-          <nz-icon nzType="info-circle" nzTheme="outline" />
+          <nz-icon nzType="info-circle" nzTheme="twotone" />
         </span>
-
       </div>
       <app-form-drag-drop 
         [acceptedToolList]="acceptedToolItemsForExtraSectionInfo"
         formControlName="extraSectionInfo" 
       ></app-form-drag-drop>
     </app-box>
-    <app-box [styles]="{ padding: '10px 12px'}">
-      <div formArrayName="groups">
-        <h3 class="box__title">Questions</h3>
-        <p class="box__sub-title">Questions are divided in many group, you can add instruction, image, questions for each group</p>
-        <nz-collapse>
-          @for (group of sectionFormControls[1].items; track groupIndex; let groupIndex = $index) {
-            <nz-collapse-panel [nzHeader]="'Group ' + (groupIndex + 1)" [nzActive]="activePanels[groupIndex]" [nzExtra]="extraTpl" (nzActiveChange)="handleActivePanelChange($event, groupIndex)">
-              <app-form-drag-drop
-                [disableDragDrop]="!activePanels[groupIndex]"
-                [excludeToolList]="excludedToolItemsForGroupQuestion"
-                [formControlName]="groupIndex" 
-              ></app-form-drag-drop>
-            </nz-collapse-panel>
-            <ng-template #extraTpl>
-              <p
-                (click)="$event.stopPropagation()"
-                nz-popconfirm
-                nzPopconfirmTitle="Are you sure delete this group?"
-                nzPopconfirmPlacement="bottom"
-                (nzOnConfirm)="handleRemoveGroup(groupIndex)"
-              >
-                <span 
-                  nz-icon 
-                  nzType="delete" 
-                  nzTheme="twotone" 
-                  nzTwotoneColor="#FF4C4C"
-                ></span>
-              </p>
-            </ng-template>
-          }
-        </nz-collapse>
-        <button nz-button nzBlock type="button" (click)="handleAddGroup()"><span nz-icon nzType="plus" nzTheme="outline"></span>Add group</button>
+    <app-box [class]="'box-form'" formArrayName="groups">
+      <div nz-flex nzJustify="space-between">
+        <div class="box-form__heading">
+          <h3 class="box-form__title">Questions</h3>
+          <span 
+            nz-tooltip 
+            nzTooltipTitle="Questions are organized into various groups, allowing for the addition of instructions, images, and questions for each group."
+          >
+            <nz-icon nzType="info-circle" nzTheme="twotone" />
+          </span>
+        </div>
+      <button nz-button type="button" (click)="handleAddGroup()"><span nz-icon nzType="plus" nzTheme="outline"></span>Add group</button>
       </div>
+      <nz-collapse>
+        @for (group of sectionFormControls[1].items; track groupIndex; let groupIndex = $index) {
+          <nz-collapse-panel [nzHeader]="'Group ' + (groupIndex + 1)" [nzActive]="activePanels[groupIndex]" [nzExtra]="extraTpl" (nzActiveChange)="handleActivePanelChange($event, groupIndex)">
+            <app-form-drag-drop
+              [disableDragDrop]="!activePanels[groupIndex]"
+              [excludeToolList]="excludedToolItemsForGroupQuestion"
+              [formControlName]="groupIndex" 
+            ></app-form-drag-drop>
+          </nz-collapse-panel>
+          <ng-template #extraTpl>
+            <p
+              (click)="$event.stopPropagation()"
+              nz-popconfirm
+              nzPopconfirmTitle="Are you sure delete this group?"
+              nzPopconfirmPlacement="bottom"
+              (nzOnConfirm)="handleRemoveGroup(groupIndex)"
+            >
+              <span 
+                nz-icon 
+                nzType="delete" 
+                nzTheme="twotone" 
+                nzTwotoneColor="#FF4C4C"
+              ></span>
+            </p>
+          </ng-template>
+        }
+      </nz-collapse>
       <button nz-button nzType="primary">submit</button>
     </app-box>
   </form>
   <div nz-col nzSpan="6" class="tool-list">
-    <h3 class="tool-list__header">Tool items</h3>
-    <div class="tool-list__body">
-      @for (item of toolItems; track $index) {
-      <div class="drag-item" draggable="true" [appDraggable]="item">
-        {{ item.name }}
+    <app-box [class]="'tool-list__container'">
+      <h3 class="tool-list__header">Tool items</h3>
+      <div class="tool-list__body">
+        @for (item of toolItems; track $index) {
+        <div nz-tooltip [nzTooltipTitle]="item.description" class="drag-item" draggable="true" [appDraggable]="item">
+          {{ item.name }}
+        </div>
+        }
       </div>
-      }
-    </div>
+    </app-box>
   </div>
 </div>

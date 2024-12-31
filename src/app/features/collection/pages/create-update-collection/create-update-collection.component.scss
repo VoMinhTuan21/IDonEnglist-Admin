@@ -1,4 +1,4 @@
-@import "../../../../../variables.scss";
+@use "../../../../../variables.scss";
 
 .create-update-collection {
   &__show-button {
@@ -18,7 +18,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      background-color: rgba($color: $highlight, $alpha: 0.5);
+      background-color: rgba($color: variables.$highlight, $alpha: 0.5);
     }
   }
 }

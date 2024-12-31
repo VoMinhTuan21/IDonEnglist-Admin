@@ -31,24 +31,24 @@ import { BoxComponent } from '../../../../shared/components/box/box.component';
 import { CreateUpdateCollectionComponent } from '../create-update-collection/create-update-collection.component';
 
 @Component({
-  selector: 'app-collection-list',
-  standalone: true,
-  imports: [
-    BoxComponent,
-    NzTableModule,
-    NzIconModule,
-    NzPopconfirmModule,
-    NzFlexModule,
-    NzButtonModule,
-    CreateUpdateCollectionComponent,
-    NzFormModule,
-    ReactiveFormsModule,
-    NzInputModule,
-    NzSelectModule,
-    NzButtonModule
-  ],
-  templateUrl: './collection-list.component.html',
-  styleUrl: './collection-list.component.scss',
+    selector: 'app-collection-list',
+    standalone: true,
+    imports: [
+        BoxComponent,
+        NzTableModule,
+        NzIconModule,
+        NzPopconfirmModule,
+        NzFlexModule,
+        NzButtonModule,
+        CreateUpdateCollectionComponent,
+        NzFormModule,
+        ReactiveFormsModule,
+        NzInputModule,
+        NzSelectModule,
+        NzButtonModule
+    ],
+    templateUrl: './collection-list.component.html',
+    styleUrl: './collection-list.component.scss'
 })
 export class CollectionListComponent implements OnInit, OnDestroy {
   table!: PaginatedList<CollectionTableItem>;

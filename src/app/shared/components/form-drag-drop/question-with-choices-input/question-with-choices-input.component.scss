@@ -1,13 +1,16 @@
-@import "../../../../../variables.scss";
+@use "../../../../../variables.scss";
 
 .question-with-choices {
+  & {
+    align-items: baseline;
+  }
+
   &__list {
     & > * + * {
       margin-top: 10px;
     }
   }
 
-  align-items: baseline;
 
   &--right {
     flex: 1;
@@ -25,7 +28,7 @@
       border-radius: 20px;
       width: 24px;
       aspect-ratio: 1 / 1;
-      background-color: $secondary;
+      background-color: variables.$secondary;
       color: white;
       font-weight: 600;
       display: flex;

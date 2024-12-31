@@ -8,11 +8,11 @@ export type ItemDragDrop = {
 }
 
 @Component({
-  selector: 'app-drag-drop',
-  standalone: true,
-  imports: [CommonModule, NzTagModule],
-  templateUrl: './drag-drop.component.html',
-  styleUrl: './drag-drop.component.scss'
+    selector: 'app-drag-drop',
+    standalone: true,
+    imports: [CommonModule, NzTagModule],
+    templateUrl: './drag-drop.component.html',
+    styleUrl: './drag-drop.component.scss'
 })
 export class DragDropComponent {
   @Input({required: true}) items!: Array<ItemDragDrop>;

@@ -42,22 +42,22 @@ import {
 } from 'rxjs';
 
 @Component({
-  selector: 'app-create-update-collection',
-  standalone: true,
-  imports: [
-    NzButtonModule,
-    NzIconModule,
-    NzDrawerModule,
-    ReactiveFormsModule,
-    NzFormModule,
-    NzInputModule,
-    NzSelectModule,
-    NzUploadModule,
-    NzSpinModule,
-    DrawerComponent,
-  ],
-  templateUrl: './create-update-collection.component.html',
-  styleUrl: './create-update-collection.component.scss',
+    selector: 'app-create-update-collection',
+    standalone: true,
+    imports: [
+        NzButtonModule,
+        NzIconModule,
+        NzDrawerModule,
+        ReactiveFormsModule,
+        NzFormModule,
+        NzInputModule,
+        NzSelectModule,
+        NzUploadModule,
+        NzSpinModule,
+        DrawerComponent,
+    ],
+    templateUrl: './create-update-collection.component.html',
+    styleUrl: './create-update-collection.component.scss'
 })
 export class CreateUpdateCollectionComponent implements OnInit, OnDestroy {
   @Input() drawerVisible = false;

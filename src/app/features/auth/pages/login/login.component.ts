@@ -16,21 +16,21 @@ import { selectAuthLoading, selectUser } from '../../store/auth.selector';
 import { AuthState } from '../../store/auth.state';
 
 @Component({
-  selector: 'app-login',
-  standalone: true,
-  imports: [
-    NzFormModule,
-    NzInputModule,
-    NzButtonModule,
-    NzFlexModule,
-    NzCheckboxModule,
-    RouterLink,
-    ReactiveFormsModule,
-    AsyncPipe,
-    NzIconModule
-  ],
-  templateUrl: './login.component.html',
-  styleUrl: './login.component.scss',
+    selector: 'app-login',
+    standalone: true,
+    imports: [
+        NzFormModule,
+        NzInputModule,
+        NzButtonModule,
+        NzFlexModule,
+        NzCheckboxModule,
+        RouterLink,
+        ReactiveFormsModule,
+        AsyncPipe,
+        NzIconModule
+    ],
+    templateUrl: './login.component.html',
+    styleUrl: './login.component.scss'
 })
 export class LoginComponent implements OnInit, OnDestroy{
   passwordVisible = false;

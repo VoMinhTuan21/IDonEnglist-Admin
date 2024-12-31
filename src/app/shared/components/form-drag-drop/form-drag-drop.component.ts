@@ -51,42 +51,42 @@ import { QuestionWithChoicesInputComponent } from './question-with-choices-input
 import { TextEditorInputComponent } from './text-editor-input/text-editor-input.component';
 import { UploadImageComponent } from './upload-image/upload-image.component';
 @Component({
-  selector: 'app-form-drag-drop',
-  standalone: true,
-  imports: [
-    ReactiveFormsModule,
-    FormsModule,
-    NzFormModule,
-    NzInputModule,
-    TextEditorInputComponent,
-    DroppableDirective,
-    ToolLabelPipe,
-    QuestionWithChoicesInputComponent,
-    TextEditorInputComponent,
-    FillInTheBlankInputComponent,
-    ClozeTestInputComponent,
-    MatchingQuestionComponent,
-    BinaryResponseQuestionComponent,
-    UploadImageComponent,
-    NzButtonModule,
-    NzIconModule,
-    NzPopconfirmModule,
-    CommonModule
-  ],
-  templateUrl: './form-drag-drop.component.html',
-  styleUrl: './form-drag-drop.component.scss',
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => FormDragDropComponent),
-      multi: true,
-    },
-    {
-      provide: NG_VALIDATORS,
-      useExisting: forwardRef(() => FormDragDropComponent),
-      multi: true,
-    },
-  ],
+    selector: 'app-form-drag-drop',
+    standalone: true,
+    imports: [
+        ReactiveFormsModule,
+        FormsModule,
+        NzFormModule,
+        NzInputModule,
+        TextEditorInputComponent,
+        DroppableDirective,
+        ToolLabelPipe,
+        QuestionWithChoicesInputComponent,
+        TextEditorInputComponent,
+        FillInTheBlankInputComponent,
+        ClozeTestInputComponent,
+        MatchingQuestionComponent,
+        BinaryResponseQuestionComponent,
+        UploadImageComponent,
+        NzButtonModule,
+        NzIconModule,
+        NzPopconfirmModule,
+        CommonModule
+    ],
+    templateUrl: './form-drag-drop.component.html',
+    styleUrl: './form-drag-drop.component.scss',
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => FormDragDropComponent),
+            multi: true,
+        },
+        {
+            provide: NG_VALIDATORS,
+            useExisting: forwardRef(() => FormDragDropComponent),
+            multi: true,
+        },
+    ]
 })
 export class FormDragDropComponent
   implements ControlValueAccessor, OnInit, Validator, OnDestroy
@@ -230,7 +230,12 @@ export class FormDragDropComponent
   }
 
   handleItemDropped(event: DragItem) {
-    console.log("event: ", event);
+    const existedFormControl = this.formGroupControls.find(item => item.controlType === event.id);
+
+    if (existedFormControl) {
+      return;
+    }
+
     switch (event.id) {
       case EToolList.Direction:
         this.formGroupControls.push({

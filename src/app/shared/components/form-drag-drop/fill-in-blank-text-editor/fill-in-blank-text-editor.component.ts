@@ -19,19 +19,19 @@ import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 import { debounceTime, Subject } from 'rxjs';
 
 @Component({
-  selector: 'app-fill-in-blank-text-editor',
-  standalone: true,
-  imports: [NzIconModule, NzButtonModule, NzToolTipModule, NzFormModule],
-  templateUrl: './fill-in-blank-text-editor.component.html',
-  styleUrl: './fill-in-blank-text-editor.component.scss',
-  encapsulation: ViewEncapsulation.None,
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => FillInBlankTextEditorComponent),
-      multi: true,
-    },
-  ],
+    selector: 'app-fill-in-blank-text-editor',
+    standalone: true,
+    imports: [NzIconModule, NzButtonModule, NzToolTipModule, NzFormModule],
+    templateUrl: './fill-in-blank-text-editor.component.html',
+    styleUrl: './fill-in-blank-text-editor.component.scss',
+    encapsulation: ViewEncapsulation.None,
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => FillInBlankTextEditorComponent),
+            multi: true,
+        },
+    ]
 })
 export class FillInBlankTextEditorComponent
   implements ControlValueAccessor, OnChanges

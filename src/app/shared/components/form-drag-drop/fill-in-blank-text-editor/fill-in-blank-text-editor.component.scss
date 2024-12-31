@@ -1,8 +1,9 @@
-@import "../../../../../variables.scss";
+@use "../../../../../variables.scss";
+@use "sass:map";
 
 .fill-in-blank-text-editor {
   width: 100%;
-  border: 1px solid map-get($gray-palette, lighter);
+  border: 1px solid map.get(variables.$gray-palette, lighter);
   outline: 0;
   border-radius: 6px;
   position: relative;
@@ -29,17 +30,17 @@
       border-radius: 4px;
 
       &:hover {
-        background-color: $background;
+        background-color: variables.$background;
       }
 
       &--active {
-        background-color: $highlight;
+        background-color: variables.$highlight;
       }
     }
   }
 
   &__placeholder {
-    color: map-get($gray-palette, light);
+    color: map.get(variables.$gray-palette, light);
     position: absolute;
     top: 42px;
     left: 11px;
@@ -73,8 +74,8 @@
     border: none;
     outline: 0;
     border-radius: 4px;
-    background-color: $background;
-    border: 2px dashed map-get($gray-palette, lighter);
+    background-color: variables.$background;
+    border: 2px dashed map.get(variables.$gray-palette, lighter);
 
     &:hover, &:focus, &:focus-visible {
       border-color: #a8caed;
@@ -86,11 +87,11 @@
   }
 
   &--error-text {
-    border-color: $error !important;
+    border-color: variables.$error !important;
     margin-bottom: 0px;
 
     &:focus, &:focus-within {
-      box-shadow: 0 0 0 2px rgba($error, $alpha: 0.2) !important
+      box-shadow: 0 0 0 2px rgba(variables.$error, $alpha: 0.2) !important
     }
 
     & ~ .helper-text {
@@ -99,14 +100,14 @@
   }
 
   &--error-answer {
-    border-color: $error !important;
-    background-color: rgba($error, $alpha: 0.1) !important;
+    border-color: variables.$error !important;
+    background-color: rgba(variables.$error, $alpha: 0.1) !important;
   }
 
   &__container {
     .helper-text {
       display: none;
-      color: $error;
+      color: variables.$error;
       font-size: 14px;
       line-height: 1.5;
       min-height: 24px;

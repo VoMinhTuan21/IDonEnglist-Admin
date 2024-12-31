@@ -42,38 +42,38 @@ interface Panel {
 }
 
 @Component({
-  selector: 'app-matching-question',
-  standalone: true,
-  imports: [
-    ReactiveFormsModule,
-    FormsModule,
-    NzFormModule,
-    NzInputModule,
-    NzButtonModule,
-    NzSelectModule,
-    NzIconModule,
-    RomanNumeralPipe,
-    NzCollapseModule,
-    NgStyle,
-    NzFlexModule,
-    NzToolTipModule,
-    NumberToCharPipe,
-    NzPopconfirmModule,
-  ],
-  templateUrl: './matching-question.component.html',
-  styleUrl: './matching-question.component.scss',
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => MatchingQuestionComponent),
-      multi: true,
-    },
-    {
-      provide: NG_VALIDATORS,
-      useExisting: forwardRef(() => MatchingQuestionComponent),
-      multi: true,
-    },
-  ],
+    selector: 'app-matching-question',
+    standalone: true,
+    imports: [
+        ReactiveFormsModule,
+        FormsModule,
+        NzFormModule,
+        NzInputModule,
+        NzButtonModule,
+        NzSelectModule,
+        NzIconModule,
+        RomanNumeralPipe,
+        NzCollapseModule,
+        NgStyle,
+        NzFlexModule,
+        NzToolTipModule,
+        NumberToCharPipe,
+        NzPopconfirmModule,
+    ],
+    templateUrl: './matching-question.component.html',
+    styleUrl: './matching-question.component.scss',
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => MatchingQuestionComponent),
+            multi: true,
+        },
+        {
+            provide: NG_VALIDATORS,
+            useExisting: forwardRef(() => MatchingQuestionComponent),
+            multi: true,
+        },
+    ]
 })
 export class MatchingQuestionComponent implements ControlValueAccessor, OnInit, Validator, OnDestroy {
   private isUpdatingValidity = false;

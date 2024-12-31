@@ -15,23 +15,23 @@ import {
 import { Observable } from 'rxjs';
 
 @Component({
-  selector: 'app-upload-image',
-  standalone: true,
-  imports: [NzUploadModule, NzIconModule, NzFormModule, NzFlexModule],
-  templateUrl: './upload-image.component.html',
-  styleUrl: './upload-image.component.scss',
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => UploadImageComponent),
-      multi: true,
-    },
-    {
-      provide: NG_VALIDATORS,
-      useExisting: forwardRef(() => UploadImageComponent),
-      multi: true,
-    },
-  ],
+    selector: 'app-upload-image',
+    standalone: true,
+    imports: [NzUploadModule, NzIconModule, NzFormModule, NzFlexModule],
+    templateUrl: './upload-image.component.html',
+    styleUrl: './upload-image.component.scss',
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => UploadImageComponent),
+            multi: true,
+        },
+        {
+            provide: NG_VALIDATORS,
+            useExisting: forwardRef(() => UploadImageComponent),
+            multi: true,
+        },
+    ]
 })
 export class UploadImageComponent implements ControlValueAccessor, Validator {
   private onChange: (value: any) => void = () => {};

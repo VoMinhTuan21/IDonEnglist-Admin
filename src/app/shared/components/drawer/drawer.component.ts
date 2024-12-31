@@ -4,15 +4,15 @@ import { NzDrawerModule } from 'ng-zorro-antd/drawer';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 
 @Component({
-  selector: 'app-drawer',
-  standalone: true,
-  imports: [
-    NzDrawerModule,
-    NzButtonModule,
-    NzIconModule
-  ],
-  templateUrl: './drawer.component.html',
-  styleUrl: './drawer.component.scss'
+    selector: 'app-drawer',
+    standalone: true,
+    imports: [
+        NzDrawerModule,
+        NzButtonModule,
+        NzIconModule
+    ],
+    templateUrl: './drawer.component.html',
+    styleUrl: './drawer.component.scss'
 })
 export class DrawerComponent {
   @Input({ required: true }) visible: boolean = false;

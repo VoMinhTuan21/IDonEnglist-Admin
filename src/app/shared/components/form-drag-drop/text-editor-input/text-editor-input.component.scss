@@ -1,15 +1,15 @@
-@import "../../../../../variables.scss";
+@use "../../../../../variables.scss";
 
 .text-editor {
   border: 1px solid rgba(0, 0, 0, 0.2);
   border-radius: 6px;
 
   &:hover, &:focus, &:focus-visible, &:focus-within {
-    border-color: $secondary;
+    border-color: variables.$secondary;
   }
 
   &:focus, &:focus-within {
-    box-shadow: 0 0 0 2px rgba($secondary, 0.2);
+    box-shadow: 0 0 0 2px rgba(variables.$secondary, 0.2);
   }
 
   .NgxEditor__MenuBar {
@@ -35,14 +35,14 @@
   }
 
   &--error {
-    border-color: $error;
+    border-color: variables.$error;
 
     &:focus, &:focus-within {
-      box-shadow: 0 0 0 2px rgba($error, 0.2) !important;
+      box-shadow: 0 0 0 2px rgba(variables.$error, 0.2) !important;
     }
 
     &:hover, &:focus, &:focus-visible, &:focus-within {
-      border-color: $error;
+      border-color: variables.$error;
     }
   
   }

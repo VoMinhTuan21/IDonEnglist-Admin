@@ -1,4 +1,4 @@
-@import "../../../../../variables.scss";
+@use "../../../../../variables.scss";
 
 .binary-response-question {
   &__type {
@@ -19,7 +19,7 @@
       border-radius: 20px;
       width: 24px;
       aspect-ratio: 1 / 1;
-      background-color: $secondary;
+      background-color: variables.$secondary;
       color: white;
       font-weight: 600;
       display: flex;

@@ -40,6 +40,7 @@ export interface FileModel {
 export interface DragItem {
   id: number;
   name: string;
+  description: string;
 }
 
 export interface FormControlItem {

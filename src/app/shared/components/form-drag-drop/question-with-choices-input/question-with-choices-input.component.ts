@@ -41,37 +41,37 @@ import { combineLatest, filter, Subject, takeUntil } from 'rxjs';
 import { v4 as uuidv4 } from 'uuid';
 
 @Component({
-  selector: 'app-question-with-choices-input',
-  standalone: true,
-  imports: [
-    ReactiveFormsModule,
-    FormsModule,
-    NzFormModule,
-    NumberToCharPipe,
-    NzInputModule,
-    NzFlexModule,
-    NzButtonModule,
-    NzIconModule,
-    NzCheckboxModule,
-    NzFlexModule,
-    NzToolTipModule,
-    NzDropDownModule,
-    NzPopconfirmModule,
-  ],
-  templateUrl: './question-with-choices-input.component.html',
-  styleUrl: './question-with-choices-input.component.scss',
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => QuestionWithChoicesInputComponent),
-      multi: true,
-    },
-    {
-      provide: NG_VALIDATORS,
-      useExisting: forwardRef(() => QuestionWithChoicesInputComponent),
-      multi: true,
-    },
-  ],
+    selector: 'app-question-with-choices-input',
+    standalone: true,
+    imports: [
+        ReactiveFormsModule,
+        FormsModule,
+        NzFormModule,
+        NumberToCharPipe,
+        NzInputModule,
+        NzFlexModule,
+        NzButtonModule,
+        NzIconModule,
+        NzCheckboxModule,
+        NzFlexModule,
+        NzToolTipModule,
+        NzDropDownModule,
+        NzPopconfirmModule,
+    ],
+    templateUrl: './question-with-choices-input.component.html',
+    styleUrl: './question-with-choices-input.component.scss',
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => QuestionWithChoicesInputComponent),
+            multi: true,
+        },
+        {
+            provide: NG_VALIDATORS,
+            useExisting: forwardRef(() => QuestionWithChoicesInputComponent),
+            multi: true,
+        },
+    ]
 })
 export class QuestionWithChoicesInputComponent
   implements ControlValueAccessor, OnInit, Validator, OnDestroy

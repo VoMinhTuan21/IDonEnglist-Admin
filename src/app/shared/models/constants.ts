@@ -20,34 +20,42 @@ export const ToolList: DragItem[] = [
   {
     id: EToolList.Direction,
     name: 'Direction',
+    description: 'Instruction for the section, group questions',
   },
   {
     id: EToolList.Passage,
     name: 'Passage',
+    description: 'Passage for the section, group questions',
   },
   {
     id: EToolList.QuestionWithChoices,
-    name: 'Question with choices',
+    name: 'Choices Question',
+    description: 'Question with multiple choices, one or more answers',
   },
   {
     id: EToolList.FillInTheBlank,
-    name: 'Fill-in-the-Blank (Sentence level)',
+    name: 'Fill in Blank',
+    description: 'Fill in the blank question, only one blank',
   },
   {
     id: EToolList.ClozeTest,
-    name: 'Cloze Test (Paragraph level)',
+    name: 'Cloze Test',
+    description: 'Multiple blanks in a small paragraph',
   },
   {
     id: EToolList.MatchingQuestion,
     name: 'Matching Question',
+    description: 'Matching questions',
   },
   {
     id: EToolList.BinaryResponseQuestion,
-    name: 'Binary Response Question',
+    name: 'Binary Question',
+    description: 'True/False/Not Given or Yes/No/Not Given',
   },
   {
     id: EToolList.Image,
     name: 'Image',
+    description: 'Image for the section, group questions',
   },
 ];
 

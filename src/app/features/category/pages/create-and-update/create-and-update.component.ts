@@ -24,20 +24,19 @@ import CategoryActions from '../../store/category.action';
 import { CategorySelect } from '../../store/category.selector';
 
 @Component({
-  selector: 'app-create-and-update',
-  standalone: true,
-  imports: [
-    NzButtonModule,
-    NzIconModule,
-    NzDrawerModule,
-    NzFormModule,
-    NzInputModule,
-    ReactiveFormsModule,
-    NzSelectModule,
-    AsyncPipe,
-  ],
-  templateUrl: './create-and-update.component.html',
-  styleUrl: './create-and-update.component.scss',
+    selector: 'app-create-and-update',
+    standalone: true,
+    imports: [
+        NzButtonModule,
+        NzIconModule,
+        NzDrawerModule,
+        NzFormModule,
+        NzInputModule,
+        ReactiveFormsModule,
+        NzSelectModule,
+    ],
+    templateUrl: './create-and-update.component.html',
+    styleUrl: './create-and-update.component.scss'
 })
 export class CreateAndUpdateComponent implements OnInit, OnDestroy {
   @Input() drawerVisible = false;

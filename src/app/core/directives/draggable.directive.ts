@@ -36,6 +36,7 @@ export class DraggableDirective {
     this.renderer.setStyle(clone, 'top', event.clientY - this.offsetY + 'px');
     this.renderer.setStyle(clone, 'width',  rect.width + 'px');
     this.renderer.setStyle(clone, 'height',  rect.height + 'px');
+    this.renderer.addClass(clone, 'drag-item--moving');
 
 
     document.body.appendChild(clone);

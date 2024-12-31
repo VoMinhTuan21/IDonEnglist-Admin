@@ -20,24 +20,24 @@ import {
 import { Editor, NgxEditorModule, Toolbar } from 'ngx-editor';
 
 @Component({
-  selector: 'app-text-editor-input',
-  standalone: true,
-  imports: [NgxEditorModule, ReactiveFormsModule, FormsModule, CommonModule],
-  templateUrl: './text-editor-input.component.html',
-  styleUrl: './text-editor-input.component.scss',
-  encapsulation: ViewEncapsulation.None,
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => TextEditorInputComponent),
-      multi: true,
-    },
-    {
-      provide: NG_VALIDATORS,
-      useExisting: forwardRef(() => TextEditorInputComponent),
-      multi: true,
-    },
-  ],
+    selector: 'app-text-editor-input',
+    standalone: true,
+    imports: [NgxEditorModule, ReactiveFormsModule, FormsModule, CommonModule],
+    templateUrl: './text-editor-input.component.html',
+    styleUrl: './text-editor-input.component.scss',
+    encapsulation: ViewEncapsulation.None,
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => TextEditorInputComponent),
+            multi: true,
+        },
+        {
+            provide: NG_VALIDATORS,
+            useExisting: forwardRef(() => TextEditorInputComponent),
+            multi: true,
+        },
+    ]
 })
 export class TextEditorInputComponent
   implements ControlValueAccessor, OnInit, OnDestroy, Validator

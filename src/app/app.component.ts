@@ -9,16 +9,16 @@ import { UnauthorizedLayoutComponent } from './core/layout/unauthorized-layout/u
 import { PageLayoutService } from './core/services/page-layout.service';
 import { PageLayout } from './shared/models/enum';
 @Component({
-  selector: 'app-root',
-  standalone: true,
-  imports: [
-    RouterOutlet,
-    UnauthorizedLayoutComponent,
-    AsyncPipe,
-    AuthorizedLayoutComponent,
-  ],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.scss',
+    selector: 'app-root',
+    standalone: true,
+    imports: [
+        RouterOutlet,
+        UnauthorizedLayoutComponent,
+        AsyncPipe,
+        AuthorizedLayoutComponent,
+    ],
+    templateUrl: './app.component.html',
+    styleUrl: './app.component.scss'
 })
 export class AppComponent {
   title = 'IDonEnglist-Admin';

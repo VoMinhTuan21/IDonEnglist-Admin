@@ -18,18 +18,18 @@ import { NzRadioModule } from 'ng-zorro-antd/radio';
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({
-  selector: 'app-choose-test-part',
-  standalone: true,
-  imports: [
-    BoxComponent,
-    NzRadioModule,
-    FormsModule,
-    NzFormModule,
-    ReactiveFormsModule,
-    NzButtonModule,
-  ],
-  templateUrl: './choose-test-part.component.html',
-  styleUrl: './choose-test-part.component.scss',
+    selector: 'app-choose-test-part',
+    standalone: true,
+    imports: [
+        BoxComponent,
+        NzRadioModule,
+        FormsModule,
+        NzFormModule,
+        ReactiveFormsModule,
+        NzButtonModule,
+    ],
+    templateUrl: './choose-test-part.component.html',
+    styleUrl: './choose-test-part.component.scss'
 })
 export class ChooseTestPartComponent implements OnInit, OnDestroy {
   private unsubscribe$ = new Subject<void>();

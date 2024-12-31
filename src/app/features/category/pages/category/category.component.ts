@@ -21,23 +21,23 @@ interface CategoryTable extends Category {
 }
 
 @Component({
-  selector: 'app-category',
-  standalone: true,
-  imports: [
-    NzTableModule,
-    NzTagModule,
-    AsyncPipe,
-    NzIconModule,
-    NzFlexModule,
-    BoxComponent,
-    CreateAndUpdateComponent,
-    RouterLink,
-    NzPopconfirmModule,
-    SkillPipe,
-    UrlCodePipe
-  ],
-  templateUrl: './category.component.html',
-  styleUrl: './category.component.scss',
+    selector: 'app-category',
+    standalone: true,
+    imports: [
+        NzTableModule,
+        NzTagModule,
+        AsyncPipe,
+        NzIconModule,
+        NzFlexModule,
+        BoxComponent,
+        CreateAndUpdateComponent,
+        RouterLink,
+        NzPopconfirmModule,
+        SkillPipe,
+        UrlCodePipe
+    ],
+    templateUrl: './category.component.html',
+    styleUrl: './category.component.scss'
 })
 export class CategoryComponent implements OnInit, OnDestroy {
   loading$!: Observable<boolean>;

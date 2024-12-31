@@ -35,19 +35,19 @@ import {
 } from 'rxjs';
 
 @Component({
-  selector: 'app-create-update-final-test',
-  standalone: true,
-  imports: [
-    NzButtonModule,
-    NzFormModule,
-    ReactiveFormsModule,
-    NzSelectModule,
-    DrawerComponent,
-    NzInputModule,
-    NzIconModule,
-  ],
-  templateUrl: './create-update-final-test.component.html',
-  styleUrl: './create-update-final-test.component.scss',
+    selector: 'app-create-update-final-test',
+    standalone: true,
+    imports: [
+        NzButtonModule,
+        NzFormModule,
+        ReactiveFormsModule,
+        NzSelectModule,
+        DrawerComponent,
+        NzInputModule,
+        NzIconModule,
+    ],
+    templateUrl: './create-update-final-test.component.html',
+    styleUrl: './create-update-final-test.component.scss'
 })
 export class CreateUpdateFinalTestComponent implements OnInit, OnDestroy {
   @Input() drawerVisible: boolean = false;

@@ -6,11 +6,11 @@ import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
 
 @Component({
-  selector: 'app-create-new-pass',
-  standalone: true,
-  imports: [NzFormModule, NzInputModule, NzButtonModule, ReactiveFormsModule, NzFlexModule],
-  templateUrl: './create-new-pass.component.html',
-  styleUrl: './create-new-pass.component.scss'
+    selector: 'app-create-new-pass',
+    standalone: true,
+    imports: [NzFormModule, NzInputModule, NzButtonModule, ReactiveFormsModule, NzFlexModule],
+    templateUrl: './create-new-pass.component.html',
+    styleUrl: './create-new-pass.component.scss'
 })
 export class CreateNewPassComponent {
   constructor(private fb: NonNullableFormBuilder) {}

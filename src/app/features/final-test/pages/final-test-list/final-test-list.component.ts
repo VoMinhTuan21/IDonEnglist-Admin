@@ -31,25 +31,25 @@ import { CollectionMin } from '@features/collection/models/collection.model';
 import { CollectionService } from '@features/collection/collection.service';
 
 @Component({
-  selector: 'app-final-test-list',
-  standalone: true,
-  imports: [
-    BoxComponent,
-    ReactiveFormsModule,
-    NzFormModule,
-    NzInputModule,
-    NzSelectModule,
-    NzButtonModule,
-    NzIconModule,
-    NzTableModule,
-    RouterLink,
-    UrlCodePipe,
-    NzFlexModule,
-    NzPopconfirmModule,
-    CreateUpdateFinalTestComponent
-],
-  templateUrl: './final-test-list.component.html',
-  styleUrl: './final-test-list.component.scss',
+    selector: 'app-final-test-list',
+    standalone: true,
+    imports: [
+        BoxComponent,
+        ReactiveFormsModule,
+        NzFormModule,
+        NzInputModule,
+        NzSelectModule,
+        NzButtonModule,
+        NzIconModule,
+        NzTableModule,
+        RouterLink,
+        UrlCodePipe,
+        NzFlexModule,
+        NzPopconfirmModule,
+        CreateUpdateFinalTestComponent
+    ],
+    templateUrl: './final-test-list.component.html',
+    styleUrl: './final-test-list.component.scss'
 })
 export class FinalTestListComponent implements OnInit, OnDestroy {
   private unsubscribe$ = new Subject<void>();

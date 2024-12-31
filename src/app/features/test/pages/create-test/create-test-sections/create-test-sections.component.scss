@@ -1,11 +1,12 @@
-@import "../../../../../../variables.scss";
+@use "../../../../../../variables.scss";
+@use "sass:map";
 
 .create-test-sections {
   &__header {
     margin-bottom: 20px;
 
     &--sub-title {
-      color: map-get($map: $gray-palette, $key: dark);
+      color: map.get($map: variables.$gray-palette, $key: dark);
       font-size: 14px;
     }
   }
@@ -18,10 +19,10 @@
 
       &__item {
         &--active {
-          color: $primary;
+          color: variables.$primary;
 
           [nz-icon] {
-            color: map-get($gray-palette, darkest);
+            color: map.get(variables.$gray-palette, darkest);
           }
         }
       }

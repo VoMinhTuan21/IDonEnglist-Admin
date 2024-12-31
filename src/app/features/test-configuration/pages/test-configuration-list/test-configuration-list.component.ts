@@ -19,24 +19,24 @@ import { NzTypographyModule } from 'ng-zorro-antd/typography';
 import { Observable, Subject, takeUntil } from 'rxjs';
 
 @Component({
-  selector: 'app-test-configuration-list',
-  standalone: true,
-  imports: [
-    BoxComponent,
-    NzTableModule,
-    NzTagModule,
-    NzFlexModule,
-    NzIconModule,
-    SkillPipe,
-    RouterLink,
-    UrlCodePipe,
-    NzTypographyModule,
-    NzButtonModule,
-    AsyncPipe,
-    NzPopconfirmModule
-  ],
-  templateUrl: './test-configuration-list.component.html',
-  styleUrl: './test-configuration-list.component.scss',
+    selector: 'app-test-configuration-list',
+    standalone: true,
+    imports: [
+        BoxComponent,
+        NzTableModule,
+        NzTagModule,
+        NzFlexModule,
+        NzIconModule,
+        SkillPipe,
+        RouterLink,
+        UrlCodePipe,
+        NzTypographyModule,
+        NzButtonModule,
+        AsyncPipe,
+        NzPopconfirmModule
+    ],
+    templateUrl: './test-configuration-list.component.html',
+    styleUrl: './test-configuration-list.component.scss'
 })
 export class TestConfigurationListComponent implements OnInit, OnDestroy {
   table!: PaginatedList<ITestTypeTableItem>;

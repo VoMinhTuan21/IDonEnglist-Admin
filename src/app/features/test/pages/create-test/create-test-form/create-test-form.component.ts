@@ -35,21 +35,21 @@ import {
 import { BoxComponent } from "../../../../../shared/components/box/box.component";
 
 @Component({
-  selector: 'app-create-test-form',
-  standalone: true,
-  imports: [
-    NzFormModule,
-    ReactiveFormsModule,
-    NzButtonModule,
-    NzSelectModule,
-    NzInputModule,
-    NzUploadModule,
-    NzIconModule,
-    SkillPipe,
-    BoxComponent
-],
-  templateUrl: './create-test-form.component.html',
-  styleUrl: './create-test-form.component.scss',
+    selector: 'app-create-test-form',
+    standalone: true,
+    imports: [
+        NzFormModule,
+        ReactiveFormsModule,
+        NzButtonModule,
+        NzSelectModule,
+        NzInputModule,
+        NzUploadModule,
+        NzIconModule,
+        SkillPipe,
+        BoxComponent
+    ],
+    templateUrl: './create-test-form.component.html',
+    styleUrl: './create-test-form.component.scss'
 })
 export class CreateTestFormComponent {
   private unsubscribe$ = new Subject<void>();

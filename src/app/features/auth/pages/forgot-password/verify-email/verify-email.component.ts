@@ -8,19 +8,19 @@ import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 import { FormControl, FormGroup, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 
 @Component({
-  selector: 'app-verify-email',
-  standalone: true,
-  imports: [
-    NzAlertModule,
-    NzFormModule,
-    NzInputModule,
-    NzButtonModule,
-    NzIconModule,
-    NzToolTipModule,
-    ReactiveFormsModule
-  ],
-  templateUrl: './verify-email.component.html',
-  styleUrl: './verify-email.component.scss',
+    selector: 'app-verify-email',
+    standalone: true,
+    imports: [
+        NzAlertModule,
+        NzFormModule,
+        NzInputModule,
+        NzButtonModule,
+        NzIconModule,
+        NzToolTipModule,
+        ReactiveFormsModule
+    ],
+    templateUrl: './verify-email.component.html',
+    styleUrl: './verify-email.component.scss'
 })
 export class VerifyEmailComponent {
   constructor(private fb: NonNullableFormBuilder) {}

@@ -25,26 +25,30 @@ import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 import { v4 as uuidv4 } from 'uuid';
 import { FormDragDropComponent } from "../form-drag-drop/form-drag-drop.component";
 import { BoxComponent } from '../box/box.component';
+import { NzFlexModule } from 'ng-zorro-antd/flex';
+import { NzTypographyModule } from 'ng-zorro-antd/typography';
 
 @Component({
-  selector: 'app-section-form',
-  standalone: true,
-  imports: [
-    NzGridModule,
-    DraggableDirective,
-    NzFormModule,
-    ReactiveFormsModule,
-    NzInputModule,
-    NzButtonModule,
-    NzToolTipModule,
-    NzCollapseModule,
-    NzPopconfirmModule,
-    FormDragDropComponent,
-    BoxComponent,
-    NzIconModule
-],
-  templateUrl: './section-form.component.html',
-  styleUrl: './section-form.component.scss',
+    selector: 'app-section-form',
+    imports: [
+        NzGridModule,
+        DraggableDirective,
+        NzFormModule,
+        ReactiveFormsModule,
+        NzInputModule,
+        NzButtonModule,
+        NzToolTipModule,
+        NzCollapseModule,
+        NzPopconfirmModule,
+        FormDragDropComponent,
+        BoxComponent,
+        NzIconModule,
+        NzFlexModule,
+        NzTypographyModule
+    ],
+    templateUrl: './section-form.component.html',
+    styleUrl: './section-form.component.scss',
+    standalone: true,
 })
 export class SectionFormComponent {
   eToolList = EToolList;
