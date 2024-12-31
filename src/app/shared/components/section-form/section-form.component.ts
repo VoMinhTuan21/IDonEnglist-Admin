@@ -24,6 +24,7 @@ import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 import { v4 as uuidv4 } from 'uuid';
 import { FormDragDropComponent } from "../form-drag-drop/form-drag-drop.component";
+import { BoxComponent } from '../box/box.component';
 
 @Component({
   selector: 'app-section-form',
@@ -35,11 +36,12 @@ import { FormDragDropComponent } from "../form-drag-drop/form-drag-drop.componen
     ReactiveFormsModule,
     NzInputModule,
     NzButtonModule,
-    NzIconModule,
     NzToolTipModule,
     NzCollapseModule,
     NzPopconfirmModule,
-    FormDragDropComponent
+    FormDragDropComponent,
+    BoxComponent,
+    NzIconModule
 ],
   templateUrl: './section-form.component.html',
   styleUrl: './section-form.component.scss',

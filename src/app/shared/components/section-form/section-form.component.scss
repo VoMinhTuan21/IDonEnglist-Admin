@@ -2,27 +2,9 @@
 
 .section-form {
   &--left {
-    & > * + * {
-      margin-top: 10px;
-    }
-  }
-  
-  .dropped-area {
-    & > * + * {
-      margin-top: 10px;
-    }
-
-    &__title {
-      font-size: 14px;
-      color: map-get($gray-palette, dark);
-      margin-bottom: 10px;
-    }
-
-    &__container {
-      position: relative;
-      min-height: 100px;
-      padding: 8px;
-    }
+    display: grid;
+    grid-template-columns: 1fr;
+    row-gap: 10px;
   }
 
   .tool-list {
@@ -41,22 +23,18 @@
       }
     }
   }
-
-  .group-questions {
-    border: 1px solid $highlight;
-    border-radius: 10px;
-    padding: 10px;
-    position: relative;
-
+  
+  .box {
     &__title {
-      color: map-get($gray-palette, medium);
+      font-size: 16px;
+      color: map-get($gray-palette, dark);
       font-weight: 500;
-      position: absolute;
-      left: 0;
-      transform: translate(20px, -50%);
-      top: 0;
-      background: white;
-      padding: 0 8px;
+    }
+
+    &__sub-title {
+      font-size: 12px;
+      color: map-get($gray-palette, light);
+      font-family: 300;
     }
   }
 }

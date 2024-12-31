@@ -8,19 +8,26 @@
     nzSpan="18"
     class="section-form--left"
   >
-    <div class="dropped-area">
-      <h3 class="dropped-area__title">Section form</h3>
+    <app-box [styles]="{ padding: '10px 12px'}">
+      <div>
+        <h3 class="box__title">General Info</h3>
+        <span 
+          nz-tooltip 
+          nzTooltipTitle="Add instruction and passage for the part (if need) here"
+        >
+          <nz-icon nzType="info-circle" nzTheme="outline" />
+        </span>
+
+      </div>
       <app-form-drag-drop 
         [acceptedToolList]="acceptedToolItemsForExtraSectionInfo"
         formControlName="extraSectionInfo" 
       ></app-form-drag-drop>
-    </div>
-    <div>
-      <div 
-        class="dropped-area"
-        formArrayName="groups"
-      >
-        <h3 class="dropped-area__title">Group Questions</h3>
+    </app-box>
+    <app-box [styles]="{ padding: '10px 12px'}">
+      <div formArrayName="groups">
+        <h3 class="box__title">Questions</h3>
+        <p class="box__sub-title">Questions are divided in many group, you can add instruction, image, questions for each group</p>
         <nz-collapse>
           @for (group of sectionFormControls[1].items; track groupIndex; let groupIndex = $index) {
             <nz-collapse-panel [nzHeader]="'Group ' + (groupIndex + 1)" [nzActive]="activePanels[groupIndex]" [nzExtra]="extraTpl" (nzActiveChange)="handleActivePanelChange($event, groupIndex)">
@@ -51,7 +58,7 @@
         <button nz-button nzBlock type="button" (click)="handleAddGroup()"><span nz-icon nzType="plus" nzTheme="outline"></span>Add group</button>
       </div>
       <button nz-button nzType="primary">submit</button>
-    </div>
+    </app-box>
   </form>
   <div nz-col nzSpan="6" class="tool-list">
     <h3 class="tool-list__header">Tool items</h3>
