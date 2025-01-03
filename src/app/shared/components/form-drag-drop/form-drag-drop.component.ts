@@ -1,11 +1,5 @@
 import { CommonModule } from '@angular/common';
-import {
-  Component,
-  forwardRef,
-  Input,
-  OnDestroy,
-  OnInit
-} from '@angular/core';
+import { Component, forwardRef, Input, OnDestroy, OnInit, ViewChild, viewChild } from '@angular/core';
 import {
   AbstractControl,
   ControlValueAccessor,
@@ -18,7 +12,7 @@ import {
   ReactiveFormsModule,
   ValidationErrors,
   Validator,
-  Validators
+  Validators,
 } from '@angular/forms';
 import { DroppableDirective } from '@core/directives/droppable.directive';
 import { ToolLabelPipe } from '@core/pipes/tool-label.pipe';
@@ -31,9 +25,7 @@ import {
   GroupQuestionsMapping,
 } from '@shared/models/common';
 import { ToolList } from '@shared/models/constants';
-import {
-  EToolList
-} from '@shared/models/enum';
+import { EToolList } from '@shared/models/enum';
 import { Utils } from '@shared/utils/utils';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzFormModule } from 'ng-zorro-antd/form';
@@ -51,42 +43,42 @@ import { QuestionWithChoicesInputComponent } from './question-with-choices-input
 import { TextEditorInputComponent } from './text-editor-input/text-editor-input.component';
 import { UploadImageComponent } from './upload-image/upload-image.component';
 @Component({
-    selector: 'app-form-drag-drop',
-    standalone: true,
-    imports: [
-        ReactiveFormsModule,
-        FormsModule,
-        NzFormModule,
-        NzInputModule,
-        TextEditorInputComponent,
-        DroppableDirective,
-        ToolLabelPipe,
-        QuestionWithChoicesInputComponent,
-        TextEditorInputComponent,
-        FillInTheBlankInputComponent,
-        ClozeTestInputComponent,
-        MatchingQuestionComponent,
-        BinaryResponseQuestionComponent,
-        UploadImageComponent,
-        NzButtonModule,
-        NzIconModule,
-        NzPopconfirmModule,
-        CommonModule
-    ],
-    templateUrl: './form-drag-drop.component.html',
-    styleUrl: './form-drag-drop.component.scss',
-    providers: [
-        {
-            provide: NG_VALUE_ACCESSOR,
-            useExisting: forwardRef(() => FormDragDropComponent),
-            multi: true,
-        },
-        {
-            provide: NG_VALIDATORS,
-            useExisting: forwardRef(() => FormDragDropComponent),
-            multi: true,
-        },
-    ]
+  selector: 'app-form-drag-drop',
+  standalone: true,
+  imports: [
+    ReactiveFormsModule,
+    FormsModule,
+    NzFormModule,
+    NzInputModule,
+    TextEditorInputComponent,
+    DroppableDirective,
+    ToolLabelPipe,
+    QuestionWithChoicesInputComponent,
+    TextEditorInputComponent,
+    FillInTheBlankInputComponent,
+    ClozeTestInputComponent,
+    MatchingQuestionComponent,
+    BinaryResponseQuestionComponent,
+    UploadImageComponent,
+    NzButtonModule,
+    NzIconModule,
+    NzPopconfirmModule,
+    CommonModule,
+  ],
+  templateUrl: './form-drag-drop.component.html',
+  styleUrl: './form-drag-drop.component.scss',
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => FormDragDropComponent),
+      multi: true,
+    },
+    {
+      provide: NG_VALIDATORS,
+      useExisting: forwardRef(() => FormDragDropComponent),
+      multi: true,
+    },
+  ],
 })
 export class FormDragDropComponent
   implements ControlValueAccessor, OnInit, Validator, OnDestroy
@@ -95,11 +87,14 @@ export class FormDragDropComponent
   @Input() acceptedToolList?: DragItem[] = [];
   @Input() excludeToolList?: DragItem[] = [];
 
+  @ViewChild(BinaryResponseQuestionComponent) binaryResponseQuestionComponent!: BinaryResponseQuestionComponent;
+  @ViewChild(MatchingQuestionComponent) matchingQuestionComponent!: MatchingQuestionComponent;
+
   $hasErrors = new Subject<boolean>();
   $touched = new Subject<boolean>();
   $unsubscribe = new Subject<void>();
 
-  private isUpdatingValidity = false; 
+  private isUpdatingValidity = false;
   eToolList = EToolList;
   excludeItemsToolForGroupQuestions = ToolList.filter((item) =>
     [EToolList.Passage].includes(item.id)
@@ -148,20 +143,19 @@ export class FormDragDropComponent
     }
 
     if (this.formGroup.invalid) {
-      return { required : true }
+      return { required: true };
     }
 
     if (Utils.isObjectHasEmptyField(this.formGroup.value)) {
-      return { required: true }
+      return { required: true };
     }
-    
+
     return null;
   }
 
   writeValue(value: GroupQuestionsFormValue): void {
-    if (!value) {
-      return;
-    }
+    Object.keys(this.formGroup.controls).forEach(key => this.formGroup.removeControl(key));
+    this.formGroupControls = [];
 
     for (const key of Object.keys(value)) {
       switch (key) {
@@ -171,8 +165,17 @@ export class FormDragDropComponent
         case 'clozeQuestions':
         case 'matchingQuestions':
         case 'binaryResponseQuestions':
-          this.formGroup.addControl(key, new FormControl(value[key], [key === 'passage' ? EditorValidator.required() : requiredAllFields()]));
-          if (!this.formGroupControls.find(item => item.controlInstance === key)) {
+          this.formGroup.addControl(
+            key,
+            new FormControl(value[key], [
+              key === 'passage'
+                ? EditorValidator.required()
+                : requiredAllFields(),
+            ])
+          );
+          if (
+            !this.formGroupControls.find((item) => item.controlInstance === key)
+          ) {
             this.formGroupControls.push({
               id: uuidv4(),
               controlType: GroupQuestionsMapping[key],
@@ -186,8 +189,8 @@ export class FormDragDropComponent
             this.formGroup.addControl(
               key,
               new FormArray(
-                value[key]?.map((item) =>
-                  new FormControl(item, [requiredAllFields()])
+                value[key]?.map(
+                  (item) => new FormControl(item, [requiredAllFields()])
                 ) ?? []
               )
             );
@@ -230,9 +233,17 @@ export class FormDragDropComponent
   }
 
   handleItemDropped(event: DragItem) {
-    const existedFormControl = this.formGroupControls.find(item => item.controlType === event.id);
+    const existedFormControl = this.formGroupControls.find(
+      (item) => item.controlType === event.id
+    );
 
-    if (existedFormControl) {
+    if (
+      existedFormControl &&
+      (existedFormControl.controlType === EToolList.Direction ||
+      existedFormControl.controlType === EToolList.Passage ||
+      existedFormControl.controlType === EToolList.Image ||
+      existedFormControl.controlType === EToolList.ClozeTest)
+    ) {
       return;
     }
 
@@ -273,13 +284,21 @@ export class FormDragDropComponent
         });
         this.formGroup.addControl(
           'clozeQuestions',
-          new FormControl({
-            text: '<table style="width: 100%; border-collapse: collapse;"><tr><td contenteditable="true" style="border: 1px solid black; padding: 5px; height: 32px;">Test</td><td contenteditable="true" style="border: 1px solid black; padding: 5px; height: 32px;">Test</td></tr><tr><td contenteditable="true" style="border: 1px solid black; padding: 5px; height: 32px;">center the __BLANK__  or insertion point</td><td contenteditable="true" style="border: 1px solid black; padding: 5px; height: 32px;">__BLANK__  the selection or insertion point</td></tr></table><br>',
-            answers: ['selection', 'justifies'],
-          }, [requiredAllFields()])
+          new FormControl(
+            {
+              text: '<table style="width: 100%; border-collapse: collapse;"><tr><td contenteditable="true" style="border: 1px solid black; padding: 5px; height: 32px;">Test</td><td contenteditable="true" style="border: 1px solid black; padding: 5px; height: 32px;">Test</td></tr><tr><td contenteditable="true" style="border: 1px solid black; padding: 5px; height: 32px;">center the __BLANK__  or insertion point</td><td contenteditable="true" style="border: 1px solid black; padding: 5px; height: 32px;">__BLANK__  the selection or insertion point</td></tr></table><br>',
+              answers: ['selection', 'justifies'],
+            },
+            [requiredAllFields()]
+          )
         );
         break;
       case EToolList.MatchingQuestion:
+        if (existedFormControl) {
+          this.matchingQuestionComponent?.handleAddQuestion();
+          break;
+        }
+
         this.formGroupControls.push({
           id: uuidv4(),
           controlType: EToolList.MatchingQuestion,
@@ -287,21 +306,28 @@ export class FormDragDropComponent
         });
         this.formGroup.addControl(
           'matchingQuestions',
-          new FormControl({
-            options: [
-              { id: '2', text: '' },
-            ],
-            type: 0,
-            questions: [
-              {
-                text: '',
-                answer: '',
-              }
-            ],
-          }, [requiredAllFields()])
+          new FormControl(
+            {
+              options: [{ id: '2', text: '' }],
+              type: 0,
+              questions: [
+                {
+                  text: '',
+                  answer: '',
+                },
+              ],
+            },
+            [requiredAllFields()]
+          )
         );
         break;
       case EToolList.BinaryResponseQuestion:
+        if (existedFormControl) {
+          console.log("this.binaryResponseQuestionComponent: ", this.binaryResponseQuestionComponent);
+          this.binaryResponseQuestionComponent?.handleAddQuestion();
+          break;
+        }
+        
         this.formGroupControls.push({
           id: uuidv4(),
           controlType: EToolList.BinaryResponseQuestion,
@@ -309,15 +335,18 @@ export class FormDragDropComponent
         });
         this.formGroup.addControl(
           'binaryResponseQuestions',
-          new FormControl({
-            type: 0,
-            questions: [
-              {
-                text: '',
-                answer: '',
-              }
-            ],
-          }, [requiredAllFields()])
+          new FormControl(
+            {
+              type: 0,
+              questions: [
+                {
+                  text: '',
+                  answer: '',
+                },
+              ],
+            },
+            [requiredAllFields()]
+          )
         );
         break;
       case EToolList.Image:
@@ -328,10 +357,13 @@ export class FormDragDropComponent
         });
         this.formGroup.addControl(
           'image',
-          new FormControl({
-            publicId: uuidv4(),
-            url: 'https://i.pinimg.com/736x/0f/f9/b1/0ff9b16e504071ac52053ae2a08b3ae6.jpg',
-          }, [Validators.required])
+          new FormControl(
+            {
+              publicId: uuidv4(),
+              url: 'https://i.pinimg.com/736x/0f/f9/b1/0ff9b16e504071ac52053ae2a08b3ae6.jpg',
+            },
+            [Validators.required]
+          )
         );
         break;
       default:
@@ -372,27 +404,33 @@ export class FormDragDropComponent
     switch (question.id) {
       case EToolList.QuestionWithChoices:
         questionsControl.push(
-          new FormControl({
-            text: 'Which is the National Date of Vietnam?',
-            choices: [
-              {
-                text: '2/9/1945',
-                markAsAnswer: true,
-              },
-              {
-                text: '30/4/1975',
-                markAsAnswer: false,
-              },
-            ],
-          }, [requiredAllFields()])
+          new FormControl(
+            {
+              text: 'Which is the National Date of Vietnam?',
+              choices: [
+                {
+                  text: '2/9/1945',
+                  markAsAnswer: true,
+                },
+                {
+                  text: '30/4/1975',
+                  markAsAnswer: false,
+                },
+              ],
+            },
+            [requiredAllFields()]
+          )
         );
         break;
       case EToolList.FillInTheBlank:
         questionsControl.push(
-          new FormControl({
-            text: '',
-            answer: '',
-          }, [requiredAllFields()])
+          new FormControl(
+            {
+              text: 'Teeth is made of __BLANK__',
+              answer: 'calcium',
+            },
+            [requiredAllFields()]
+          )
         );
         break;
       default:
@@ -415,6 +453,8 @@ export class FormDragDropComponent
   }
 
   get isInvalid(): boolean {
-    return this.control ? this.control.invalid && (this.control.dirty || this.control.touched) : false;
+    return this.control
+      ? this.control.invalid && (this.control.dirty || this.control.touched)
+      : false;
   }
 }

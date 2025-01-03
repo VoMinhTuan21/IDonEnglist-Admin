@@ -110,6 +110,13 @@ button {
     color: variables.$primary;
     background-color: variables.$background;
   }
+
+  &--disabled {
+    border-color: map.get(variables.$gray-palette, light);
+    color: map.get(variables.$gray-palette, light);
+    background-color: map.get(variables.$gray-palette, lightest);
+    cursor: not-allowed;
+  }
 }
 
 .drop-cover {

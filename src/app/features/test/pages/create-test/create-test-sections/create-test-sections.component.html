@@ -1,11 +1,54 @@
 <div class="create-test-sections">
-  <div class="create-test-sections__header">
-    <h3>Create Questions</h3>
-    <p class="create-test-sections__header--sub-title">
-      You are creating questions for Part 1
-    </p>
-  </div>
-  <div class="create-test-sections__body">
-    <app-section-form></app-section-form>
+  <h3>Create Questions</h3>
+  <app-section-form
+    [numberOfQuestions]="parts[index].questions"
+    [partsMenu]="partsMenu"
+  ></app-section-form>
+  <div class="create-test-sections__footer">
+    @if (index > 0) {
+      <button nz-button (click)="handleGoPrevious()">
+        <nz-icon nzType="arrow-left" nzTheme="outline" />Go back
+      </button>
+    }
+    @if (index < parts.length - 1) {
+      <button nz-button nzType="primary" (click)="handleGoToPart(index + 1)">
+        Next Part
+      </button>
+    }
+
+    @if (partsFormValue.size >= parts.length - 1 && index === parts.length - 1) {
+      <button nz-button nzType="primary" (click)="handleCreateTest()">
+        Finish
+      </button>
+    }
   </div>
 </div>
+
+<ng-template #partsMenu>
+  <button nz-button nzType="text" nz-popover nzPopoverTitle="Parts" [nzPopoverContent]="part" nzPopoverTrigger="click">
+    <ng-icon size="16" name="bootstrapCollection"/>
+  </button>
+</ng-template>
+
+<ng-template #part>
+  <div class="parts-list">
+    @for (part of parts; track $index) {
+      <div (click)="handleGoToPart($index)" class="parts-list__item">
+        @if (index === $index) {
+          <ng-icon color="#7BA8E0" size="28" name="bootstrapRecordCircleFill" />
+        } 
+        @else if (partsFormValue.get(part.id)) {
+          <ng-icon color="#7BA8E0" size="28" name="bootstrapCheckCircleFill" />
+        } @else {
+          <ng-icon color="#7BA8E0" size="28" name="bootstrapCircle" />
+        }
+        <div>
+          <p class="parts-list__item__title">
+            Part {{ $index + 1 }}
+          </p>
+          <small class="parts-list__item__description">{{part.questions + ' questions | ' + part.duration + ' minutes'}}</small>
+        </div>
+      </div>
+    }
+  </div>
+</ng-template>

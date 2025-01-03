@@ -2,35 +2,9 @@
 @use "sass:map";
 
 .section-form {
-  &--left {
-    display: grid;
-    grid-template-columns: 1fr;
-    row-gap: 10px;
-  }
-
-  ::ng-deep .tool-list {
-    position: relative;
-
-    &__container {
-      padding: 16px !important;
-      display: grid;
-      grid-template-columns: 1fr;
-      row-gap: 10px;
-      position: sticky;
-      top: 20px;
-    }
-
-    &__header {
-      font-size: 14px;
-      color: map.get(variables.$gray-palette, dark);
-    }
-
-    &__body {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-  }
+  display: grid;
+  grid-template-columns: 1fr;
+  row-gap: 10px;
   
   ::ng-deep .box-form {
     & {
@@ -51,5 +25,36 @@
       color: map.get(variables.$gray-palette, dark);
       font-weight: 500;
     }
+  }
+
+  &__float-button-group {
+    padding: 8px 0;
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 20px;
+    z-index: 1000;
+    background-color: white;
+    border-radius: 6px;
+    // box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+.tool-list {
+  &__body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  &__footer {
+    max-width: 250px;
+    display: flex;
+    column-gap: 6px;
+    align-items: center;
+    color: variables.$warning;
   }
 }

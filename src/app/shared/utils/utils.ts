@@ -4,6 +4,7 @@ import { Observable, Observer } from 'rxjs';
 import { Category } from '../../features/category/models/category.model';
 import { FormArray, FormGroup } from '@angular/forms';
 import { BLANK, BlankRegex } from '@shared/models/constants';
+import { GroupQuestionsFormValue } from '@shared/models/common';
 
 export const Utils = {
   findCategoryInTree: (categories: Category[], id: number): Category | null => {
@@ -169,5 +170,31 @@ export const Utils = {
         ctrl.updateValueAndValidity();
       }
     });
+  },
+  countQuestions: (partValue: GroupQuestionsFormValue[]): number => {
+    let count = 0;
+    partValue.forEach((group) => {
+      if (group.choicesQuestions) {
+        count += group.choicesQuestions.length;
+      }
+
+      if (group.fillInBlankQuestions) {
+        count += group.fillInBlankQuestions.length;
+      }
+
+      if (group.clozeQuestions) {
+        count += group.clozeQuestions.answers.length;
+      }
+
+      if (group.matchingQuestions) {
+        count += group.matchingQuestions.questions.length;
+      }
+
+      if (group.binaryResponseQuestions) {
+        count += group.binaryResponseQuestions.questions.length;
+      }
+    });
+
+    return count;
   }
 };

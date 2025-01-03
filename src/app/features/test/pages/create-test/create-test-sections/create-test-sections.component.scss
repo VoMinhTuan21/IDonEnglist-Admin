@@ -2,42 +2,66 @@
 @use "sass:map";
 
 .create-test-sections {
-  &__header {
-    margin-bottom: 20px;
+  display: grid;
+  grid-template-columns: 1fr;
+  row-gap: 10px;
 
-    &--sub-title {
-      color: map.get($map: variables.$gray-palette, $key: dark);
-      font-size: 14px;
-    }
+  &__footer {
+    display: flex;
+    column-gap: 10px;
+    justify-content: flex-end;
   }
+}
 
-  &__body {
-    .sections-list {
-      flex: 1;
-      display: flex;
-      column-gap: 2px;
+.parts-list {
 
-      &__item {
-        &--active {
-          color: variables.$primary;
+  &__item {
+    width: 250px;
+    display: flex;
+    column-gap: 20px;
+    align-items: center;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
 
-          [nz-icon] {
-            color: map.get(variables.$gray-palette, darkest);
-          }
-        }
+    &:hover {
+      background-color: map.get(variables.$gray-palette, lightest);
+      .parts-list__item__title {
+        color: variables.$primary;
       }
     }
-  }
-}
 
-.editor {
-  .NgxEditor {
-    transition: all 0.3s, height 0s;
-    
-    &:focus-within {
-      border-color: #a8caed;
-      box-shadow: 0 0 0 2px rgba(123, 168, 224, 0.2);
+    &::after {
+      content: "";
+      position: absolute;
+      top: -11px;
+      left: 33px;
+      width: 1px;
+      height: 20px;
+      border: 1.5px dashed variables.$primary;
+    }
+
+    &:nth-child(1)::after {
+      display: none;
+    }
+
+    &__icon {
+      color: variables.$primary;
+    }
+
+    &__title {
+      color: variables.$text-normal;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+
+    &__description {
+      color: map.get(variables.$gray-palette, dark);
+    }
+
+    &--active {
+      background-color: variables.$background;
     }
   }
 }
-

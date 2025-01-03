@@ -8,7 +8,7 @@
   [excludeList]="excludeToolList"
   [isDisabled]="disableDragDrop"
 >
-  @for (control of formGroupControls; track controlIndex; let controlIndex = $index) { 
+  @for (control of formGroupControls; track control.id; let controlIndex = $index) { 
     @switch (control.controlType) 
     { 
       @case (eToolList.Direction) {

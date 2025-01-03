@@ -61,13 +61,14 @@ export class DroppableDirective implements OnInit, OnDestroy, OnChanges {
 
   private updateDropCover() {
     this.isUpdating = true;
-    this.observer.disconnect();
+    // this.observer.disconnect();
     if (this.notHasChildren()) {
       this.dropCoverDom?.classList.remove('drop-cover--hidden');
     } else {
       this.dropCoverDom?.classList.add('drop-cover--hidden');
-
     }
+
+    this.isUpdating = false;
   }
 
   ngOnInit(): void {

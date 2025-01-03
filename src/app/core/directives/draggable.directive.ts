@@ -8,6 +8,7 @@ import { DragItem } from '@shared/models/common';
 })
 export class DraggableDirective {
   @Input() appDraggable?: DragItem;
+  @Input() disabled = false;
   private offsetX = 0;
   private offsetY = 0;
 
@@ -19,6 +20,10 @@ export class DraggableDirective {
 
   @HostListener('mousedown', ['$event'])
   onDragStart(event: any): void {
+    if (this.disabled) {
+      return;
+    }
+    
     event.preventDefault();
     this.dragDropService.setDraggedItem(this.appDraggable);
     

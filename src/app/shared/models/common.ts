@@ -167,3 +167,13 @@ export type ExtraInfoFormValue = {
   instruction?: string;
   passage?: string;
 }
+
+export type SectionForm = FormGroup<{
+  extraSectionInfo?: FormControl<ExtraInfoFormValue>;
+  groups?: FormArray<FormControl<GroupQuestionsFormValue>>;
+}>;
+
+export type SectionFormValue = {
+  extraSectionInfo?: ExtraInfoFormValue;
+  groups?: GroupQuestionsFormValue[];
+}
