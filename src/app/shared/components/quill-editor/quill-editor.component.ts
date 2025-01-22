@@ -28,7 +28,7 @@ import { FillInBlankTextEditorOutput } from '@shared/models/common';
 import { debounceTime, Subject } from 'rxjs';
 import { Utils } from '@shared/utils/utils';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
-
+import QuillResizeImage from 'quill-resize-image';
 @Component({
   selector: 'app-quill-editor',
   imports: [NgIcon, NzDividerModule],
@@ -178,8 +178,29 @@ export class QuillEditorComponent
     tableModule?.insertTable(3, 3);
   }
 
+  insertImage(quill: Quill) {
+    const input = document.createElement('input');
+    input.setAttribute('type', 'file');
+    input.setAttribute('accept', 'image/*');
+    input.click();
+
+    input.onchange = () => {
+      const file = input.files?.[0];
+
+      if (!file) {
+        return;
+      }
+      
+      const imageUrl = "https://i.pinimg.com/736x/d8/2d/b1/d82db192bfa37d3a0ca8594bf22f018f.jpg"; // Adjust based on your response structure
+      const range = quill.getSelection();
+
+      if (range) {
+        quill.insertEmbed(range.index, 'image', imageUrl);
+      }
+    };
+  }
+
   onTextChange = (delta: Delta) => {
-    console.log("delta: ", delta);
     this.deltaSubject.next(delta);
   };
 
@@ -191,6 +212,9 @@ export class QuillEditorComponent
       },
       true
     );
+    Quill.register({
+      "modules/resize": QuillResizeImage
+    });
 
     this.quill = new Quill('#editor', {
       modules: {
@@ -205,6 +229,11 @@ export class QuillEditorComponent
             },
           },
         },
+        resize: {
+          locale: {
+            center: "center",
+          },
+        },
         keyboard: {
           bindings: QuillBetterTable.keyboardBindings,
         },
@@ -217,7 +246,9 @@ export class QuillEditorComponent
 
   initToolbar() {
     this.toolbar = this.quill.getModule('toolbar');
-    // this.toolbar.addHandler("image", this.imageHandler.bind(this, this.quill));
+
+    this.toolbar.addHandler("image", this.insertImage.bind(this, this.quill));
+
     this.editableBoxMenu.nativeElement.addEventListener(
       'click',
       this.insertEditableBox.bind(this, this.quill)

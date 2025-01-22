@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { CreateTestStep } from '@shared/models/enum';
-import { EditorComponent } from "../../../../shared/components/editor/editor.component";
 import { ChooseTestPartComponent } from './choose-test-part/choose-test-part.component';
 import { CreateTestFormComponent } from './create-test-form/create-test-form.component';
 import { CreateTestSectionsComponent } from './create-test-sections/create-test-sections.component';
@@ -11,8 +10,7 @@ import { CreateTestSectionsComponent } from './create-test-sections/create-test-
     imports: [
     CreateTestFormComponent,
     ChooseTestPartComponent,
-    CreateTestSectionsComponent,
-    EditorComponent
+    CreateTestSectionsComponent
 ],
     templateUrl: './create-test.component.html',
     styleUrl: './create-test.component.scss'
