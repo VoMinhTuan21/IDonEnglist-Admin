@@ -1,0 +1,50 @@
+<div class="quill-editor" [class]="inValid ? 'quill-editor__invalid': ''">
+  <div id="toolbar" class="quill-editor__menu">
+    <div class="quill-editor__menu--group">
+      <button class="ql-bold" ></button>
+      <button class="ql-italic"></button>
+      <button class="ql-underline"></button>
+      <button class="ql-strike"></button>
+    </div>
+    <div class="quill-editor__menu--group">
+      <select class="ql-header">
+        <option value="1">Heading 1</option>
+        <option value="2">Heading 2</option>
+        <option value="3">Heading 3</option>
+        <option value="4">Heading 4</option>
+        <option value="5">Heading 5</option>
+        <option value="6">Heading 6</option>
+        <option selected></option>
+      </select>
+    </div>
+    <div class="quill-editor__menu--group">
+      <button class="ql-list" value="ordered"></button>
+      <button class="ql-list" value="bullet"></button>
+      <button class="ql-indent" value="-1"></button>
+      <button class="ql-indent" value="+1"></button>
+    </div>
+    <div class="quill-editor__menu--group">
+      <button class="ql-blockquote"></button>
+      <button class="ql-direction"></button>
+    </div>
+    <div class="quill-editor__menu--group">
+      <select class="ql-align"></select>
+      <select class="ql-color"></select>
+      <select class="ql-background"></select>
+    </div>
+    <div class="quill-editor__menu--group">
+      <button class="ql-link"></button>
+      <button class="ql-image"></button>
+    </div>
+    <!-- But you can also add your own -->
+     <div class="quill-editor__menu--group">
+      <button #editableBoxMenu [hidden]="!hasBlankBox">
+        <ng-icon name="bootstrapInputCursorText"/>
+      </button>
+       <button #tableMenu>
+        <ng-icon size="16" name="bootstrapTable"/>
+       </button>
+     </div>
+  </div>
+  <div id="editor" #editorContent class="quill-editor__content"></div>
+</div>

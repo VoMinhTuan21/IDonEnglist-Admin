@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
-import { CreateTestFormComponent } from './create-test-form/create-test-form.component';
 import { CreateTestStep } from '@shared/models/enum';
-import { ChooseTestPartComponent } from './choose-test-part/choose-test-part.component';
-import { CreateTestSectionsComponent } from './create-test-sections/create-test-sections.component';
 import { EditorComponent } from "../../../../shared/components/editor/editor.component";
+import { ChooseTestPartComponent } from './choose-test-part/choose-test-part.component';
+import { CreateTestFormComponent } from './create-test-form/create-test-form.component';
+import { CreateTestSectionsComponent } from './create-test-sections/create-test-sections.component';
 
 @Component({
     selector: 'app-create-test',

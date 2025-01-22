@@ -51,12 +51,17 @@
             <nz-form-label nzRequired>{{
               control.controlType | toolLabel
             }}</nz-form-label>
-            <nz-form-control nzErrorTip="This field is required">
-              <app-text-editor-input
+            <nz-form-control [nzErrorTip]="passageErrorTpl">
+              <app-quill-editor
                 [formControlName]="control.controlInstance ?? ''"
-              ></app-text-editor-input>
+              ></app-quill-editor>
             </nz-form-control>
           </nz-form-item>
+          <ng-template #passageErrorTpl>
+            @if (formGroup.get("passage")?.errors?.['fillEditor']) {
+              This field is required
+            }
+          </ng-template>
         </div>
       } 
       @case (eToolList.QuestionWithChoices) { 

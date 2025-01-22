@@ -1,0 +1,78 @@
+@use "../../../../variables.scss";
+@use "sass:map";
+
+.quill-editor {
+  background-color: white;
+  border: 1px solid map.get(variables.$gray-palette, lighter);
+  border-radius: 6px;
+
+  &__invalid {
+    border-color: variables.$error;
+
+    &:hover, &:focus, &:focus-visible {
+      border-color: variables.$error !important;
+    }
+  
+    &:focus, &:focus-within {
+      box-shadow: 0 0 2px rgba(variables.$error, 0.2) !important;
+    }
+  }
+
+  &:hover, &:focus, &:focus-visible {
+    border-color: #a8caed;
+  }
+
+  &:focus, &:focus-within {
+    box-shadow: 0 0 2px rgba(123, 168, 224, 0.2);
+  }
+
+  &__menu {
+    border-top: 0px !important;
+    border-left: 0px !important;
+    border-right: 0px !important;
+    border-bottom: 1px solid map.get(variables.$gray-palette, lighter);
+  
+    &--group {
+      border-right: 1px solid #d5d3d3;
+      padding-right: 4px;
+      padding-left: 4px;
+      display: inline-block;
+
+      &:first-child {
+        padding-left: 0;
+      }
+
+      &:last-child {
+        padding-right: 0;
+        border-right: none;
+      }
+    }
+  }
+
+  &__content {
+    border: none !important;
+  }
+
+  .editable-inline-box {
+    padding: 4px 11px;
+    font-size: 14px;
+    border: none;
+    outline: 0;
+    border-radius: 4px;
+    background-color: variables.$background;
+    border: 2px dashed map.get(variables.$gray-palette, lighter);
+
+    &:hover, &:focus, &:focus-visible {
+      border-color: #a8caed;
+    }
+  
+    &:focus {
+      box-shadow: 0 0 2px rgba(123, 168, 224, 0.2);
+    }
+
+    &__error {
+      border-color: variables.$error !important;
+      background-color: rgba(variables.$error, 0.2);
+    }
+  }
+}

@@ -130,6 +130,39 @@ export const Utils = {
     }
     return result;
   },
+  extractAndReplaceEditableInlineBox: (
+    htmlString: string
+  ): [string[], string] => {
+    const regex = /<span class="editable-inline-box">(.*?)<\/span>/g;
+    const extractedTexts: string[] = [];
+    let match;
+
+    // Extract inner text and store it in the array
+    while ((match = regex.exec(htmlString)) !== null) {
+      extractedTexts.push(match[1]); // match[1] contains the inner text
+    }
+
+    // Replace spans with __BLANK__
+    const modifiedHtmlString = htmlString.replace(regex, '__BLANK__');
+
+    return [extractedTexts, modifiedHtmlString];
+  },
+  revertExtractAndReplace: (
+    extractedTexts: string[],
+    modifiedHtmlString: string
+  ): string => {
+    let index = 0;
+
+    // Replace __BLANK__ with the corresponding extracted text
+    const revertedHtmlString = modifiedHtmlString.replace(/__BLANK__/g, () => {
+      if (index < extractedTexts.length) {
+        return `<span class="editable-inline-box">${extractedTexts[index++]}</span>`;
+      }
+      return '__BLANK__'; // Fallback if out of bounds
+    });
+
+    return revertedHtmlString;
+  },
   fillInBlanks: (template: string, answers: string[]): string => {
     // Use a regular expression to replace "__BLANK__" with values from the answers array
     let index = 0;
@@ -143,7 +176,9 @@ export const Utils = {
     });
     return result;
   },
-  getQuestionTypes: <T extends object>(enumObj: T): { value: number; label: string }[] => {
+  getQuestionTypes: <T extends object>(
+    enumObj: T
+  ): { value: number; label: string }[] => {
     return Object.keys(enumObj)
       .filter((key) => !isNaN(Number(enumObj[key as keyof T])))
       .map((key) => ({
@@ -153,11 +188,14 @@ export const Utils = {
   },
   isObjectHasEmptyField: (obj: Record<string, any>): boolean => {
     if (Object.keys(obj).length === 0) {
-        return true;
+      return true;
     }
 
-    return Object.values(obj).some(value => 
-        value === undefined || value === null || value === '' || 
+    return Object.values(obj).some(
+      (value) =>
+        value === undefined ||
+        value === null ||
+        value === '' ||
         (typeof value === 'object' && Utils.isObjectHasEmptyField(value))
     );
   },
@@ -196,5 +234,5 @@ export const Utils = {
     });
 
     return count;
-  }
+  },
 };

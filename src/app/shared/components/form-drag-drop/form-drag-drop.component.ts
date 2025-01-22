@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, forwardRef, Input, OnDestroy, OnInit, ViewChild, viewChild } from '@angular/core';
+import { Component, forwardRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import {
   AbstractControl,
   ControlValueAccessor,
@@ -32,15 +32,14 @@ import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
-import { Validators as EditorValidator } from 'ngx-editor';
 import { combineLatest, filter, Subject, takeUntil } from 'rxjs';
 import { v4 as uuidv4 } from 'uuid';
+import { QuillEditorComponent } from "../quill-editor/quill-editor.component";
 import { BinaryResponseQuestionComponent } from './binary-response-question/binary-response-question.component';
 import { ClozeTestInputComponent } from './cloze-test-input/cloze-test-input.component';
 import { FillInTheBlankInputComponent } from './fill-in-the-blank-input/fill-in-the-blank-input.component';
 import { MatchingQuestionComponent } from './matching-question/matching-question.component';
 import { QuestionWithChoicesInputComponent } from './question-with-choices-input/question-with-choices-input.component';
-import { TextEditorInputComponent } from './text-editor-input/text-editor-input.component';
 import { UploadImageComponent } from './upload-image/upload-image.component';
 @Component({
   selector: 'app-form-drag-drop',
@@ -50,11 +49,9 @@ import { UploadImageComponent } from './upload-image/upload-image.component';
     FormsModule,
     NzFormModule,
     NzInputModule,
-    TextEditorInputComponent,
     DroppableDirective,
     ToolLabelPipe,
     QuestionWithChoicesInputComponent,
-    TextEditorInputComponent,
     FillInTheBlankInputComponent,
     ClozeTestInputComponent,
     MatchingQuestionComponent,
@@ -64,7 +61,8 @@ import { UploadImageComponent } from './upload-image/upload-image.component';
     NzIconModule,
     NzPopconfirmModule,
     CommonModule,
-  ],
+    QuillEditorComponent
+],
   templateUrl: './form-drag-drop.component.html',
   styleUrl: './form-drag-drop.component.scss',
   providers: [
@@ -134,6 +132,7 @@ export class FormDragDropComponent
   }
 
   validate(control: AbstractControl): ValidationErrors | null {
+    console.log("control: ", control);
     this.control = control;
     if (!this.isUpdatingValidity) {
       this.isUpdatingValidity = true;
@@ -167,11 +166,7 @@ export class FormDragDropComponent
         case 'binaryResponseQuestions':
           this.formGroup.addControl(
             key,
-            new FormControl(value[key], [
-              key === 'passage'
-                ? EditorValidator.required()
-                : requiredAllFields(),
-            ])
+            new FormControl(value[key], [requiredAllFields()])
           );
           if (
             !this.formGroupControls.find((item) => item.controlInstance === key)
@@ -267,7 +262,7 @@ export class FormDragDropComponent
         });
         this.formGroup.addControl(
           'passage',
-          new FormControl(null, [EditorValidator.required()])
+          new FormControl(null, [requiredAllFields()])
         );
         break;
       case EToolList.QuestionWithChoices:

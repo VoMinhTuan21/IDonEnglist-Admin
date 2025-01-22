@@ -15,12 +15,20 @@
       </li>
     </ul>
   </nz-dropdown-menu>
-  <div class="fill-in-the-blank-question--right">
-    <app-fill-in-blank-text-editor
-      [ngModel]="value"
-      (ngModelChange)="onInput($event)"
-      [numOfBlanks]="1"
-      [shouldValidate]="shouldValidate"
-    ></app-fill-in-blank-text-editor>
+  <div class="fill-in-the-blank-question--right" [formGroup]="formGroup">
+    <nz-form-item>
+      <nz-form-control [nzErrorTip]="errorTpl">
+        <app-quill-editor [hasBlankBox]="true" formControlName="fillInTheBlank"/>
+      </nz-form-control>
+    </nz-form-item>
+    <ng-template #errorTpl>
+      @if (formGroup.get("fillInTheBlank")?.errors?.['insertBlank']) {
+        Please insert blank box
+      } @else if (formGroup.get("fillInTheBlank")?.errors?.['fillInBlank']) {
+        Please fill in the blank box
+      } @else if (formGroup.get("fillInTheBlank")?.errors?.['fillEditor']) {
+        This field is required
+      }
+    </ng-template>
   </div>
 </div>

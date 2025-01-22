@@ -37,11 +37,8 @@
             "styles": [
               "src/theme.less",
               "src/styles.scss",
-              "node_modules/prosemirror-example-setup/style/style.css",
-              "node_modules/prosemirror-gapcursor/style/gapcursor.css",
-              "node_modules/prosemirror-menu/style/menu.css",
-              "node_modules/prosemirror-tables/style/tables.css",
-              "node_modules/prosemirror-view/style/prosemirror.css"
+              "node_modules/quill/dist/quill.snow.css",
+              "node_modules/quill-better-table/dist/quill-better-table.css"
             ],
             "scripts": [],
             "server": "src/main.server.ts",
