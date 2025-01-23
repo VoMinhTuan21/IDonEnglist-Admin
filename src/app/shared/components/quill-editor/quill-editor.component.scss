@@ -5,6 +5,7 @@
   background-color: white;
   border: 1px solid map.get(variables.$gray-palette, lighter);
   border-radius: 6px;
+  position: relative;
 
   &__invalid {
     border-color: variables.$error;
@@ -73,6 +74,18 @@
     &__error {
       border-color: variables.$error !important;
       background-color: rgba(variables.$error, 0.2);
+    }
+  }
+
+  &__uploading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    column-gap: 10px;
+    
+    img {
+      width: 32px;
+      height: 32px;
     }
   }
 }

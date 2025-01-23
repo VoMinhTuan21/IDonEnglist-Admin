@@ -1,7 +1,7 @@
-<div class="quill-editor" [class]="inValid ? 'quill-editor__invalid': ''">
+<div class="quill-editor" [class]="inValid ? 'quill-editor__invalid' : ''">
   <div id="toolbar" class="quill-editor__menu">
     <div class="quill-editor__menu--group">
-      <button class="ql-bold" ></button>
+      <button class="ql-bold"></button>
       <button class="ql-italic"></button>
       <button class="ql-underline"></button>
       <button class="ql-strike"></button>
@@ -37,14 +37,30 @@
       <button class="ql-image"></button>
     </div>
     <!-- But you can also add your own -->
-     <div class="quill-editor__menu--group">
+    <div class="quill-editor__menu--group">
       <button #editableBoxMenu [hidden]="!hasBlankBox">
-        <ng-icon name="bootstrapInputCursorText"/>
+        <ng-icon name="bootstrapInputCursorText" />
       </button>
-       <button #tableMenu>
-        <ng-icon size="16" name="bootstrapTable"/>
-       </button>
-     </div>
+      <button #tableMenu>
+        <ng-icon size="16" name="bootstrapTable" />
+      </button>
+    </div>
   </div>
   <div id="editor" #editorContent class="quill-editor__content"></div>
 </div>
+<nz-modal
+  [(nzVisible)]="isUploading"
+  [nzFooter]="null"
+  nzMaskClosable
+  [nzClosable]="false"
+  [nzKeyboard]="false"
+  nzCentered
+  nzWidth="200"
+>
+  <ng-container *nzModalContent>
+    <div class="quill-editor__uploading">
+      <img src="/assets/images/upload.gif" />
+      <p>Uploading...</p>
+    </div>
+  </ng-container>
+</nz-modal>

@@ -132,7 +132,6 @@ export class FormDragDropComponent
   }
 
   validate(control: AbstractControl): ValidationErrors | null {
-    console.log("control: ", control);
     this.control = control;
     if (!this.isUpdatingValidity) {
       this.isUpdatingValidity = true;

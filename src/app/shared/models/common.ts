@@ -177,3 +177,15 @@ export type SectionFormValue = {
   extraSectionInfo?: ExtraInfoFormValue;
   groups?: GroupQuestionsFormValue[];
 }
+
+export type FileUpload = {
+  publicId: string;
+  displayName: string;
+  url: string;
+  secureUrl: string;
+  assetId: string;
+  status: string;
+  type: string;
+  width: number;
+  height: number;
+}

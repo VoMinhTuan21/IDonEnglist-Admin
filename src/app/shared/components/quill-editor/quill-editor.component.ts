@@ -25,13 +25,17 @@ import {
   Validator,
 } from '@angular/forms';
 import { FillInBlankTextEditorOutput } from '@shared/models/common';
-import { debounceTime, Subject } from 'rxjs';
+import { catchError, debounceTime, of, Subject, take } from 'rxjs';
 import { Utils } from '@shared/utils/utils';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
 import QuillResizeImage from 'quill-resize-image';
+import { FileService } from '@shared/services/file.service';
+import { NzNotificationService } from 'ng-zorro-antd/notification';
+import { NzModalModule } from 'ng-zorro-antd/modal';
+
 @Component({
   selector: 'app-quill-editor',
-  imports: [NgIcon, NzDividerModule],
+  imports: [NgIcon, NzDividerModule, NzModalModule],
   templateUrl: './quill-editor.component.html',
   styleUrl: './quill-editor.component.scss',
   encapsulation: ViewEncapsulation.None,
@@ -68,6 +72,9 @@ export class QuillEditorComponent
   editorContent!: ElementRef<HTMLDivElement>;
 
   inValid = false;
+  isUploading = false;
+
+  constructor(private readonly fileService: FileService, private readonly notificationService: NzNotificationService) {}
 
   ngOnInit() {
     this.initQuill();
@@ -184,19 +191,36 @@ export class QuillEditorComponent
     input.setAttribute('accept', 'image/*');
     input.click();
 
-    input.onchange = () => {
+    input.onchange = async () => {
       const file = input.files?.[0];
 
       if (!file) {
         return;
       }
-      
-      const imageUrl = "https://i.pinimg.com/736x/d8/2d/b1/d82db192bfa37d3a0ca8594bf22f018f.jpg"; // Adjust based on your response structure
-      const range = quill.getSelection();
 
-      if (range) {
-        quill.insertEmbed(range.index, 'image', imageUrl);
-      }
+      const formData = new FormData();
+      formData.append("file", file);
+
+      this.isUploading = true;
+
+      this.fileService.updateImage(formData).pipe(take(1), catchError(error => { console.log(error); return of("Upload image failed");})).subscribe((imageResponse) => {
+        if (typeof imageResponse === 'string') {
+          this.notificationService.create(
+            'error',
+            imageResponse,
+            "Please try again. If this error happens frequently, please contact the development team."
+          );
+        } else {
+          const range = quill.getSelection();
+    
+          if (range) {
+            quill.insertEmbed(range.index, 'image', imageResponse.secureUrl);
+          }
+        }
+        
+        this.isUploading = false;
+      });
+      
     };
   }
 
