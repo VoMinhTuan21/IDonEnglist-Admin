@@ -14,7 +14,6 @@ export enum Skill {
 
 export enum CreateTestStep {
   CreateTest = 1,
-  ChooseTestPart = 3,
   CreateSections = 6,
 }
 

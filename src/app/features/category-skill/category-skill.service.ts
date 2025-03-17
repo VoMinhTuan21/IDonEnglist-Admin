@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { HttpService } from "@core/http/http.service";
 import { Observable } from "rxjs";
 import CategorySkillAPI from "./api/category-skill.api";
-import { CategorySkillMin, GetListCategorySkillRequest } from "./models/category-skill.model";
+import { CategorySkill, CategorySkillMin, GetListCategorySkillRequest } from "./models/category-skill.model";
 
 @Injectable({providedIn: 'root'})
 export class CategorySkillService {
@@ -10,5 +10,9 @@ export class CategorySkillService {
 
   getList(params: GetListCategorySkillRequest): Observable<Array<CategorySkillMin>> {
     return this.httpService.get(CategorySkillAPI.getList, params);
+  }
+
+  getDetails(id: number): Observable<CategorySkill> {
+    return this.httpService.get(CategorySkillAPI.getDetails(id));
   }
 }

@@ -4,4 +4,19 @@
     bottom: 100px;
     right: 20px;
   }
+
+  .tag {
+    cursor: pointer;
+
+    &:hover {
+      nz-icon {
+        width: 12px;
+      }
+    }
+
+    nz-icon {
+      width: 0;
+      transition: width 0.3s ease-in-out;
+    }
+  }
 }

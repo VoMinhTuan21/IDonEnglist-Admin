@@ -5,37 +5,35 @@ import {
 } from '@angular/core';
 import { provideRouter } from '@angular/router';
 
-import { routes } from './app.routes';
-import { provideClientHydration } from '@angular/platform-browser';
-import { en_US, provideNzI18n } from 'ng-zorro-antd/i18n';
 import { registerLocaleData } from '@angular/common';
-import en from '@angular/common/locales/en';
-import { FormsModule } from '@angular/forms';
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import {
   HTTP_INTERCEPTORS,
   provideHttpClient,
   withFetch,
   withInterceptorsFromDi,
 } from '@angular/common/http';
-import { provideStore } from '@ngrx/store';
-import { provideStoreDevtools } from '@ngrx/store-devtools';
-import { provideEffects } from '@ngrx/effects';
-import authReducer from './features/auth/store/auth.reducer';
-import { AuthEffects } from './features/auth/store/auth.effect';
-import { HttpErrorInterceptor } from './core/interceptors/http-error.interceptor';
-import { HttpAuthInterceptor } from './core/interceptors/http-auth.interceptor';
-import { CategoryEffects } from './features/category/store/category.effect';
-import categoryReducer from './features/category/store/category.reducer';
-import { resetOnLogout } from './core/store/auth.meta-reducer';
-import { TestConfigurationEffects } from '@features/test-configuration/store/test-configuration.effect';
-import testConfigurationReducer from '@features/test-configuration/store/test-configuration.reducer';
+import en from '@angular/common/locales/en';
+import { FormsModule } from '@angular/forms';
+import { provideClientHydration } from '@angular/platform-browser';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { CollectionEffects } from '@features/collection/store/collection.effect';
 import collectionReducer from '@features/collection/store/collection.reducer';
-import finalTestReducer from '@features/final-test/store/final-test.reducer';
 import { FinalTestEffects } from '@features/final-test/store/final-test.effect';
-import testReducer from '@features/test/store/test.reducer';
+import finalTestReducer from '@features/final-test/store/final-test.reducer';
 import { TestEffects } from '@features/test/store/test.effect';
+import testReducer from '@features/test/store/test.reducer';
+import { provideEffects } from '@ngrx/effects';
+import { provideStore } from '@ngrx/store';
+import { provideStoreDevtools } from '@ngrx/store-devtools';
+import { en_US, provideNzI18n } from 'ng-zorro-antd/i18n';
+import { routes } from './app.routes';
+import { HttpAuthInterceptor } from './core/interceptors/http-auth.interceptor';
+import { HttpErrorInterceptor } from './core/interceptors/http-error.interceptor';
+import { resetOnLogout } from './core/store/auth.meta-reducer';
+import { AuthEffects } from './features/auth/store/auth.effect';
+import authReducer from './features/auth/store/auth.reducer';
+import { CategoryEffects } from './features/category/store/category.effect';
+import categoryReducer from './features/category/store/category.reducer';
 
 registerLocaleData(en);
 
@@ -53,7 +51,6 @@ export const appConfig: ApplicationConfig = {
       {
         auth: authReducer,
         category: categoryReducer,
-        testConfiguration: testConfigurationReducer,
         collection: collectionReducer,
         finalTest: finalTestReducer,
         test: testReducer
@@ -64,7 +61,6 @@ export const appConfig: ApplicationConfig = {
     provideEffects([
       AuthEffects,
       CategoryEffects,
-      TestConfigurationEffects,
       CollectionEffects,
       FinalTestEffects,
       TestEffects

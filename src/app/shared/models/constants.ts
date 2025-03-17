@@ -1,3 +1,4 @@
+import { HttpStatusCode } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { DragItem } from './common';
 import { EBinaryResponseQuestionType, EToolList, Skill } from './enum';
@@ -96,3 +97,10 @@ export const BinaryResponseQuestionTypeLabel: { [index: number]: string} = {
 
 export const BLANK = '__BLANK__'
 export const BlankRegex = /__BLANK__/g;
+
+export const ExcludeErrorAPI = [
+  {
+    url: '/api/test-type/detail',
+    status: HttpStatusCode.NotFound
+  }
+]

@@ -9,3 +9,11 @@ export type CategorySkillMin = {
   id: number;
   skill: Skill
 }
+
+export type CategorySkill = CategorySkillMin & {
+  category:  {
+    id: number;
+    name: string;
+    code: string;
+  }
+}

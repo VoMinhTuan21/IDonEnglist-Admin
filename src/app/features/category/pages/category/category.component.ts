@@ -2,11 +2,13 @@ import { AsyncPipe } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { SkillPipe } from '@core/pipes/skill.pipe';
+import { UrlCodePipe } from '@core/pipes/url.pipe';
 import { Category } from '@features/category/models/category.model';
 import CategoryActions from '@features/category/store/category.action';
 import { CategorySelect } from '@features/category/store/category.selector';
 import { Store } from '@ngrx/store';
 import { BoxComponent } from '@shared/components/box/box.component';
+import { NzBadgeModule } from 'ng-zorro-antd/badge';
 import { NzFlexModule } from 'ng-zorro-antd/flex';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
@@ -14,7 +16,6 @@ import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzTagModule } from 'ng-zorro-antd/tag';
 import { map, Observable, Subject, takeUntil } from 'rxjs';
 import { CreateAndUpdateComponent } from '../create-and-update/create-and-update.component';
-import { UrlCodePipe } from '@core/pipes/url.pipe';
 
 interface CategoryTable extends Category {
   expand?: boolean;
@@ -34,7 +35,8 @@ interface CategoryTable extends Category {
         RouterLink,
         NzPopconfirmModule,
         SkillPipe,
-        UrlCodePipe
+        UrlCodePipe,
+        NzBadgeModule
     ],
     templateUrl: './category.component.html',
     styleUrl: './category.component.scss'

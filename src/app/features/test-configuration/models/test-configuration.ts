@@ -1,5 +1,3 @@
-import { Category } from "@features/category/models/category.model";
-
 export interface ITestTypeTableItem {
   id: number;
   name: string;
@@ -54,4 +52,8 @@ export interface ITestPartDetail {
 
 export type TestTypeDetail = Omit<ITestTypeTableItem, "parts"> & {
   parts: ITestPartDetail[]
+}
+
+export type GetTestTypeDetailsRequest = {
+  categorySkillId: number | string;
 }

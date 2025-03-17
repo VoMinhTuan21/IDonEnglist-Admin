@@ -1,0 +1,16 @@
+.category-skill-config {
+  
+  .editable-row {
+    .editable-cell {
+      border-width: 0;
+      cursor: pointer;
+      outline: none;
+      transition: all 0.1s ease;
+      width: 100%;
+      
+      &:hover, &:focus {
+        border-width: 1px;
+      }
+    }
+  }
+}

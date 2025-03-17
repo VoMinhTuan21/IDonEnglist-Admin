@@ -5,6 +5,7 @@ export interface Category {
   children?: Category[];
   skills?: Array<{
     id: number;
+    isConfigured: boolean;
     skill: number;
   }>;
   parentId?: number;

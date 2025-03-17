@@ -3,11 +3,21 @@ import { AuthGuard } from '@core/guards/auth.guard';
 import { setLayout } from '@core/layout/resolvers/layout-resolver';
 import { PageLayout } from '@shared/models/enum';
 import { CategoryComponent } from './pages/category/category.component';
+import { CategorySkillConfigComponent } from './pages/category-skill-config/category-skill-config.component';
 
 export const categoryRoutes: Routes = [
   {
     path: 'category',
     component: CategoryComponent,
+    resolve: {
+      layout: setLayout(PageLayout.Authorized),
+    },
+    data: { isAuthLayout: true },
+    canActivate: [AuthGuard],
+  },
+  {
+    path: "category/:categoryName/configuration/:categorySkillSlug",
+    component: CategorySkillConfigComponent,
     resolve: {
       layout: setLayout(PageLayout.Authorized),
     },
@@ -22,5 +32,5 @@ export const categoryRoutes: Routes = [
     },
     data: { isAuthLayout: true },
     canActivate: [AuthGuard],
-  },
+  }
 ];

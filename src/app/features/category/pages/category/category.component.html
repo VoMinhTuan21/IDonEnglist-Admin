@@ -1,8 +1,10 @@
 <app-box>
   <nz-table
+    class="categories"
     #nestedTable
     [nzData]="(categories$ | async) ?? []"
     [nzPageSize]="10"
+    [nzLoading]="(loading$ | async)"
   >
     <thead>
       <tr>
@@ -54,9 +56,9 @@
         >
           <thead>
             <tr>
-              <th>Name</th>
-              <th>Skill</th>
-              <th>Action</th>
+              <th [width]="'50%'">Name</th>
+              <th [width]="'30%'">Skills</th>
+              <th [width]="'20%'">Action</th>
             </tr>
           </thead>
           <tbody>
@@ -71,9 +73,13 @@
               </td>
               <td>
                 @for (skill of data.skills; track skill) {
-                <nz-tag [nzColor]="(skill.skill| skill).color">{{
-                  (skill.skill| skill).name
-                }}</nz-tag>
+                  <a [routerLink]="['/category', data.code, 'configuration', ((skill.skill| skill).name.toLowerCase()| urlCode: skill.id)]">
+                    <nz-badge [nzDot]="!skill.isConfigured" [nzOffset]="[-8, 0]">
+                      <nz-tag class="tag" [nzColor]="(skill.skill| skill).color">{{
+                        (skill.skill| skill).name
+                      }} <nz-icon class="tag__icon" nzType="setting" nzTheme="outline" /></nz-tag>
+                    </nz-badge>
+                  </a>
                 }
               </td>
               <td>

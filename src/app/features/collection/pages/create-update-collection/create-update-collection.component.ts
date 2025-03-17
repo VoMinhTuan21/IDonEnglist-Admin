@@ -13,7 +13,6 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
 import { Category } from '@features/category/models/category.model';
 import { CategorySelect } from '@features/category/store/category.selector';
 import CollectionActions from '@features/collection/store/collection.action';
@@ -84,8 +83,6 @@ export class CreateUpdateCollectionComponent implements OnInit, OnDestroy {
     private fb: NonNullableFormBuilder,
     private store: Store,
     private messageService: NzMessageService,
-    private route: ActivatedRoute,
-    private router: Router
   ) {}
 
   open() {
@@ -164,10 +161,11 @@ export class CreateUpdateCollectionComponent implements OnInit, OnDestroy {
     return this.form.get('thumbnail')?.value;
   }
 
-  beforeUpload(
+  beforeUpload = (
     file: NzUploadFile,
     _fileList: NzUploadFile[]
-  ): Observable<boolean> {
+  ): Observable<boolean>  => {
+    console.log("run before upload");
     return Utils.beforeImageUpload(this.messageService, file, _fileList);
   }
 
