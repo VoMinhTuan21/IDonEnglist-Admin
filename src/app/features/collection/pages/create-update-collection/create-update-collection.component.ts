@@ -165,7 +165,6 @@ export class CreateUpdateCollectionComponent implements OnInit, OnDestroy {
     file: NzUploadFile,
     _fileList: NzUploadFile[]
   ): Observable<boolean>  => {
-    console.log("run before upload");
     return Utils.beforeImageUpload(this.messageService, file, _fileList);
   }
 

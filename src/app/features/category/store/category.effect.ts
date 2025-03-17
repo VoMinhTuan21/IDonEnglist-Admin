@@ -52,7 +52,6 @@ export class CategoryEffects {
           map((value) => {
             if (value.id) {
               this.messageService.success("Update success.");
-              console.log("this.messageService: ", this.messageService);
             }
             return CategoryActions.updateSuccess(value);
           }),
